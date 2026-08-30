@@ -77,10 +77,10 @@ export const COURSES: CourseItem[] = [
         topics: [
           {
             slug: 'intro-distributed-cloud',
-            title: 'System Goals, Hardware/Software Models, and Cloud Paradigms',
+            title: 'Distributed System Goals, Hardware/Software Models & Cloud Paradigms',
             lectureNumber: 1,
-            duration: '60 min',
-            description: 'Distributed systems definition, 8 forms of transparency, multiprocessors vs multicomputers, DOS vs NOS vs Middleware, NIST cloud model, and IaaS/PaaS/SaaS architectures.',
+            duration: '10 Hours (36 Slides)',
+            description: 'Comprehensive 10-hour curriculum covering Distributed system definition, 8 forms of transparency, UMA vs NUMA hardware, DOS vs NOS vs Middleware, 8 fallacies, NIST cloud model, IaaS/PaaS/SaaS architectures, shared responsibility, deployment models, FinOps cost analysis, and interactive 3D demonstrations.',
             path: '/sem8/bit452co/unit-01/intro-distributed-cloud',
           },
         ],
