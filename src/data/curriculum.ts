@@ -69,6 +69,22 @@ export const COURSES: CourseItem[] = [
     category: 'Systems & Cloud',
     description: 'Distributed systems architectures, logical clocks, consistent hashing, consensus algorithms (Paxos, Raft), virtualization, and cloud infrastructure.',
     color: 'rose',
-    units: [],
+    units: [
+      {
+        id: 'unit-01',
+        number: 1,
+        title: 'Introduction to Distributed & Cloud Computing',
+        topics: [
+          {
+            slug: 'intro-distributed-cloud',
+            title: 'System Goals, Hardware/Software Models, and Cloud Paradigms',
+            lectureNumber: 1,
+            duration: '60 min',
+            description: 'Distributed systems definition, 8 forms of transparency, multiprocessors vs multicomputers, DOS vs NOS vs Middleware, NIST cloud model, and IaaS/PaaS/SaaS architectures.',
+            path: '/sem8/bit452co/unit-01/intro-distributed-cloud',
+          },
+        ],
+      },
+    ],
   },
 ];

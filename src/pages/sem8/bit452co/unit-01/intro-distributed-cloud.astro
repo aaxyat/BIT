@@ -1,0 +1,509 @@
+---
+import DeckLayout from '../../../../layouts/DeckLayout.astro';
+import Slide from '../../../../components/slides/Slide.astro';
+import Card from '../../../../components/slides/Card.astro';
+import KeyTerms from '../../../../components/slides/KeyTerms.astro';
+import Table from '../../../../components/slides/Table.astro';
+import SpeakerNotes from '../../../../components/slides/SpeakerNotes.astro';
+---
+
+<DeckLayout
+  title="BIT 542CO: Distributed & Cloud Computing — Unit 1: Introduction"
+  description="Foundational principles of distributed systems, hardware and software architectures, and the NIST cloud computing framework."
+>
+  <!-- Slide 1: Course Unit Scope -->
+  <Slide
+    id="unit-intro"
+    eyebrow="01 · DISTRIBUTED & CLOUD FOUNDATIONS"
+    title="Distributed Systems & Cloud Computing Architecture"
+    subtitle="Unit 01 · System Goals, Hardware/Software Models, and Cloud Paradigms"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4 max-w-4xl">
+      <p class="text-base leading-relaxed text-slate-900 font-medium">
+        Modern computational workloads increasingly exceed the physical capacity, memory bandwidth, and fault tolerance boundaries of any single server. To achieve high availability, low geographic latency, and horizontal scalability, systems are engineered as networked collections of autonomous computers working cooperatively.
+      </p>
+      <p class="text-base leading-relaxed text-slate-900 font-medium">
+        This unit establishes the core theoretical and practical foundations of distributed systems: defining their architectural goals, examining physical hardware configurations and operating software layers, and analyzing how cloud computing evolved from traditional distributed clusters into an on-demand utility infrastructure.
+      </p>
+      <div class="p-4 rounded-lg bg-indigo-50 border-2 border-indigo-200 mt-4">
+        <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Learning Objectives</h4>
+        <p class="text-sm text-indigo-900 m-0 font-semibold">
+          Understand the formal definition of distributed systems, analyze the eight ISO forms of distribution transparency, compare multiprocessor and multicomputer memory models, evaluate distributed operating software abstractions, and master the NIST cloud service (IaaS, PaaS, SaaS) and deployment (Public, Private, Hybrid) models.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Welcome students to Unit 01. Emphasize that cloud computing is not an entirely new computational paradigm, but rather the commercial and operational maturity of distributed systems principles running on virtualized hardware.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 2: Distributed System Definition & Core Goals -->
+  <Slide
+    id="system-definition-goals"
+    eyebrow="01 · DISTRIBUTED SYSTEMS PRINCIPLES"
+    title="Distributed System Definition & Core Goals"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          A <strong>distributed system</strong> is a collection of autonomous computing entities (nodes) that communicate over a shared network and coordinate their actions by passing messages, presenting themselves to end users as a single, coherent computing facility.
+        </p>
+        <div class="lecture-card border-2 border-slate-300 space-y-2">
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Four Fundamental Architectural Goals:</h4>
+          <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
+            <li><strong>Resource Accessibility</strong>: Enabling users and applications to seamlessly share remote hardware peripherals, files, storage arrays, and compute instances securely.</li>
+            <li><strong>Distribution Transparency</strong>: Hiding the physical separation and internal communication mechanics of distributed components from end users.</li>
+            <li><strong>Openness</strong>: Offering services according to standard rules and syntax (IDLs, standard protocols) allowing multi-vendor components to interoperate cleanly.</li>
+            <li><strong>Scalability</strong>: Retaining system performance when scaling along numerical dimensions (more users), geographical spans (larger distances), or administrative domains.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Core Terms"
+          terms={[
+            {
+              term: "Autonomous Node",
+              definition: "A compute host with its own local CPU, memory, and operating system capable of independent execution."
+            },
+            {
+              term: "Single-System Image",
+              definition: "The illusion presented to users that a cluster of separate machines is a single unified computing device."
+            },
+            {
+              term: "Open System",
+              definition: "A system whose public interfaces are specified using standardized formats independent of underlying implementation."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Explain Tanenbaum's and Coulouris's definitions. Stress that autonomous nodes do not share a common clock or shared physical memory bus, which is why message passing is necessary.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 3: Forms of Distribution Transparency -->
+  <Slide
+    id="distribution-transparency"
+    eyebrow="01 · DISTRIBUTION TRANSPARENCY"
+    title="Forms of Distribution Transparency (ISO/OSI Reference)"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Access & Location" badge="Spatial" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Access: Uniform representation regardless of machine architecture.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Hides differences in data representation and machine architecture (e.g. big-endian vs little-endian byte orders) across nodes.
+        </p>
+        <p class="text-xs text-slate-700 font-bold mb-1">Location: Hides physical server coordinates.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Users access resources using logical identifiers (such as URLs or database URIs) without knowing the physical server IP or rack.
+        </p>
+      </Card>
+
+      <Card title="Migration & Relocation" badge="Kinematic" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Migration: Moving resources between hosts while idle.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Hides that a resource (e.g. a database table) has moved to another physical host during routine maintenance.
+        </p>
+        <p class="text-xs text-slate-700 font-bold mb-1">Relocation: Live movement during active operation.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Hides that a resource is actively moving to another server while currently receiving active client reads and writes.
+        </p>
+      </Card>
+
+      <Card title="Replication & Failure" badge="Reliability" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Replication: Hides that multiple copies exist.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Clients read and write to multiple replica nodes across datacenters as if modifying a single master record.
+        </p>
+        <p class="text-xs text-slate-700 font-bold mb-1">Failure: Masking node crashes and packet drops.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Hides that a server has crashed by automatically routing transactions to a standby replica node without throwing client errors.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Discuss the trade-off between full transparency and performance: attempting 100% failure transparency across high-latency inter-continental links can cause severe response stalls.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 4: Hardware Concepts: Multiprocessors vs Multicomputers -->
+  <Slide
+    id="hardware-architectures"
+    eyebrow="02 · HARDWARE CLASSIFICATIONS"
+    title="Hardware Concepts: Multiprocessors vs. Multicomputers"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          Under Flynn's taxonomy, all distributed systems fall under the MIMD (Multiple Instruction, Multiple Data) category. They are broadly divided into shared-memory multiprocessors and distributed-memory multicomputers based on physical memory architecture.
+        </p>
+        
+        <div class="lecture-card border-2 border-slate-300">
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">1. Shared-Memory Multiprocessors (Tightly Coupled)</h4>
+          <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
+            Multiple CPUs share a single physical memory address space connected via a high-speed system bus. Classified as <strong>Uniform Memory Access (UMA)</strong> (equal memory latency for all CPUs) or <strong>Non-Uniform Memory Access (NUMA)</strong> (CPUs access local memory faster than remote memory banks). Physical bus contention limits scalability to dozens of cores.
+          </p>
+        </div>
+
+        <div class="lecture-card border-2 border-slate-300">
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">2. Distributed-Memory Multicomputers (Loosely Coupled)</h4>
+          <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
+            Each machine possesses its own dedicated private memory space. Communication occurs strictly through network interfaces via message passing. Scales horizontally to tens of thousands of compute nodes.
+          </p>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Hardware Terms"
+          terms={[
+            {
+              term: "UMA Architecture",
+              definition: "Uniform Memory Access: symmetric multiprocessing where all CPUs access memory banks with identical latency."
+            },
+            {
+              term: "NUMA Architecture",
+              definition: "Non-Uniform Memory Access: memory latency varies depending on which CPU socket accesses which physical memory bank."
+            },
+            {
+              term: "Bus Contention",
+              definition: "Performance bottleneck occurring when multiple CPUs compete simultaneously for memory bus access."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Contrast shared memory with message passing. Point out why modern cloud infrastructure is built entirely out of distributed-memory commodity multicomputer racks.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 5: Software Concepts: DOS vs NOS vs Middleware -->
+  <Slide
+    id="software-concepts"
+    eyebrow="03 · SOFTWARE ABSTRACTIONS"
+    title="Software Concepts: Distributed OS vs. Network OS vs. Middleware"
+    layout="table"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="my-auto">
+      <p class="text-sm text-slate-900 font-medium mb-3">
+        Comparing system software layers across homogeneity requirements, transparency levels, and resource management models:
+      </p>
+
+      <Table
+        headers={["Criterion", "Distributed OS (DOS)", "Network OS (NOS)", "Middleware Layer"]}
+        rows={[
+          ["Degree of Transparency", "Very High (Looks like 1 computer)", "Low (Explicit remote node logins)", "High (Unified application services)"],
+          ["Kernel Homogeneity", "Strictly Homogeneous (Same OS)", "Heterogeneous (Linux, Windows, BSD)", "Heterogeneous (Platform Independent)"],
+          ["Primary Goal", "Hide and manage multi-hardware", "Share remote files and printers", "Interoperability & enterprise integration"],
+          ["Communication Mechanism", "Shared memory / Low-level IPC", "Explicit Remote Files / Sockets", "Remote Procedure Calls (RPC) / REST"],
+          ["Resource Management", "Global centralized/distributed scheduling", "Per-node autonomous control", "Layered middleware resource brokers"]
+        ]}
+      />
+
+      <p class="text-xs text-slate-600 font-semibold mt-3">
+        *Modern Industry Standard: Distributed OS failed commercially due to rigidity; modern systems utilize <strong>Middleware layered over Network Operating Systems</strong>.
+      </p>
+    </div>
+    <SpeakerNotes>
+      Explain why Middleware won the industry battle: companies cannot replace all operating systems with a homogeneous DOS kernel, but they can run a common middleware layer over Linux and Windows.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 6: Fundamental Design Challenges -->
+  <Slide
+    id="design-challenges"
+    eyebrow="04 · SYSTEM DESIGN CHALLENGES"
+    title="Fundamental Design Challenges in Distributed Systems"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          Designing distributed software requires overcoming five fundamental physical and organizational constraints:
+        </p>
+
+        <div class="lecture-card border-2 border-slate-300 space-y-2">
+          <ul class="text-xs text-slate-900 space-y-2 pl-4 list-disc font-medium">
+            <li><strong>Heterogeneity Handling</strong>: Bridging differences in hardware endianness, operating system system calls, programming language type models, and network transport protocols using standardized data serialization (JSON, Protobuf).</li>
+            <li><strong>Partial Failure Invariant</strong>: In a distributed system, components fail independently while other parts continue running. Systems must detect, isolate, and mask component failures without whole-cluster crashes.</li>
+            <li><strong>Concurrency Control</strong>: Coordinating concurrent access to shared data stores to prevent race conditions without introducing global locking bottlenecks.</li>
+            <li><strong>Lack of Global State & Global Clock</strong>: No single node has an instantaneous, accurate view of total system state or synchronized physical clock time.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Design Terms"
+          terms={[
+            {
+              term: "Partial Failure",
+              definition: "A failure mode where one server or network link crashes while remaining system components continue executing."
+            },
+            {
+              term: "Heterogeneity",
+              definition: "The diversity of hardware platforms, operating systems, network protocols, and programming languages across a cluster."
+            },
+            {
+              term: "Fault Masking",
+              definition: "Hiding component failure from the client by retrying requests or routing to standby redundant nodes."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Emphasize Leslie Lamport's famous quote: "A distributed system is one in which the failure of a computer you didn't even know existed can render your own computer unusable."
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 7: Cloud Computing Definition & NIST Model -->
+  <Slide
+    id="cloud-definition-nist"
+    eyebrow="05 · CLOUD COMPUTING PARADIGM"
+    title="Cloud Computing Definition & The NIST Architecture Model"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          According to the <strong>National Institute of Standards and Technology (NIST)</strong>, cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (networks, servers, storage, applications, services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
+        </p>
+
+        <div class="lecture-card border-2 border-slate-300">
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">Five Essential NIST Characteristics:</h4>
+          <ol class="text-xs text-slate-900 space-y-1 pl-4 list-decimal font-medium">
+            <li><strong>On-Demand Self-Service</strong>: Provisioning compute and storage automatically without manual human ticket approvals.</li>
+            <li><strong>Broad Network Access</strong>: Capabilities accessible across standard network protocols via heterogeneous client devices.</li>
+            <li><strong>Resource Pooling</strong>: Multi-tenant model dynamically assigning physical resources according to consumer demand.</li>
+            <li><strong>Rapid Elasticity</strong>: Capabilities provisioned and released elastically to scale rapidly outward and inward with demand.</li>
+            <li><strong>Measured Service</strong>: Resource usage monitored, controlled, and billed transparently based on actual consumption.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="NIST Terms"
+          terms={[
+            {
+              term: "Resource Pooling",
+              definition: "Serving multiple consumers using a multi-tenant model with dynamically assigned physical and virtual resources."
+            },
+            {
+              term: "Rapid Elasticity",
+              definition: "The ability to scale compute and memory capacity up or down automatically in response to workload spikes."
+            },
+            {
+              term: "CAPEX to OPEX",
+              definition: "Shifting from upfront capital expenditure (buying datacenters) to operational expenditure (metered utility billing)."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Break down the 5 NIST characteristics. Explain the financial shift from buying fixed servers that sit idle at night to renting servers per second.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 8: Cloud Service Models (IaaS, PaaS, SaaS) -->
+  <Slide
+    id="service-models-spi"
+    eyebrow="06 · CLOUD SERVICE MODELS"
+    title="Cloud Service Models: The SPI Framework (IaaS, PaaS, SaaS)"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Infrastructure as a Service (IaaS)" badge="Raw Resources" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Consumer Controls: OS, Middleware, Storage, Runtime & Applications.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Provides fundamental compute instances, storage volumes, and network firewalls. The cloud provider manages physical hardware, power, cooling, and hypervisors.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: Amazon EC2, Google Compute Engine, Microsoft Azure VMs.</p>
+      </Card>
+
+      <Card title="Platform as a Service (PaaS)" badge="Application Engine" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Consumer Controls: Application Source Code & Configuration Data.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Provides managed runtime environments, database engines, and deployment tooling. Provider handles OS patching, scaling, runtime updates, and hardware health.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: AWS Elastic Beanstalk, Heroku, Google App Engine, Cloudflare Workers.</p>
+      </Card>
+
+      <Card title="Software as a Service (SaaS)" badge="End-User Software" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Consumer Controls: User Settings & Tenant Access Management.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Complete, fully functional web applications running on cloud infrastructure. Zero management of underlying servers, databases, or runtime code.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: Google Workspace, Microsoft 365, Salesforce CRM, Dropbox.</p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain the abstraction ladder: IaaS gives total control with high operational burden; SaaS gives zero operational burden with fixed application features.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 9: Shared Responsibility Model -->
+  <Slide
+    id="shared-responsibility"
+    eyebrow="07 · CLOUD GOVERNANCE"
+    title="Cloud Shared Responsibility & Governance Matrix"
+    layout="table"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="my-auto">
+      <p class="text-sm text-slate-900 font-medium mb-3">
+        Delineating operational and security responsibilities between Cloud Service Provider (CSP) and Cloud Consumer:
+      </p>
+
+      <Table
+        headers={["Architectural Layer", "Traditional On-Prem", "IaaS Model", "PaaS Model", "SaaS Model"]}
+        rows={[
+          ["Applications & Logic", "Customer Managed", "Customer Managed", "Customer Managed", "Provider Managed"],
+          ["Data & Access (IAM)", "Customer Managed", "Customer Managed", "Customer Managed", "Customer Managed"],
+          ["Runtime & Middleware", "Customer Managed", "Customer Managed", "Provider Managed", "Provider Managed"],
+          ["Operating System & Patching", "Customer Managed", "Customer Managed", "Provider Managed", "Provider Managed"],
+          ["Virtualization Hypervisor", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"],
+          ["Physical Compute, Storage, Network", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"],
+          ["Datacenter Facilities & Security", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"]
+        ]}
+      />
+
+      <p class="text-xs text-slate-600 font-semibold mt-3">
+        *Key Invariant: <strong>Customer Data and Identity Access Management (IAM)</strong> remains the legal responsibility of the consumer across all cloud models.
+      </p>
+    </div>
+    <SpeakerNotes>
+      Highlight row 2: Data and Access management is ALWAYS the customer's responsibility, even in SaaS. If a user sets a weak password or leaks an API key, the provider is not at fault.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 10: Cloud Deployment Models -->
+  <Slide
+    id="deployment-models"
+    eyebrow="08 · DEPLOYMENT SCENARIOS"
+    title="Cloud Deployment Models: Public, Private, Hybrid & Community"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Public Cloud" badge="Multi-Tenant" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Infrastructure owned by third-party provider and shared across tenants.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Delivers maximum economies of scale, near-infinite capacity elasticity, and global multi-region deployments with zero physical maintenance.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Trade-off: Shared multi-tenancy and external data hosting.</p>
+      </Card>
+
+      <Card title="Private Cloud" badge="Single-Tenant" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Dedicated infrastructure provisioned for exclusive use by one organization.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          May be hosted on-premises in corporate datacenters or managed by third parties. Provides total control over physical security, compliance, and custom hardware.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Trade-off: High capital expenditure and manual capacity management.</p>
+      </Card>
+
+      <Card title="Hybrid & Community" badge="Federated Mesh" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Composite infrastructure binding distinct clouds via standardized technology.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          <strong>Hybrid Cloud</strong> connects on-prem private infrastructure with public clouds (e.g. AWS DirectConnect) for cloud bursting during peak traffic. <strong>Community Cloud</strong> shares infrastructure among organizations with common regulatory missions.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain cloud bursting: sensitive financial databases stay on private infrastructure, while stateless web servers burst to public cloud during Black Friday traffic surges.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 11: Benefits, Limitations & Challenges -->
+  <Slide
+    id="benefits-and-challenges"
+    eyebrow="09 · TRADEOFF ANALYSIS"
+    title="Cloud Computing: Benefits, Architectural Limits & Challenges"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Key Benefits" badge="Advantages" glow="indigo">
+        <ul class="text-xs text-slate-900 space-y-1 pl-4 list-disc font-medium">
+          <li><strong>Zero Capital Overhead</strong>: Eliminates massive upfront hardware purchases; pay only for provisioned resources.</li>
+          <li><strong>Instant Global Scale</strong>: Deploy services worldwide in minutes across multiple availability regions.</li>
+          <li><strong>High Resilience</strong>: Automated hardware failover, geo-redundant storage, and managed disaster recovery.</li>
+        </ul>
+      </Card>
+
+      <Card title="Architectural Limits" badge="Constraints" glow="amber">
+        <ul class="text-xs text-slate-900 space-y-1 pl-4 list-disc font-medium">
+          <li><strong>Network Latency Reliance</strong>: Cloud functionality relies entirely on stable WAN network connectivity.</li>
+          <li><strong>Vendor Lock-in</strong>: Proprietary APIs, bespoke database engines, and egress data transfer fees make migration expensive.</li>
+          <li><strong>Noisy Neighbors</strong>: Multi-tenant resource sharing can occasionally cause unpredictable I/O jitter.</li>
+        </ul>
+      </Card>
+
+      <Card title="Core Open Challenges" badge="Engineering Hurdles" glow="rose">
+        <ul class="text-xs text-slate-900 space-y-1 pl-4 list-disc font-medium">
+          <li><strong>Data Sovereignty & Legal Compliance</strong>: Adhering to jurisdictional data residency laws (GDPR, HIPAA, local privacy acts).</li>
+          <li><strong>Cloud Cost Governance</strong>: Unmonitored auto-scaling leading to unexpected billing spikes (FinOps).</li>
+          <li><strong>Distributed Attack Surface</strong>: Complex IAM policies and API security vulnerabilities across hybrid environments.</li>
+        </ul>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Discuss FinOps: why companies now employ dedicated cloud financial engineers to audit and optimize multi-cloud spending.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 12: Unit Synthesis & Evolutionary Summary -->
+  <Slide
+    id="unit-synthesis"
+    eyebrow="10 · UNIT SYNTHESIS"
+    title="Summary: Evolution from Clusters to Cloud Utilities"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4 max-w-4xl my-auto">
+      <div class="lecture-card border-2 border-indigo-300 bg-indigo-50/50 p-4">
+        <h4 class="text-sm font-bold text-indigo-950 uppercase tracking-wide mb-2">Technological Evolution Flow</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-xs font-mono text-center font-bold text-slate-800">
+          <div class="p-2 bg-white rounded border border-indigo-200">1. Multicomputer Clusters (Message Passing Networks)</div>
+          <div class="p-2 bg-white rounded border border-indigo-200">2. Middleware Abstractions (RPC, CORBA, Enterprise Buses)</div>
+          <div class="p-2 bg-white rounded border border-indigo-200">3. Hardware Virtualization (Hypervisors & Resource Pooling)</div>
+          <div class="p-2 bg-white rounded border border-indigo-200">4. Elastic Cloud Utility (On-Demand SPI Service Models)</div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="text-base font-extrabold text-slate-950 m-0">Core Takeaways for Unit 01:</h4>
+        <ul class="text-sm text-slate-900 space-y-2 pl-5 list-disc font-medium leading-relaxed">
+          <li><strong>Distributed Systems Core:</strong> Collections of autonomous nodes communicating via message passing to provide a single-system image while managing partial failures.</li>
+          <li><strong>Hardware & Software:</strong> Commodity loosely coupled multicomputers paired with middleware layers represent the dominant enterprise architecture.</li>
+          <li><strong>Cloud Computing:</strong> Standardizes distributed resource pooling, elasticity, and utility billing across IaaS, PaaS, and SaaS service models.</li>
+          <li><strong>Shared Responsibility:</strong> Data ownership and IAM access control always remain the responsibility of the cloud customer.</li>
+        </ul>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t-2 border-slate-200 text-xs text-slate-600 font-bold">
+        <span>Next Unit: System Models of Distributed Systems (Architectural, Interaction & Failure Models)</span>
+        <a href="/sem8/bit452co" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg transition-colors font-bold">Return to Course Hub</a>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Conclude Unit 1. Review how hardware concepts and software middleware led directly to modern hypervisors and cloud platforms. Introduce Unit 2 preview.
+    </SpeakerNotes>
+  </Slide>
+</DeckLayout>
