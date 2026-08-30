@@ -9,7 +9,7 @@ export class CyberGridPreset implements ScenePreset {
   private gridHelper2: THREE.GridHelper | null = null;
   private stars: THREE.Points | null = null;
   private sun: THREE.Mesh | null = null;
-  private gridSpeed = 60;
+  private gridSpeed = 12;
   private gridOffset = 0;
   private gridSize = 800;
 
@@ -104,12 +104,8 @@ export class CyberGridPreset implements ScenePreset {
     this.gridGroup.rotation.x = ctx.mouseY * 0.05;
   }
 
-  onSlideChange(ctx: SceneContext, slideIndex: number): void {
-    // Increase flight speed momentarily on slide change
-    this.gridSpeed = 160;
-    setTimeout(() => {
-      this.gridSpeed = 60;
-    }, 600);
+  onSlideChange(_ctx: SceneContext, _slideIndex: number): void {
+    // Calm, consistent speed
   }
 
   destroy(ctx: SceneContext): void {

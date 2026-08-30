@@ -87,28 +87,28 @@ export class FloatingGeometryPreset implements ScenePreset {
     if (!this.group) return;
 
     if (this.torusKnot) {
-      this.torusKnot.rotation.x = elapsed * 0.3;
-      this.torusKnot.rotation.y = elapsed * 0.4;
+      this.torusKnot.rotation.x = elapsed * 0.08;
+      this.torusKnot.rotation.y = elapsed * 0.1;
     }
 
     if (this.icosahedron) {
-      this.icosahedron.rotation.x = elapsed * 0.5;
-      this.icosahedron.rotation.z = elapsed * 0.3;
-      this.icosahedron.position.x = Math.cos(elapsed * 0.6) * 130;
-      this.icosahedron.position.z = Math.sin(elapsed * 0.6) * 70 - 50;
-      this.icosahedron.position.y = Math.sin(elapsed * 0.9) * 30 + 20;
+      this.icosahedron.rotation.x = elapsed * 0.12;
+      this.icosahedron.rotation.z = elapsed * 0.08;
+      this.icosahedron.position.x = Math.cos(elapsed * 0.2) * 130;
+      this.icosahedron.position.z = Math.sin(elapsed * 0.2) * 70 - 50;
+      this.icosahedron.position.y = Math.sin(elapsed * 0.3) * 20 + 10;
     }
 
     if (this.octahedron) {
-      this.octahedron.rotation.y = elapsed * 0.7;
-      this.octahedron.rotation.x = elapsed * 0.4;
-      this.octahedron.position.x = Math.sin(elapsed * 0.5 + 2) * 120;
-      this.octahedron.position.z = Math.cos(elapsed * 0.5 + 2) * 60 - 30;
-      this.octahedron.position.y = Math.cos(elapsed * 0.8) * 35 - 15;
+      this.octahedron.rotation.y = elapsed * 0.15;
+      this.octahedron.rotation.x = elapsed * 0.1;
+      this.octahedron.position.x = Math.sin(elapsed * 0.18 + 2) * 120;
+      this.octahedron.position.z = Math.cos(elapsed * 0.18 + 2) * 60 - 30;
+      this.octahedron.position.y = Math.cos(elapsed * 0.25) * 20 - 10;
     }
 
     if (this.ring) {
-      this.ring.rotation.z = elapsed * 0.15;
+      this.ring.rotation.z = elapsed * 0.04;
     }
 
     // Parallax mouse rotation
@@ -116,13 +116,8 @@ export class FloatingGeometryPreset implements ScenePreset {
     this.group.rotation.x = -ctx.mouseY * 0.2;
   }
 
-  onSlideChange(ctx: SceneContext, slideIndex: number): void {
-    if (!this.torusKnot) return;
-    // Morph scale effect on slide change
-    this.torusKnot.scale.set(1.2, 1.2, 1.2);
-    setTimeout(() => {
-      if (this.torusKnot) this.torusKnot.scale.set(1, 1, 1);
-    }, 400);
+  onSlideChange(_ctx: SceneContext, _slideIndex: number): void {
+    // No abrupt scale jumps
   }
 
   destroy(ctx: SceneContext): void {

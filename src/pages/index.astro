@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ThreeBackground from '../components/three/ThreeBackground.astro';
 import DeckCard from '../components/decks/DeckCard.astro';
 import Presentation from 'lucide-astro/Presentation';
 import Sparkles from 'lucide-astro/Sparkles';
@@ -49,9 +48,6 @@ const decks = [
   title="Astro Slides — Modern Presentation Platform"
   description="Component-driven presentation decks built with Astro, Reveal.js, Three.js, and Tailwind CSS."
 >
-  <!-- Background 3D WebGL Canvas Layer -->
-  <ThreeBackground initialScene="particles" />
-
   <div class="relative min-h-screen flex flex-col justify-between px-6 py-12 max-w-7xl mx-auto z-10">
     <!-- Header -->
     <header class="flex items-center justify-between pb-8 border-b border-white/10">

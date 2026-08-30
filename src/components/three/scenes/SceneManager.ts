@@ -21,16 +21,11 @@ export class SceneManager {
 
   private presets: Map<string, ScenePreset> = new Map();
   private activePreset: ScenePreset | null = null;
-  private activePresetName = 'particles';
+  private activePresetName = 'none';
 
-  private animFrameId: number | null = null;
-  private isPaused = false;
-  private isDestroyed = false;
-
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, initialScene = 'none') {
     this.canvas = canvas;
     this.clock = new THREE.Clock();
-
     const width = window.innerWidth;
     const height = window.innerHeight;
 
@@ -66,7 +61,7 @@ export class SceneManager {
     this.registerPreset(new ConstellationPreset());
 
     this.bindEvents();
-    this.setScene('particles');
+    this.setScene(initialScene);
     this.startLoop();
 
     window.__sceneManager = this;
@@ -138,9 +133,10 @@ export class SceneManager {
 
         if (this.activePreset) {
           this.activePreset.update(this.ctx, delta, elapsed);
+          this.renderer.render(this.scene, this.camera);
+        } else {
+          this.renderer.clear();
         }
-
-        this.renderer.render(this.scene, this.camera);
       }
 
       this.animFrameId = requestAnimationFrame(loop);

@@ -10,10 +10,8 @@ export class ConstellationPreset implements ScenePreset {
   private particlesData: Array<{ velocity: THREE.Vector3; numConnections: number }> = [];
   private particlePositions: Float32Array | null = null;
   private linesPositions: Float32Array | null = null;
-  private linesColors: Float32Array | null = null;
-
-  private maxParticleCount = 110;
-  private connectDistance = 115;
+  private maxParticleCount = 60;
+  private connectDistance = 110;
 
   init(ctx: SceneContext): void {
     this.group = new THREE.Group();
@@ -35,12 +33,11 @@ export class ConstellationPreset implements ScenePreset {
       this.particlePositions[i * 3] = x;
       this.particlePositions[i * 3 + 1] = y;
       this.particlePositions[i * 3 + 2] = z;
-
       this.particlesData.push({
         velocity: new THREE.Vector3(
-          (Math.random() - 0.5) * 0.7,
-          (Math.random() - 0.5) * 0.7,
-          (Math.random() - 0.5) * 0.7
+          (Math.random() - 0.5) * 0.2,
+          (Math.random() - 0.5) * 0.2,
+          (Math.random() - 0.5) * 0.2
         ),
         numConnections: 0,
       });
@@ -151,9 +148,7 @@ export class ConstellationPreset implements ScenePreset {
     (this.linesMesh.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
     (this.linesMesh.geometry.attributes.color as THREE.BufferAttribute).needsUpdate = true;
     (this.pointCloud.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
-
-    // Slow rotation & parallax
-    this.group.rotation.y = elapsed * 0.05 + ctx.mouseX * 0.2;
+    this.group.rotation.y = elapsed * 0.015 + ctx.mouseX * 0.1;
     this.group.rotation.x = ctx.mouseY * 0.15;
   }
 

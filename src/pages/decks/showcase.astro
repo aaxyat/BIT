@@ -31,10 +31,9 @@ export default defineConfig({
 <DeckLayout
   title="Master Feature Showcase"
   description="Explore the full power of Astro, Reveal.js, and Three.js presentation engine"
-  initialScene="particles"
 >
   <!-- Slide 1: Cover -->
-  <Slide id="cover" layout="cover" bgScene="particles">
+  <Slide id="cover" layout="cover">
     <div class="max-w-3xl">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
         <Sparkles class="w-3.5 h-3.5" />
@@ -58,7 +57,7 @@ export default defineConfig({
   </Slide>
 
   <!-- Slide 2: Split Architecture Layout -->
-  <Slide id="architecture" title="Component-Driven Architecture" subtitle="How Astro powers modern presentation decks" layout="split" bgScene="particles">
+  <Slide id="architecture" title="Component-Driven Architecture" subtitle="How Astro powers modern presentation decks" layout="split">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
       <div class="space-y-4">
         <Step effect="fade-up" index={1}>
@@ -184,7 +183,7 @@ export default defineConfig({
   </VerticalStack>
 
   <!-- Slide 5: Code Block with Line Highlighting -->
-  <Slide id="code-demo" title="Interactive Code Highlights" subtitle="Step through code line-by-line" bgScene="constellation">
+  <Slide id="code-demo" title="Interactive Code Highlights" subtitle="Step through code line-by-line">
     <div class="max-w-3xl my-auto">
       <p class="text-slate-300 text-sm mb-4">
         Notice how lines highlight sequentially on subsequent keystrokes using the <code>lines="1-2|4-6|8-11"</code> prop:
@@ -202,7 +201,7 @@ export default defineConfig({
   </Slide>
 
   <!-- Slide 6: Summary & Presenter Notes Callout -->
-  <Slide id="summary" layout="center" bgScene="particles">
+  <Slide id="summary" layout="center">
     <div class="max-w-2xl text-center">
       <div class="w-16 h-16 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-6 border border-indigo-500/30">
         <Sparkles class="w-8 h-8" />

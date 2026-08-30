@@ -3,10 +3,10 @@ interface Props {
   initialScene?: 'particles' | 'grid' | 'geometry' | 'constellation' | 'none';
 }
 
-const { initialScene = 'particles' } = Astro.props;
+const { initialScene = 'none' } = Astro.props;
 ---
 
-<div id="three-bg-container" class="fixed inset-0 pointer-events-none -z-10 overflow-hidden select-none" aria-hidden="true">
+<div id="three-bg-container" data-initial-scene={initialScene} class="fixed inset-0 pointer-events-none -z-10 overflow-hidden select-none" aria-hidden="true">
   <canvas id="three-bg-canvas" class="w-full h-full block"></canvas>
 </div>
 
@@ -22,14 +22,9 @@ const { initialScene = 'particles' } = Astro.props;
       return;
     }
 
-    const sceneManager = new SceneManager(canvas);
-    
-    // Initial scene if specified in body or container dataset
     const container = document.getElementById('three-bg-container');
-    const initial = container?.dataset.initialScene;
-    if (initial) {
-      sceneManager.setScene(initial);
-    }
+    const initial = container?.dataset.initialScene || 'none';
+    new SceneManager(canvas, initial);
   }
 
   // Initialize on load

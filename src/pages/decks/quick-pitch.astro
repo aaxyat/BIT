@@ -15,10 +15,9 @@ import ArrowRight from 'lucide-astro/ArrowRight';
 <DeckLayout
   title="Nova AI — Pitch Deck"
   description="Next-generation autonomous data infrastructure"
-  initialScene="constellation"
 >
   <!-- Slide 1: Cover -->
-  <Slide id="cover" layout="cover" bgScene="constellation">
+  <Slide id="cover" layout="cover">
     <div class="max-w-3xl">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
         <Rocket class="w-3.5 h-3.5" />
@@ -42,7 +41,7 @@ import ArrowRight from 'lucide-astro/ArrowRight';
   </Slide>
 
   <!-- Slide 2: Problem & Solution -->
-  <Slide id="problem-solution" title="The Enterprise Challenge" subtitle="Traditional data pipelines break under LLM workloads" layout="split" bgScene="constellation">
+  <Slide id="problem-solution" title="The Enterprise Challenge" subtitle="Traditional data pipelines break under LLM workloads" layout="split">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-auto">
       <Card title="The Problem" badge="Current Pain" glow="rose">
         <ul class="space-y-3 text-slate-300 text-sm list-none p-0">
@@ -84,9 +83,8 @@ import ArrowRight from 'lucide-astro/ArrowRight';
       Contrast legacy batch pipelines with Nova's instant streaming architecture.
     </SpeakerNotes>
   </Slide>
-
   <!-- Slide 3: Market Size & Traction Stats -->
-  <Slide id="market-traction" title="Market Opportunity & Traction" subtitle="Accelerating enterprise demand for real-time AI infrastructure" bgScene="particles">
+  <Slide id="market-traction" title="Market Opportunity & Traction" subtitle="Accelerating enterprise demand for real-time AI infrastructure">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
       <Step effect="zoom-in" index={1}>
         <Card stat="$42B" statLabel="Total Addressable Market by 2028" glow="indigo" badge="Market Size">
@@ -118,8 +116,7 @@ import ArrowRight from 'lucide-astro/ArrowRight';
   </Slide>
 
   <!-- Slide 4: Product Roadmap -->
-  <Slide id="roadmap" title="Execution Roadmap" subtitle="Milestones through 2027" bgScene="grid">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+  <Slide id="roadmap" title="Execution Roadmap" subtitle="Milestones through 2027">
       <div class="p-6 rounded-2xl glass-panel border-t-4 border-indigo-500">
         <div class="text-xs font-mono text-indigo-400 font-bold mb-2">Q4 2026</div>
         <h4 class="text-base font-bold text-white mb-2">Global Edge Mesh</h4>
@@ -154,7 +151,7 @@ import ArrowRight from 'lucide-astro/ArrowRight';
   </Slide>
 
   <!-- Slide 5: The Ask & Call to Action -->
-  <Slide id="closing" layout="center" bgScene="constellation">
+  <Slide id="closing" layout="center">
     <div class="max-w-2xl text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-6">
         <DollarSign class="w-3.5 h-3.5" />

@@ -7,11 +7,11 @@ export class ParticleWavePreset implements ScenePreset {
   private points: THREE.Points | null = null;
   private geometry: THREE.BufferGeometry | null = null;
   private material: THREE.PointsMaterial | null = null;
-  private countX = 65;
-  private countY = 65;
-  private totalParticles = 65 * 65;
-  private waveSpeed = 1.2;
-  private waveHeight = 28;
+  private countX = 50;
+  private countY = 50;
+  private totalParticles = 50 * 50;
+  private waveSpeed = 0.3;
+  private waveHeight = 10;
   private basePositions: Float32Array | null = null;
   private currentHue = 0.65; // Indigo / blue default
   private targetHue = 0.65;
@@ -61,15 +61,13 @@ export class ParticleWavePreset implements ScenePreset {
 
     // Particle sprite or smooth point material
     this.material = new THREE.PointsMaterial({
-      size: 4.5,
+      size: 3.2,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.55,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-
-    this.points = new THREE.Points(this.geometry, this.material);
     this.points.position.y = -60;
     this.points.rotation.x = 0.25;
 
