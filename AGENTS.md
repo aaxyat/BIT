@@ -5,7 +5,6 @@
 - **Scripts & Privileges**: `~/opt/<scripts>` or `/opt/agents/scripts/`. Use `/opt/agents/scripts/run-sudo.sh <cmd>` for privileged actions without credential exposure.
 - **URL Style & Routing Hierarchy**: NEVER generate URLs with query strings (`?key=value`) in web apps, no exceptions. Use clean nested path segments following `<Semester>/<Subject>/<Unit>/<Topic>` hierarchy (`/sem4/bit255co/unit-01/oop-foundations`) or `POST` for forms/filters. Remove existing query strings found during work.
 - **Cloudflare Scope**: NEVER invoke Cloudflare AI (Workers AI, inference, embeddings, text/image gen) unless explicitly ordered. Allowed scope: Infrastructure, DNS, Tunnels only.
-- **Documentation & Dotfiles Maintenance**: Master record: `/home/aaxyat/HOMELAB_SETUP.md`. Update on every setup, package, service, route, config change. Run `yadm commit` + `yadm push` on shell/terminal/editor/system config changes.
 - **Format**: Dense, compressed, terse. Zero fluff.
 
 ---
