@@ -73,14 +73,14 @@ export const COURSES: CourseItem[] = [
       {
         id: 'unit-01',
         number: 1,
-        title: 'Introduction to Distributed & Cloud Computing',
+        title: 'Introduction to Distributed Systems & Cloud Computing',
         topics: [
           {
             slug: 'intro-distributed-cloud',
-            title: 'Distributed System Goals, Hardware/Software Models & Cloud Paradigms',
+            title: 'Core Concepts, Hardware Models & Cloud Architectures',
             lectureNumber: 1,
             duration: '10 Hours (36 Slides)',
-            description: 'Comprehensive 10-hour curriculum covering Distributed system definition, 8 forms of transparency, UMA vs NUMA hardware, DOS vs NOS vs Middleware, 8 fallacies, NIST cloud model, IaaS/PaaS/SaaS architectures, shared responsibility, deployment models, FinOps cost analysis, and interactive 3D demonstrations.',
+            description: 'Core concepts of distributed systems, hardware memory models, software layers, network challenges, and cloud service architectures.',
             path: '/sem8/bit452co/unit-01/intro-distributed-cloud',
           },
         ],

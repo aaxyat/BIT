@@ -9,7 +9,7 @@ import ThreeCanvas from '../../../../components/three/ThreeCanvas.astro';
 import Mermaid from '../../../../components/slides/Mermaid.astro';
 import SpeakerNotes from '../../../../components/slides/SpeakerNotes.astro';
 
-const distributedMessagePassingCode = `// Distributed Node Message Broker Simulation
+const distributedMessagePassingCode = `// Distributed Node Message Passing Example
 class DistributedNode {
   constructor(nodeId, networkLatencyMs = 15) {
     this.nodeId = nodeId;
@@ -26,7 +26,7 @@ class DistributedNode {
     const target = this.peers.get(targetNodeId);
     if (!target) throw new Error(\`Node \${targetNodeId} unreachable\`);
     
-    // Simulate network latency and packet serialization
+    // Simulate network latency
     await new Promise(resolve => setTimeout(resolve, this.networkLatencyMs));
     return target.receive(this.nodeId, message);
   }
@@ -41,219 +41,219 @@ class DistributedNode {
   }
 }
 
-// Cluster Execution
+// Connect two nodes and send data
 const nodeA = new DistributedNode("node-us-east-1", 10);
 const nodeB = new DistributedNode("node-eu-west-1", 85);
 nodeA.registerPeer(nodeB);
 
-console.log("Transmitting state across network boundary...");
+console.log("Sending data across network...");
 nodeA.send("node-eu-west-1", { key: "cluster_config", value: "replicated" })
   .then(res => console.log("Response:", JSON.stringify(res)));`;
 
-const cloudCostFormulaCode = `// Total Cost of Ownership (TCO) & Break-Even Analysis
-function calculateCloudBreakEven({
-  onPremHardwareCost,    // Upfront CAPEX (Servers, Switches, UPS)
-  datacenterOpexYearly,  // Power, Cooling, Admin, Space
-  cloudMonthlyCost,      // Dynamic IaaS/PaaS billing
-  operationalYears = 3
+const cloudCostFormulaCode = `// Comparing On-Premises Cost vs Cloud Cost
+function compareCosts({
+  onPremHardwareCost,    // Upfront cost to buy servers
+  datacenterOpexYearly,  // Electricity, cooling, building rent
+  cloudMonthlyCost,      // Monthly cloud bill
+  years = 3
 }) {
-  const totalOnPremTco = onPremHardwareCost + (datacenterOpexYearly * operationalYears);
-  const totalCloudTco = cloudMonthlyCost * 12 * operationalYears;
-  const costDelta = totalCloudTco - totalOnPremTco;
+  const onPremTotal = onPremHardwareCost + (datacenterOpexYearly * years);
+  const cloudTotal = cloudMonthlyCost * 12 * years;
+  const difference = cloudTotal - onPremTotal;
 
   return {
-    onPremTco: totalOnPremTco,
-    cloudTco: totalCloudTco,
-    favorableModel: costDelta < 0 ? "Cloud OPEX" : "On-Premises CAPEX",
-    annualSavings: Math.abs(costDelta / operationalYears)
+    onPremisesTotal: onPremTotal,
+    cloudTotal: cloudTotal,
+    cheaperOption: difference < 0 ? "Cloud" : "On-Premises",
+    yearlyDifference: Math.abs(difference / years)
   };
 }
 
-const analysis = calculateCloudBreakEven({
+const result = compareCosts({
   onPremHardwareCost: 120000,
   datacenterOpexYearly: 45000,
   cloudMonthlyCost: 6200,
-  operationalYears: 3
+  years: 3
 });
 
-console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null, 2));`;
+console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
 ---
 
 <DeckLayout
-  title="BIT 542CO: Distributed & Cloud Computing — Unit 1: Introduction (10 Hours)"
-  description="Comprehensive 10-hour lecture notes on distributed system goals, hardware/software concepts, design challenges, and cloud architectures."
+  title="Distributed & Cloud Computing: Introduction"
+  description="Introduction to distributed systems, hardware memory models, software layers, and cloud computing architectures."
 >
   <!-- ========================================================================
-       SLIDE 1: FORMAL TITLE SLIDE
+       SLIDE 1: TITLE SLIDE
        ======================================================================== -->
   <Slide
     id="title-slide"
-    eyebrow="BIT 542CO · DISTRIBUTED & CLOUD COMPUTING"
-    title="Unit 1: Introduction to Distributed Systems & Cloud Computing"
-    subtitle="10-Hour Master Curriculum · Architectural Foundations, Hardware/Software Models, and Cloud Utility Paradigms"
-    unit="Unit 01: Introduction"
+    eyebrow="DISTRIBUTED & CLOUD COMPUTING"
+    title="Introduction to Distributed Systems & Cloud Computing"
+    subtitle="Core Concepts, Hardware Models, and Cloud Architectures"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="space-y-4 max-w-4xl">
       <div class="p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
-        <h4 class="text-sm font-extrabold text-slate-950 uppercase tracking-wide mb-1">Curriculum Scope (10 Teaching Hours)</h4>
+        <h4 class="text-sm font-extrabold text-slate-950 uppercase tracking-wide mb-1">Topics in this Unit</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-800 font-medium">
-          <div>• Part 1: Distributed Systems Definition, Motivations & Core Goals</div>
-          <div>• Part 2: Hardware Concepts: UMA, NUMA & Multicomputers</div>
-          <div>• Part 3: Software Layers: Distributed OS, Network OS & Middleware</div>
-          <div>• Part 4: Core Design Issues, Heterogeneity & Scalability</div>
-          <div>• Part 5: NIST Cloud Architecture & SPI Service Models</div>
-          <div>• Part 6: Deployment Models, Shared Governance & Challenges</div>
+          <div>• What are distributed systems and why do we build them?</div>
+          <div>• Hardware models: shared memory vs separate computers</div>
+          <div>• Software layers: operating systems and middleware</div>
+          <div>• Common design challenges: handling errors and scaling up</div>
+          <div>• Cloud computing basics and service models (IaaS, PaaS, SaaS)</div>
+          <div>• Cloud deployment types and cost comparisons</div>
         </div>
       </div>
       <p class="text-sm leading-relaxed text-slate-700 font-medium">
-        This unit establishes the theoretical models, physical memory topologies, middleware software abstractions, and cloud utility infrastructure that underpin modern large-scale computing.
+        This unit explains how multiple computers connect together over networks to share work, and how cloud providers package these systems into services you can use on demand.
       </p>
     </div>
     <SpeakerNotes>
-      Welcome students to Unit 1 of BIT 542CO. Outline the 10-hour teaching schedule. Explain that this unit builds the vocabulary and architectural foundations required for all subsequent units in the course.
+      Welcome everyone to the first unit of Distributed and Cloud Computing. Explain that cloud computing is built on top of distributed systems ideas developed over the last several decades.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 2: MOTIVATION & WHY DISTRIBUTED SYSTEMS MATTER
+       SLIDE 2: MOTIVATION
        ======================================================================== -->
   <Slide
     id="motivation"
-    eyebrow="01 · DISTRIBUTED FOUNDATIONS"
-    title="Why Distributed Systems? Physical & Economic Motivations"
+    eyebrow="DISTRIBUTED FOUNDATIONS"
+    title="Why Do We Connect Multiple Computers Together?"
     layout="card-grid"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Physical Hardware Limits" badge="Moore's Law Limits" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Single-chip scaling hits the Power Wall and Memory Wall.</p>
+      <Card title="Limits of One Machine" badge="Physical Limits" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">One computer can only get so big and fast.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Clock frequencies stalled at 4–5 GHz due to thermal dissipation limits ($P = C \cdot V^2 \cdot f$). Vertical scaling (buying a bigger server) becomes exponentially expensive, whereas horizontal scaling (adding commodity nodes) scales linearly.
+          Making a single computer faster hits heat and power limits. Buying one giant super-computer is very expensive. Buying many standard computers and linking them together gives more power for less money.
         </p>
       </Card>
 
-      <Card title="Fault Tolerance & Reliability" badge="Availability" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">No single point of physical hardware failure.</p>
+      <Card title="Keeping Systems Running" badge="Reliability" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">If one machine breaks, others keep working.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          A centralized server represents a single point of failure (SPOF). Distributed clusters provide redundancy: if 3 out of 10 nodes crash or lose power, the remaining 7 continue serving client requests with zero total downtime.
+          If an entire website runs on a single server and that server crashes, the site goes down. When work is spread across ten servers, three can fail and the website stays online without interruption.
         </p>
       </Card>
 
-      <Card title="Geographical Locality" badge="Latency Physics" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Speed of light in fiber enforces latency bounds.</p>
+      <Card title="Reaching Users Worldwide" badge="Speed" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Signals take time to travel long distances.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Signal propagation across global fiber optics introduces ~100ms round-trip latency per 10,000 km. Distributing compute instances near end users across worldwide regions reduces access latency to under 15ms.
+          Data traveling through undersea cables takes time. Placing servers in different countries close to users makes websites load in milliseconds instead of seconds.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Explain the Power Wall: why CPUs no longer double in clock speed every 18 months, forcing software architecture to embrace distributed multicore and multi-node clusters.
+      Give everyday examples like Netflix or Google: a single computer could never store all the videos or handle millions of searches at the same second.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 3: FORMAL DEFINITION OF DISTRIBUTED SYSTEM
+       SLIDE 3: DEFINITION
        ======================================================================== -->
   <Slide
-    id="formal-definition"
-    eyebrow="01 · DISTRIBUTED FOUNDATIONS"
-    title="Formal Definition & Architectural Characteristics"
+    id="definition"
+    eyebrow="DISTRIBUTED FOUNDATIONS"
+    title="What Is a Distributed System?"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A <strong>distributed system</strong> is a collection of autonomous computing entities that communicate over a shared network and coordinate their actions by passing messages, presenting themselves to end users as a single, coherent computing facility.
+          A <strong>distributed system</strong> is a group of independent computers that talk to each other over a network by sending messages, while appearing to users as if they were just one single computer.
         </p>
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Three Essential Invariant Properties:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Three Core Rules of Distributed Systems:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Concurrent Execution</strong>: Multiple independent threads of execution run simultaneously on physically separated processors without shared global state.</li>
-            <li><strong>No Global Physical Clock</strong>: Synchronization cannot rely on shared physical timers; time ordering must be established via logical timestamps or consensus protocols.</li>
-            <li><strong>Independent Failure Modes</strong>: Components fail independently. Some servers or network links will fail while the rest of the system remains fully operational.</li>
+            <li><strong>Running at the same time</strong>: Many computers run their own tasks at the same exact moment.</li>
+            <li><strong>No shared master clock</strong>: Each computer has its own timer. They must agree on order of events using network messages.</li>
+            <li><strong>Separate failures</strong>: One computer can crash or lose its internet cable without stopping the other computers.</li>
           </ul>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Core Terms"
+          title="Key Terms"
           terms={[
             {
-              term: "Autonomous Entity",
-              definition: "A compute host with private CPU and local memory running an independent OS kernel."
+              term: "Node",
+              definition: "A single computer in a network with its own processor, memory, and operating system."
             },
             {
-              term: "Message Passing",
-              definition: "Communication via discrete network packets rather than shared memory address reads/writes."
+              term: "Message",
+              definition: "A packet of data sent over the network from one computer to another."
             },
             {
-              term: "Single-System Image",
-              definition: "The illusion that a cluster of separate physical servers is a single unified computing device."
+              term: "Single System",
+              definition: "Making many separate computers look like one simple service to the user."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Contrast shared-memory concurrency (mutex locks, threads) with distributed concurrency (network messages, timeouts, RPCs).
+      Emphasize that the user does not need to know which specific computer answered their request.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 4: THE FOUR FUNDAMENTAL GOALS
+       SLIDE 4: THE FOUR GOALS
        ======================================================================== -->
   <Slide
     id="four-goals"
-    eyebrow="01 · DISTRIBUTED FOUNDATIONS"
-    title="The Four Fundamental Goals of Distributed Systems"
+    eyebrow="DISTRIBUTED FOUNDATIONS"
+    title="The Four Main Goals of Building Distributed Systems"
     layout="card-grid"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
-      <Card title="1. Making Resources Accessible" badge="Goal 1" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Sharing expensive peripherals, storage volumes, and data stores.</p>
+      <Card title="1. Sharing Resources" badge="Sharing" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Letting users share hardware and files easily.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Provides economic advantages by pooling resources (printers, multi-terabyte databases, compute clusters) across corporate networks while strictly managing multi-user access control and data security.
+          Allowing many people in an office or across the world to share files, printers, databases, and computing power safely without stepping on each other.
         </p>
       </Card>
 
-      <Card title="2. Distribution Transparency" badge="Goal 2" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Hiding the distributed nature of system components.</p>
+      <Card title="2. Hiding the Complexity" badge="Transparency" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Making remote systems feel like local ones.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          An ideal system presents resources so that users and application programs perceive them as local, concealing physical locations, data replication, network migration, and component failures.
+          Hiding where files are stored, how many copies exist, or whether a server restarted so users can focus on their work.
         </p>
       </Card>
 
-      <Card title="3. Openness & Interoperability" badge="Goal 3" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Standardized interfaces and portable service definitions.</p>
+      <Card title="3. Staying Open & Compatible" badge="Openness" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Using clear rules so different systems work together.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Specified through Interface Definition Languages (IDLs), RESTful APIs, and standard protocols, allowing components built in different programming languages by different vendors to interoperate cleanly.
+          Writing clear API rules so a phone app written in Swift, a backend in Java, and a server running Linux can exchange data without issues.
         </p>
       </Card>
 
-      <Card title="4. Scalability" badge="Goal 4" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Maintaining performance across scale expansions.</p>
+      <Card title="4. Easy to Scale" badge="Scalability" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Growing smoothly when more users arrive.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          System performance scales gracefully along three independent axes: size scalability (adding users/resources), geographical scalability (spanning continents), and administrative scalability (crossing organizations).
+          Handling ten users today and ten million users next month by adding more standard computers, without rewriting the whole system.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Walk through the 4 goals. Emphasize that achieving 100% transparency often conflicts with performance over high-latency networks.
+      Review each goal with simple real-world examples: sharing a Google Drive file, using standard HTTP, and handling spikes in user traffic.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 5: DISTRIBUTION TRANSPARENCY DEEP DIVE (PART 1)
+       SLIDE 5: TRANSPARENCY TYPES (PART 1)
        ======================================================================== -->
   <Slide
-    id="transparency-spatial"
-    eyebrow="01 · DISTRIBUTION TRANSPARENCY"
-    title="Distribution Transparency: Access, Location & Migration"
+    id="transparency-part1"
+    eyebrow="DISTRIBUTION TRANSPARENCY"
+    title="Hiding System Details: Access, Location & Migration"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
@@ -261,21 +261,21 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
           <div>
             <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">1. Access Transparency</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Hides differences in data representation and the way resources are accessed on different machines. For example, a client program accesses a file on a big-endian Solaris server or a little-endian Linux x86 node using identical read/write function calls.
+              You read or write data using the same commands, whether the file is on your laptop or on a server in another country running a different operating system.
             </p>
           </div>
 
           <div>
             <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">2. Location Transparency</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Hides where in physical space a resource is located. The user identifies resources purely by logical names (e.g. <code>http://api.bank.com/accounts/402</code>) without knowing the physical server rack, IP address, or datacenter building.
+              You find resources by name (like typing <code>google.com</code>) without needing to know which physical building, room, or IP address hosts the data.
             </p>
           </div>
 
           <div>
             <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">3. Migration Transparency</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Hides that a resource can move to another physical location while it is idle without affecting client access. For example, relocating an idle database partition from Server A to Server B during storage rebalancing.
+              An engineer can move a database from Server A to Server B while it is idle, and your apps keep working without updating their settings.
             </p>
           </div>
         </div>
@@ -283,89 +283,88 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Spatial Terms"
+          title="Terms"
           terms={[
             {
               term: "Access Transparency",
-              definition: "Hiding data format and protocol differences between heterogeneous client/server architectures."
+              definition: "Hiding differences in how different computers format numbers and files."
             },
             {
               term: "Location Transparency",
-              definition: "Decoupling logical resource names from physical network coordinates."
+              definition: "Using simple names instead of physical server coordinates."
             },
             {
-              term: "Migration Transparency",
-              definition: "Moving offline resources between servers without breaking logical name bindings."
+              term: "Migration",
+              definition: "Moving files or databases between machines without breaking links."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain how DNS and URLs achieve location transparency. Point out that IP addresses break location transparency if hardcoded into application source code.
+      Remind students that URLs are the best example of location transparency: you type a domain name and never worry about which server rack answers.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 6: DISTRIBUTION TRANSPARENCY DEEP DIVE (PART 2)
+       SLIDE 6: TRANSPARENCY TYPES (PART 2)
        ======================================================================== -->
   <Slide
-    id="transparency-runtime"
-    eyebrow="01 · DISTRIBUTION TRANSPARENCY"
-    title="Distribution Transparency: Relocation, Replication, Concurrency & Failure"
+    id="transparency-part2"
+    eyebrow="DISTRIBUTION TRANSPARENCY"
+    title="Hiding System Details: Copies, Concurrent Access & Errors"
     layout="table"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <Table
-        headers={["Transparency Type", "What Is Hidden from the Client Application", "Real-World Industrial Example"]}
+        headers={["Transparency Type", "What Is Hidden from the User", "Simple Example"]}
         rows={[
-          ["Relocation", "Resource moving dynamically while receiving active requests", "Live VM migration across hypervisors without dropping TCP connections"],
-          ["Replication", "That multiple identical copies exist across distinct servers", "Amazon S3 storing 3 geographically separated copies of an object"],
-          ["Concurrency", "That multiple clients are simultaneously accessing shared data", "Database row locking / MVCC preventing dirty read race conditions"],
-          ["Failure", "That a server or network switch has crashed and restarted", "Web load balancer redirecting HTTP requests to healthy replica"],
-          ["Persistence", "Whether a resource is currently in RAM or swapped to SSD", "Object-relational mapping (ORM) hydrating entities on demand"]
+          ["Relocation", "Moving a service while it is actively in use", "Moving a virtual server to a new machine without dropping active calls"],
+          ["Replication", "That multiple duplicate copies of data exist", "Saving a photo on cloud storage and it automatically saves across 3 cities"],
+          ["Concurrency", "That other people are using the same data at the exact same moment", "Two people buying seats on an airline app without booking the same seat"],
+          ["Failure", "That a machine crashed or restarted behind the scenes", "A web page automatically reloads from a backup server when one server loses power"]
         ]}
       />
 
       <div class="lecture-card border-2 border-amber-300 bg-amber-50 mt-3 p-3">
-        <h4 class="text-xs font-bold text-amber-950 uppercase mb-1">Engineering Trade-off: Degree of Transparency</h4>
+        <h4 class="text-xs font-bold text-amber-950 uppercase mb-1">Important Reality: We Cannot Hide Everything</h4>
         <p class="text-xs text-amber-950 m-0 font-medium">
-          Total transparency is not always desirable. Attempting to mask signal latency to a server on Mars or guaranteeing instantaneous replication across continents causes massive transaction blocking.
+          Trying to hide every single network delay across the globe would make programs freeze while waiting for confirmation. Good engineers choose when to hide details and when to show realistic loading states.
         </p>
       </div>
     </div>
     <SpeakerNotes>
-      Walk through why 100% failure transparency is physically impossible across WAN: network timeouts vs server death cannot be distinguished with certainty.
+      Explain why total transparency is impossible: sending data across the Pacific ocean takes at least 100 milliseconds due to the speed of light.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 7: HARDWARE CONCEPTS - FLYNN'S TAXONOMY & COUPLING
+       SLIDE 7: HARDWARE CONCEPTS - TWO BASIC DESIGNS
        ======================================================================== -->
   <Slide
-    id="hardware-flynn"
-    eyebrow="02 · HARDWARE CONCEPTS"
-    title="Hardware Architectures: Flynn's Taxonomy & System Coupling"
+    id="hardware-overview"
+    eyebrow="HARDWARE CONCEPTS"
+    title="Hardware Models: Shared Memory vs. Networked Machines"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          Under Michael J. Flynn's classification, computer architectures are categorized by the number of concurrent instruction streams and data streams. All distributed systems fall under <strong>MIMD (Multiple Instruction, Multiple Data)</strong>: multiple processors executing independent instruction streams on independent datasets.
+          When we build systems with multiple processors, there are two main ways to connect them: sharing one common memory pool, or giving each computer its own private memory.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="lecture-card border-2 border-slate-300">
-            <h4 class="text-sm font-bold text-indigo-900 mb-1">Tightly Coupled Systems</h4>
+            <h4 class="text-sm font-bold text-indigo-900 mb-1">Shared Memory (Multiprocessors)</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Processors share physical clock timing, a common high-speed bus, and a single shared memory address space. Inter-processor communication delay is in nanoseconds.
+              All processors share the same physical RAM. Any processor can read any memory location directly over a shared motherboard bus. Very fast, but limited in size.
             </p>
           </div>
           <div class="lecture-card border-2 border-slate-300">
-            <h4 class="text-sm font-bold text-indigo-900 mb-1">Loosely Coupled Systems</h4>
+            <h4 class="text-sm font-bold text-indigo-900 mb-1">Separate Memory (Multicomputers)</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Processors have private memory and separate operating systems. Communication occurs exclusively over network links. Inter-node communication delay is in milliseconds.
+              Every machine has its own private RAM. To share data, they must send messages over network cables. Can scale to thousands of machines.
             </p>
           </div>
         </div>
@@ -373,107 +372,107 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Flynn Terms"
+          title="Hardware Terms"
           terms={[
             {
-              term: "MIMD Classification",
-              definition: "Multiple Instruction, Multiple Data: autonomous processors executing distinct programs on separate data."
+              term: "Multiprocessor",
+              definition: "Multiple CPUs sharing one common physical RAM address space."
             },
             {
-              term: "Coupling Degree",
-              definition: "Measure of spatial proximity, shared clock dependency, and memory sharing between processors."
+              term: "Multicomputer",
+              definition: "Separate computers connected by network cables, each with private RAM."
             },
             {
-              term: "Latency Ratio",
-              definition: "Shared bus access (~10ns) vs local network (~100µs) vs WAN internet (~50ms) introduces 100,000x gap."
+              term: "System Bus",
+              definition: "The physical wires on a motherboard connecting CPUs to RAM."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain Flynn's 4 classes: SISD (traditional uniprocessor), SIMD (GPU vector units), MISD (fault-tolerant flight controllers), MIMD (distributed systems).
+      Compare a shared-memory computer to people sitting around one shared whiteboard, vs multicomputers as people in separate offices sending text messages.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 8: SHARED MEMORY MULTIPROCESSORS (UMA VS NUMA)
+       SLIDE 8: SHARED MEMORY (UMA VS NUMA)
        ======================================================================== -->
   <Slide
-    id="hardware-multiprocessors"
-    eyebrow="02 · HARDWARE CONCEPTS"
-    title="Shared-Memory Multiprocessors: UMA vs. NUMA Architectures"
+    id="hardware-uma-numa"
+    eyebrow="HARDWARE CONCEPTS"
+    title="Shared-Memory Computers: UMA and NUMA"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          In a multiprocessor, all CPUs execute within a single uniform physical memory address space. Every CPU can read or write any memory address using standard hardware load/store instructions.
+          In shared-memory computers, how CPUs connect to RAM affects performance as you add more processor cores.
         </p>
 
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">1. Uniform Memory Access (UMA) — Symmetric Multiprocessors (SMP)</h4>
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">1. Uniform Memory Access (UMA)</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            All CPUs share a single memory controller and system bus. Every CPU experiences identical read/write access latency to all memory locations. <em>Bottleneck:</em> As CPU count increases beyond 16–32 cores, memory bus contention severely degrades performance.
+            All CPUs share one central memory bus. Every CPU takes the exact same amount of time to read any memory byte. <em>Problem:</em> If 32 CPUs try to read RAM at the same time, the bus gets clogged.
           </p>
         </div>
 
         <div class="lecture-card border-2 border-slate-300">
           <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">2. Non-Uniform Memory Access (NUMA)</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            Memory is physically divided into local banks per CPU socket, connected via high-speed interconnects (e.g. Intel UPI / AMD Infinity Fabric). Accessing local memory is 3–5x faster than accessing remote memory attached to another CPU socket.
+            Each CPU gets its own local memory bank attached directly to its socket. Reading local RAM is fast. Reading RAM attached to another CPU takes longer over internal link cables.
           </p>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Memory Terms"
+          title="Memory Types"
           terms={[
             {
-              term: "UMA (SMP)",
-              definition: "Uniform Memory Access: identical memory latency for all processors across a shared system bus."
+              term: "UMA",
+              definition: "Uniform access: all memory locations take the exact same time to read."
             },
             {
               term: "NUMA",
-              definition: "Non-Uniform Memory Access: physical memory is partitioned per socket; local access is faster than remote."
+              definition: "Non-uniform access: local memory is fast, remote memory attached to other CPUs is slower."
             },
             {
-              term: "Cache Coherence",
-              definition: "Hardware protocol (MESI/MOESI) ensuring all CPU cache lines reflect the latest memory writes."
+              term: "Bus Bottleneck",
+              definition: "When too many processors try to use one shared wire at the same moment."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain the cache coherence tax: why building 1,000-core shared-memory machines is economically non-viable due to directory-based cache invalidation overhead.
+      Explain why personal laptops use UMA, while big 64-core database servers use NUMA to prevent memory traffic jams.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 9: DISTRIBUTED-MEMORY MULTICOMPUTERS
+       SLIDE 9: MULTICOMPUTERS & CLUSTERS
        ======================================================================== -->
   <Slide
-    id="hardware-multicomputers"
-    eyebrow="02 · HARDWARE CONCEPTS"
-    title="Distributed-Memory Multicomputers: Clusters & Interconnects"
+    id="hardware-clusters"
+    eyebrow="HARDWARE CONCEPTS"
+    title="Networked Clusters (Multicomputers)"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A <strong>multicomputer</strong> consists of multiple autonomous computing nodes, each with its own private CPU, cache, memory controller, and local storage. Processors have no physical shared memory address space; a CPU cannot directly execute a load/store instruction against another node's RAM.
+          A <strong>multicomputer cluster</strong> is built by stacking standard, independent computers into server racks and connecting them with high-speed network switches.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Interconnect Topologies & Communication:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">How Cluster Machines Communicate:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Communication Mechanism</strong>: Explicit message passing via Network Interface Cards (NICs) over packet-switched networks.</li>
-            <li><strong>Cluster Topologies</strong>: Nodes organized in rack-mounted server chassis connected via Top-of-Rack (ToR) switches, Spine-Leaf datacenter networks, or torus/hypercube topologies for supercomputing.</li>
-            <li><strong>High-Speed Fabrics</strong>: Commodity Ethernet (10/25/100 Gbps) or specialized ultra-low-latency InfiniBand / RDMA (Remote Direct Memory Access) fabrics.</li>
+            <li><strong>Message Passing</strong>: Processors send packets of bytes through network cards (NICs).</li>
+            <li><strong>Rack Switches</strong>: Servers in a rack plug into a top-of-rack switch, which connects to main datacenter spine switches.</li>
+            <li><strong>Affordable Scale</strong>: You can connect 100,000 standard machines together, which is impossible with shared-memory motherboards.</li>
           </ul>
         </div>
       </div>
@@ -483,49 +482,49 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
           title="Cluster Terms"
           terms={[
             {
-              term: "Multicomputer",
-              definition: "Loosely-coupled system of independent computers communicating exclusively over network interconnects."
+              term: "Cluster",
+              definition: "A collection of interconnected standard computers working together on common jobs."
             },
             {
-              term: "Spine-Leaf Fabric",
-              definition: "Datacenter network topology ensuring constant 2-hop switching latency between any two cluster server racks."
+              term: "Server Rack",
+              definition: "A physical metal frame holding stacked server computers and network switches."
             },
             {
-              term: "RDMA",
-              definition: "Remote Direct Memory Access: bypassing the operating system kernel to copy data directly between node memories."
+              term: "Network Card",
+              definition: "Hardware component that converts memory data into network cable signals."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Show why multicomputers won: commodity PC hardware connected by Ethernet scales to millions of cores at 1/10th the cost of proprietary supercomputers.
+      Show how all modern cloud datacenters (Amazon, Microsoft, Google) are built entirely out of cluster racks rather than giant single motherboards.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 10: 3D DEMONSTRATION - HARDWARE TOPOLOGIES
+       SLIDE 10: 3D DEMONSTRATION - HARDWARE TOPOLOGY
        ======================================================================== -->
   <Slide
-    id="demo-hardware-topologies"
-    eyebrow="02 · VISUAL DEMONSTRATION"
-    title="Visual Model: Shared Bus Contention vs. Switched Node Clusters"
+    id="demo-hardware"
+    eyebrow="VISUAL DEMONSTRATION"
+    title="Visualizing Computer Connections: Shared Bus vs. Cluster Mesh"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center my-auto">
       <div class="space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          The 3D model demonstrates the geometric contrast between a centralized shared-memory bus (central core bottleneck) and an interconnected distributed cluster topology (radial mesh nodes).
+          This 3D model shows how interconnected cluster nodes form a distributed network mesh, rather than relying on one central bus wire.
         </p>
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Spatial Comparison</h4>
+          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Interact with the Model</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            <strong>Drag the 3D model</strong> to rotate and inspect node distribution. Notice how distributed nodes eliminate central bus serialization by delegating communication across independent mesh links.
+            <strong>Click and drag</strong> the 3D shape to see how nodes connect along multiple routes. If one link fails, traffic reroutes along another connection.
           </p>
         </div>
         <p class="text-xs text-slate-600 font-bold m-0">
-          *Scalability Theorem: A shared bus scales as O(1) in bandwidth capacity, whereas switched network multicomputers scale as O(N).
+          *Key Takeaway: Mesh connections eliminate single points of failure in hardware design.
         </p>
       </div>
 
@@ -534,186 +533,183 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
       </div>
     </div>
     <SpeakerNotes>
-      Interact with the 3D model. Explain how the torus geometry maps to 2D/3D torus interconnects used in supercomputing clusters like IBM Blue Gene.
+      Rotate the 3D model to show students how redundancy works when nodes form geometric meshes.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 11: SOFTWARE CONCEPTS - THREE OPERATING SYSTEM MODELS
+       SLIDE 11: SOFTWARE CONCEPTS - THREE APPROACHES
        ======================================================================== -->
   <Slide
-    id="software-models-overview"
-    eyebrow="03 · SOFTWARE CONCEPTS"
-    title="Software Concepts: Distributed OS vs. Network OS vs. Middleware"
+    id="software-approaches"
+    eyebrow="SOFTWARE CONCEPTS"
+    title="Three Software Approaches: DOS, NOS & Middleware"
     layout="card-grid"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="1. Distributed OS (DOS)" badge="Tightly Coupled" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Single homogeneous kernel managing multiple CPU nodes.</p>
+      <Card title="1. Distributed OS (DOS)" badge="One Kernel" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">One unified operating system across all machines.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Presents full transparency. The kernel manages process migration, distributed memory paging, and hardware allocation. <em>Limitation:</em> Fails in real enterprises because all machines must run the exact same operating system. Examples: Amoeba, Sprite, Mach.
+          The operating system manages all machines as if they were one. <em>Why it failed:</em> Every computer in the company had to run the exact same special OS. Real companies need different operating systems for different tasks.
         </p>
       </Card>
 
-      <Card title="2. Network OS (NOS)" badge="Loosely Coupled" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Independent heterogeneous kernels with networking tools.</p>
+      <Card title="2. Network OS (NOS)" badge="Separate Kernels" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Standard operating systems with networking tools.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Provides zero distribution transparency. Users explicitly log in to remote machines (SSH) or mount remote disks (NFS, SMB). Each node retains absolute autonomous control over local resources. Examples: UNIX, Linux, Windows Server.
+          Each computer runs standard Linux, Windows, or macOS. Users manually connect to remote machines using tools like SSH or file shares. Shows no transparency, but very flexible.
         </p>
       </Card>
 
-      <Card title="3. Middleware Systems" badge="Modern Standard" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Software layer positioned between OS and applications.</p>
+      <Card title="3. Middleware" badge="The Winner" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">A helper software layer on top of standard operating systems.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Runs on top of heterogeneous Network Operating Systems to provide uniform high-level services: RPC, distributed transactions, naming directories, and security tokens. Examples: gRPC, CORBA, Java RMI, Apache Kafka.
+          Runs on top of any standard OS to provide easy remote communication, database tools, and security. This is how modern web and cloud software is built.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Emphasize that modern computing runs on NOS kernels with Middleware layered on top. Distributed Operating Systems are primarily of historical/academic interest.
+      Explain why Middleware won: it allows a Windows laptop to talk to a Linux server and a cloud database without forcing all machines to run identical kernels.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 12: EIGHT-DIMENSION SOFTWARE COMPARISON TABLE
+       SLIDE 12: SOFTWARE COMPARISON TABLE
        ======================================================================== -->
   <Slide
-    id="software-comparison-table"
-    eyebrow="03 · SOFTWARE CONCEPTS"
-    title="Detailed Comparison: DOS vs. NOS vs. Middleware"
+    id="software-table"
+    eyebrow="SOFTWARE CONCEPTS"
+    title="Comparing DOS, NOS, and Middleware"
     layout="table"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <Table
-        headers={["Architectural Dimension", "Distributed OS (DOS)", "Network OS (NOS)", "Middleware Layer"]}
+        headers={["Feature", "Distributed OS (DOS)", "Network OS (NOS)", "Middleware Layer"]}
         rows={[
-          ["Degree of Transparency", "Very High (Looks like single uniprocessor)", "Low (Explicit remote server syntax)", "High (Masks network via uniform APIs)"],
-          ["Kernel Architecture", "Homogeneous microkernel across nodes", "Heterogeneous standard kernels", "Heterogeneous OS with common middleware runtime"],
-          ["Scalability Limit", "Low (10s to 100s of nodes)", "Medium (Limited by manual administration)", "Very High (100,000s of nodes across internet)"],
-          ["Fault Tolerance", "Kernel masks failed nodes internally", "None (Remote crash throws socket error)", "Middleware retries / failovers transparently"],
-          ["Resource Management", "Global centralized scheduler", "Per-node local OS scheduler", "Distributed resource brokers / Kubernetes"],
-          ["Communication Model", "Shared memory / Low-level message passing", "Explicit TCP/UDP sockets and files", "Remote Procedure Calls (RPC) / REST / Pub-Sub"]
+          ["Appearance to User", "Looks like one single computer", "Shows separate individual servers", "Hides network complexity via APIs"],
+          ["Operating System Requirement", "Must be 100% identical on all nodes", "Can be different (Linux, Windows)", "Can be different on every node"],
+          ["How Nodes Communicate", "Low-level kernel memory messages", "Explicit socket connections and files", "Remote function calls (RPC) and web APIs"],
+          ["How Many Nodes It Can Handle", "Small clusters (tens of nodes)", "Medium networks (hundreds)", "Massive scale (millions of devices)"]
         ]}
       />
     </div>
     <SpeakerNotes>
-      Step through the table rows. Highlight row 2 (Homogeneity): the fatal flaw of Distributed OS was requiring all hardware vendors to run the same proprietary microkernel.
+      Walk students through why heterogeneity (differences in OS and hardware) made Middleware the industry standard.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 13: THE MIDDLEWARE ARCHITECTURE MODEL
+       SLIDE 13: WHAT MIDDLEWARE DOES
        ======================================================================== -->
   <Slide
-    id="middleware-architecture"
-    eyebrow="03 · SOFTWARE CONCEPTS"
-    title="The Middleware Layer: Services & Abstractions"
+    id="middleware-services"
+    eyebrow="SOFTWARE CONCEPTS"
+    title="What Does Middleware Do for Developers?"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          Middleware acts as the "software glue" that transforms a collection of heterogeneous, network-connected computers into a unified platform. It sits logically above the local operating system and network protocol stack, but below domain-specific application logic.
+          Instead of developers writing complex low-level network code for every app, <strong>middleware</strong> provides ready-to-use building blocks for common distributed tasks.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Five Core Middleware Services:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Common Middleware Services:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Remote Invocation</strong>: Remote Procedure Calls (RPC) and Remote Method Invocation (RMI) allowing functions to execute on remote servers as if local.</li>
-            <li><strong>Naming & Directory Services</strong>: Mapping human-readable resource names to dynamic network endpoints (e.g. DNS, LDAP, ZooKeeper).</li>
-            <li><strong>Distributed Transactions</strong>: Ensuring multi-node atomic commits via Two-Phase Commit (2PC) protocols.</li>
-            <li><strong>Security & Authentication</strong>: Kerberos tickets, OAuth2 tokens, and TLS mutual authentication across untrusted networks.</li>
-            <li><strong>Persistence & State Management</strong>: Distributed caching (Redis), distributed queues (Kafka), and replicated data stores.</li>
+            <li><strong>Calling Remote Functions (RPC)</strong>: Running a function on another server as easily as calling a local function in your code.</li>
+            <li><strong>Finding Services (Naming)</strong>: Looking up which server currently runs a specific service (like DNS or service discovery).</li>
+            <li><strong>Handling Security</strong>: Verifying user logins and permissions across multiple servers using secure tokens.</li>
+            <li><strong>Message Queues</strong>: Storing messages safely when thousands of requests arrive at once (like Apache Kafka).</li>
           </ul>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Middleware Terms"
+          title="Terms"
           terms={[
             {
               term: "Middleware",
-              definition: "A software layer providing common programming abstractions across heterogeneous operating systems."
+              definition: "Software between the operating system and applications that handles network communication."
             },
             {
               term: "RPC",
-              definition: "Remote Procedure Call: invoking a sub-routine on another address space without explicit socket coding."
+              definition: "Remote Procedure Call: calling a function on another computer over the network."
             },
             {
-              term: "Service Broker",
-              definition: "An intermediary that registers, locates, and binds client requests to available server instances."
+              term: "Message Queue",
+              definition: "A buffer that holds messages until receiving servers are ready to process them."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Describe how middleware simplifies application development: developers write business logic without writing raw TCP socket packet-framing code.
+      Explain how tools like gRPC and Kafka are examples of modern middleware that students will use in their careers.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 14: THE 8 FALLACIES OF DISTRIBUTED COMPUTING
+       SLIDE 14: EIGHT FALSE ASSUMPTIONS (DEUTSCH)
        ======================================================================== -->
   <Slide
     id="eight-fallacies"
-    eyebrow="04 · DESIGN CHALLENGES"
-    title="The 8 Fallacies of Distributed Computing (Peter Deutsch)"
+    eyebrow="DESIGN CHALLENGES"
+    title="The Eight False Assumptions About Networks (Deutsch)"
     layout="table"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <p class="text-sm text-slate-900 font-medium mb-3">
-        Engineers transitioning from uniprocessor software to distributed systems frequently assume false invariants that lead to catastrophic production failures:
+        New developers often make false assumptions that cause systems to fail in production:
       </p>
 
       <Table
-        headers={["Fallacy (False Assumption)", "Physical Reality in Real Networks", "Engineering Countermeasure"]}
+        headers={["False Assumption", "The Real Truth", "What You Should Do"]}
         rows={[
-          ["1. The network is reliable", "Packet loss, dropped frames, switch reboots occur constantly", "Idempotent retries, message acknowledgments"],
-          ["2. Latency is zero", "Speed of light limits WAN latency to 50–200ms", "Asynchronous non-blocking I/O, edge caching"],
-          ["3. Bandwidth is infinite", "Network throughput saturates under high concurrent load", "Binary serialization (Protobuf), data compression"],
-          ["4. The network is secure", "Packets traverse untrusted public routing nodes", "End-to-end TLS encryption, mTLS certificates"],
-          ["5. Topology does not change", "Servers auto-scale, fail, and migrate dynamically", "Dynamic service discovery (Consul, etcd)"],
-          ["6. There is one administrator", "Multi-tenant clouds cross international corporate boundaries", "Federated identity (OAuth/SAML), zero-trust IAM"],
-          ["7. Transport cost is zero", "Data egress fees and serialization CPU costs are significant", "Minimize cross-region egress data transfer"],
-          ["8. The network is homogeneous", "Clients use diverse mobile devices, OS kernels, and MTUs", "Strict JSON/Protobuf schemas, standard protocols"]
+          ["1. The network never fails", "Wi-Fi drops and switches restart often", "Always add timeout and retry logic"],
+          ["2. Data travels instantly", "Signals take 50–150ms to cross oceans", "Do not block the screen while waiting"],
+          ["3. Bandwidth is unlimited", "Cables get clogged during busy hours", "Send small, compact data packets"],
+          ["4. The network is secure", "Anyone on public Wi-Fi can intercept data", "Always use HTTPS and encryption"],
+          ["5. Network structure never changes", "Servers crash and new ones start dynamically", "Use service discovery tools"],
+          ["6. There is only one administrator", "Data travels across companies and countries", "Use standard authentication tokens"],
+          ["7. Moving data costs nothing", "Cloud providers charge fees for exported data", "Keep data transfers minimal"],
+          ["8. All computers are identical", "Users have different phones, laptops, and OS", "Use standard data formats like JSON"]
         ]}
       />
     </div>
     <SpeakerNotes>
-      Walk through Fallacies 1 and 2 in detail. Emphasize that assuming zero latency or 100% reliability leads to blocking thread deadlocks.
+      Tell stories about apps that freeze when Wi-Fi drops because the developer assumed the network never fails.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 15: CORE DESIGN ISSUE - HETEROGENEITY
+       SLIDE 15: DESIGN CHALLENGE - HETEROGENEITY
        ======================================================================== -->
   <Slide
-    id="issue-heterogeneity"
-    eyebrow="04 · DESIGN CHALLENGES"
-    title="Design Challenge 1: Heterogeneity & Data Marshalling"
+    id="heterogeneity"
+    eyebrow="DESIGN CHALLENGES"
+    title="Challenge 1: Handling Different Types of Computers"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          Distributed systems encompass hardware from different manufacturers (x86, ARM, RISC-V), distinct operating systems (Linux, Windows, macOS, iOS), multiple programming languages (Java, C++, Rust, Python, Go), and varying network protocols.
+          A single system might connect an iPhone (ARM chip), a Windows desktop (x86 chip), and a Linux server. They store numbers in different byte orders and run different programming languages.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Two Architectural Solutions:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">How We Solve This:</h4>
           <div class="space-y-2 text-xs text-slate-900 font-medium">
             <p class="m-0">
-              <strong>1. Data Marshalling & Canonical Intermediate Representations</strong>: Data structures in local RAM are serialized into canonical, architecture-neutral wire formats (JSON, XML, or binary formats like Protocol Buffers and Apache Avro). Numbers are normalized to standard byte order (Network Byte Order = Big Endian).
+              <strong>1. Standard Data Formats</strong>: Instead of sending raw computer memory bytes, we convert data into standard formats like JSON or Protocol Buffers before sending it over the wire.
             </p>
             <p class="m-0">
-              <strong>2. Language-Independent Interface Definition Languages (IDLs)</strong>: Public APIs are declared in a neutral IDL (e.g. gRPC <code>.proto</code> files), from which client stubs and server skeletons are automatically compiled into target languages.
+              <strong>2. Clear Interface Rules</strong>: We define API inputs and outputs clearly so programs written in Python, Java, or C++ can understand each other without errors.
             </p>
           </div>
         </div>
@@ -721,798 +717,811 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Marshalling Terms"
+          title="Terms"
           terms={[
             {
-              term: "Marshalling",
-              definition: "Packaging in-memory data structures into a contiguous byte stream suitable for network transmission."
+              term: "Heterogeneity",
+              definition: "Having different brands of hardware, operating systems, and languages in one network."
             },
             {
-              term: "Unmarshalling",
-              definition: "Reconstructing local typed in-memory data structures from an incoming serialized network byte stream."
+              term: "Serialization",
+              definition: "Converting a program object into a text or byte string to send over a network."
             },
             {
-              term: "Endianness",
-              definition: "Byte ordering in memory: Big-Endian (MSB first) vs Little-Endian (LSB first)."
+              term: "JSON",
+              definition: "A standard text format readable by all programming languages."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain why passing raw C struct pointers across a network fails: different padding, endianness, and memory addresses between client and server.
+      Show an example of how JSON lets a Python script send data to a Java server seamlessly.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 16: CORE DESIGN ISSUE - SCALABILITY & BOTTLENECKS
+       SLIDE 16: DESIGN CHALLENGE - SCALING BOTTLENECKS
        ======================================================================== -->
   <Slide
-    id="issue-scalability"
-    eyebrow="04 · DESIGN CHALLENGES"
-    title="Design Challenge 2: Scalability Bottlenecks & Decentralized Solutions"
+    id="scalability-bottlenecks"
+    eyebrow="DESIGN CHALLENGES"
+    title="Challenge 2: Avoiding Central Bottlenecks"
     layout="card-grid"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Centralized Services" badge="Bottleneck 1" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">A single centralized server handling all user registrations.</p>
+      <Card title="One Central Server" badge="Bottleneck 1" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Having one machine handle all logins.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          CPU and network bandwidth saturate as client count passes millions. <em>Solution:</em> Partition the service into decentralized autonomous shards using Consistent Hashing.
+          Works fine for 100 users, but crashes when 100,000 users try to log in at once. <em>Solution:</em> Run multiple login servers behind a load balancer.
         </p>
       </Card>
 
-      <Card title="Centralized Data" badge="Bottleneck 2" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">A single central telephone book or global DNS registry file.</p>
+      <Card title="One Central Database File" badge="Bottleneck 2" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Storing all user records on one hard disk.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          Disk I/O bandwidth and single storage limits throttle performance. <em>Solution:</em> Hierarchical namespace partitioning (DNS tree) and distributed hash tables (DHTs).
+          The hard disk becomes too slow to read all requests. <em>Solution:</em> Split data into shards across many database servers.
         </p>
       </Card>
 
-      <Card title="Centralized Algorithms" badge="Bottleneck 3" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Routing algorithms requiring complete global knowledge of all nodes.</p>
+      <Card title="Requiring Total Knowledge" badge="Bottleneck 3" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Algorithms that require knowing the state of every computer.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          Collecting global state causes massive message overhead $O(N^2)$. <em>Solution:</em> Decentralized localized algorithms where nodes communicate only with immediate neighbors.
+          Asking 10,000 computers for their status causes massive network traffic. <em>Solution:</em> Have nodes talk only to their immediate neighbors.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Highlight why decentralized algorithms are mandatory: no single machine can have complete state information in a system with 10 million nodes.
+      Explain how dividing work among many smaller servers prevents bottlenecks.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 17: CORE DESIGN ISSUE - FAULT TOLERANCE & RECOVERY
+       SLIDE 17: DESIGN CHALLENGE - HANDLING CRASHES
        ======================================================================== -->
   <Slide
-    id="issue-fault-tolerance"
-    eyebrow="04 · DESIGN CHALLENGES"
-    title="Design Challenge 3: Fault Tolerance, Detection & Recovery Models"
+    id="fault-tolerance"
+    eyebrow="DESIGN CHALLENGES"
+    title="Challenge 3: Handling Machine Crashes Gracefully"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A distributed system must maintain availability in the presence of partial failures. A system is said to be <strong>fault tolerant</strong> if it can continue operating correctly in the presence of hardware crashes, software bugs, and network partitions.
+          In large systems, hardware failures happen every day. A system is <strong>fault-tolerant</strong> if it continues serving users even when some servers crash.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Four-Stage Fault Handling Pipeline:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">How Systems Recover from Crashes:</h4>
           <ol class="text-xs text-slate-900 space-y-1.5 pl-4 list-decimal font-medium">
-            <li><strong>Fault Detection</strong>: Periodic heartbeat pinging or lease timeouts to identify unresponsive nodes.</li>
-            <li><strong>Fault Masking</strong>: Replicating state across $2f+1$ nodes so that $f$ simultaneous crashes can be masked without data loss.</li>
-            <li><strong>Fault Containment</strong>: Isolating failed nodes using circuit breakers to prevent cascading cascade failures across the cluster.</li>
-            <li><strong>Recovery</strong>: <strong>Backward Recovery</strong> (restoring system to a prior consistent checkpoint state via Write-Ahead Logs) vs. <strong>Forward Recovery</strong> (bringing system forward to a valid new state via error-correcting codes).</li>
+            <li><strong>Detecting the Problem</strong>: Servers send regular "heartbeat" signals. If a server stops answering, the system knows it failed.</li>
+            <li><strong>Automatic Backup Copies</strong>: Important data is stored on at least 3 separate machines so losing one machine causes no data loss.</li>
+            <li><strong>Stopping Domino Effects</strong>: If one service slows down, circuit breakers stop sending requests to it so the whole website does not freeze.</li>
           </ol>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Recovery Terms"
+          title="Terms"
           terms={[
             {
-              term: "Fault Masking",
-              definition: "Hiding component failure from the client through automatic replication and failover."
+              term: "Heartbeat",
+              definition: "A periodic check message sent by servers to prove they are still running."
             },
             {
-              term: "Backward Recovery",
-              definition: "Rolling back failed transactions to a recorded previous consistent checkpoint."
+              term: "Circuit Breaker",
+              definition: "Software pattern that stops calling a broken service to prevent cascading crashes."
             },
             {
-              term: "Cascading Failure",
-              definition: "A failure where one server crash shifts traffic to others, causing sequential overload crashes."
+              term: "Redundancy",
+              definition: "Keeping duplicate backup servers ready to take over instantly."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain why backward recovery requires Write-Ahead Logging (WAL) and how circuit breakers prevent cascading failures.
+      Use the electrical fuse box analogy: a circuit breaker stops one failing appliance from setting the whole house on fire.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 18: CODE DEMONSTRATION - DISTRIBUTED MESSAGE PASSING
+       SLIDE 18: CODE DEMONSTRATION - NETWORK MESSAGING
        ======================================================================== -->
   <Slide
-    id="code-message-passing"
-    eyebrow="04 · CODE DEMONSTRATION"
-    title="Demonstration: Simulating Network Latency & Message Passing"
+    id="code-demo"
+    eyebrow="CODE DEMONSTRATION"
+    title="Code Example: Sending Messages Across Network Nodes"
     layout="code"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <p class="text-sm text-slate-900 font-medium mb-2">
-        A functioning simulation demonstrating asynchronous message passing, inter-node network serialization, and latency delays across geographical cluster regions:
+        A working JavaScript simulation showing how two independent servers send data over a network with simulated latency:
       </p>
 
       <CodeBlock
-        title="DistributedNode.js: Inter-Node Network Simulation"
+        title="DistributedNode.js: Simulating Message Passing"
         lang="javascript"
         code={distributedMessagePassingCode}
-        output={"Transmitting state across network boundary...\nResponse: {\"status\":\"ACK\",\"receiver\":\"node-eu-west-1\",\"appliedState\":{\"key\":\"cluster_config\",\"value\":\"replicated\"}}"}
+        output={"Sending data across network...\nResponse: {\"status\":\"ACK\",\"receiver\":\"node-eu-west-1\",\"appliedState\":{\"key\":\"cluster_config\",\"value\":\"replicated\"}}"}
         pitfalls={[
-          "Assuming network operations return synchronously without Promise / async await leads to race conditions and unhandled rejections.",
-          "Failing to handle network timeouts causes client worker threads to block indefinitely waiting for an ACK that was lost in transit.",
-          "Sending un-serializable references (such as in-memory function pointers or open file descriptors) fails across physical network boundaries."
+          "Forgetting that network requests take time: always use async and await when talking to other machines.",
+          "Not adding timeout handling: your code can hang forever if the receiving server loses power.",
+          "Trying to send in-memory function references over the network: functions cannot be sent directly as text."
         ]}
       />
     </div>
     <SpeakerNotes>
-      Walk through the code: lines 13-20 show how `send()` introduces a synthetic delay simulating WAN transit time. Discuss why serialization is mandatory.
+      Walk through the code lines: explain the `setTimeout` delay simulating real network cables between US and Europe.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 19: CONCEPTS OF CLOUD COMPUTING - HISTORICAL EVOLUTION
+       SLIDE 19: WHAT IS CLOUD COMPUTING?
        ======================================================================== -->
   <Slide
-    id="cloud-evolution"
-    eyebrow="05 · CLOUD COMPUTING"
-    title="Concepts of Cloud Computing: The Technological Evolution"
-    layout="card-grid"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="1. Mainframe to Grid" badge="1960s–1990s" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Centralized time-sharing to batch scientific clusters.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Mainframes provided centralized compute time-sharing. Grid computing (1990s) aggregated distributed university supercomputers for batch MPI jobs, but lacked on-demand virtualization and multi-tenancy.
-        </p>
-      </Card>
-
-      <Card title="2. Utility Computing & ASP" badge="2000s" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Computing packaged like water and electricity.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Application Service Providers (ASPs) hosted single-tenant applications. Utility computing introduced metered billing, treating CPU cycles and gigabytes as consumable public commodities.
-        </p>
-      </Card>
-
-      <Card title="3. Virtualization & Cloud" badge="2006–Present" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Hardware hypervisors enable dynamic multi-tenant clouds.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Hardware virtualization (x86 hypervisors) decoupled operating systems from physical silicon. Combined with self-service REST APIs, Amazon launched EC2 and S3 in 2006, creating modern cloud computing.
-        </p>
-      </Card>
-    </div>
-    <SpeakerNotes>
-      Trace the genealogy: Grid Computing $\rightarrow$ Utility Computing $\rightarrow$ Virtualization $\rightarrow$ Cloud Computing.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 20: THE NIST CLOUD ARCHITECTURE REFERENCE MODEL
-       ======================================================================== -->
-  <Slide
-    id="nist-architecture-model"
-    eyebrow="05 · CLOUD COMPUTING"
-    title="The NIST Cloud Computing Reference Architecture"
+    id="cloud-intro"
+    eyebrow="CLOUD COMPUTING"
+    title="What Is Cloud Computing?"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          The National Institute of Standards and Technology (NIST SP 800-145) defines the standard reference architecture for cloud systems, composed of <strong>5 Essential Characteristics</strong>, <strong>3 Service Models</strong>, and <strong>4 Deployment Models</strong>.
+          <strong>Cloud computing</strong> means renting computer power, storage space, and software over the internet from companies like Amazon (AWS), Microsoft (Azure), and Google (GCP), instead of buying physical computers yourself.
         </p>
 
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">Five Essential Characteristics:</h4>
-          <ol class="text-xs text-slate-900 space-y-1 pl-4 list-decimal font-medium">
-            <li><strong>On-Demand Self-Service</strong>: Consumers provision compute instances and storage automatically via APIs/dashboards without human admin interaction.</li>
-            <li><strong>Broad Network Access</strong>: Capabilities accessible across standard internet mechanisms from heterogeneous thick/thin clients (laptops, mobile phones).</li>
-            <li><strong>Resource Pooling</strong>: Multi-tenant physical infrastructure dynamically allocated and reassigned according to consumer demand.</li>
-            <li><strong>Rapid Elasticity</strong>: Resources provisioned and released elastically to match workload spikes instantly.</li>
-            <li><strong>Measured Service</strong>: Resource usage metered transparently, providing pay-as-you-go billing.</li>
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">How It Changes Computing:</h4>
+          <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
+            <li><strong>Like Electricity or Water</strong>: You plug in and pay only for what you consume each month.</li>
+            <li><strong>No Building Maintenance</strong>: You do not need to buy air conditioning, backup generators, or rent server rooms.</li>
+            <li><strong>Instant Setup</strong>: You can create 10 new servers in 30 seconds using a web dashboard or code script.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Cloud Terms"
+          terms={[
+            {
+              term: "Cloud Provider",
+              definition: "A company (like AWS or Google) that owns datacenters and rents access to them."
+            },
+            {
+              term: "On-Demand",
+              definition: "Getting resources immediately whenever you need them without waiting weeks."
+            },
+            {
+              term: "Pay-As-You-Go",
+              definition: "Billing based strictly on the exact minutes and gigabytes you use."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Use the electricity utility analogy: nobody builds their own power plant to run a house; we plug into the electrical grid.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 20: THE 5 ESSENTIAL CLOUD TRAITS (NIST)
+       ======================================================================== -->
+  <Slide
+    id="cloud-nist-traits"
+    eyebrow="CLOUD COMPUTING"
+    title="How Cloud Computing Works: The Five Essential Traits (NIST)"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          The National Institute of Standards and Technology (NIST) defines five characteristics that a system must have to be called a true cloud:
+        </p>
+
+        <div class="lecture-card border-2 border-slate-300">
+          <ol class="text-xs text-slate-900 space-y-1.5 pl-4 list-decimal font-medium">
+            <li><strong>On-Demand Self-Service</strong>: You can start servers yourself instantly without calling support.</li>
+            <li><strong>Broad Network Access</strong>: You can access services over standard internet from phones, laptops, or tablets.</li>
+            <li><strong>Resource Pooling</strong>: Hardware is shared securely among many customers to keep prices low.</li>
+            <li><strong>Rapid Elasticity</strong>: Systems automatically add servers during traffic spikes and remove them when traffic drops.</li>
+            <li><strong>Measured Service</strong>: You get a clear bill showing exactly how many seconds and bytes were used.</li>
           </ol>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="NIST Terms"
+          title="Terms"
           terms={[
             {
-              term: "NIST Model",
-              definition: "The authoritative US federal standard (SP 800-145) defining cloud computing taxonomy and requirements."
+              term: "Elasticity",
+              definition: "The ability to automatically stretch bigger during busy times and shrink smaller when quiet."
             },
             {
               term: "Resource Pooling",
-              definition: "Sharing physical servers among multiple tenants with logical isolation and dynamic allocation."
+              definition: "Sharing large physical server farms securely among multiple clients."
             },
             {
-              term: "Rapid Elasticity",
-              definition: "The ability to scale resources outward and inward in real-time matching demand fluctuations."
+              term: "Self-Service",
+              definition: "Creating and managing servers directly from a web page or script."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain why private datacenters without on-demand self-service or measured billing are NOT true cloud computing under the NIST standard.
+      Explain that an ordinary office server with no automatic elasticity or self-service is not a true cloud system.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 21: CLOUD SERVICE MODELS - INFRASTRUCTURE AS A SERVICE (IAAS)
+       SLIDE 21: THE THREE SERVICE MODELS (IAAS, PAAS, SAAS)
        ======================================================================== -->
   <Slide
-    id="service-model-iaas"
-    eyebrow="05 · SERVICE MODELS"
-    title="Infrastructure as a Service (IaaS): Architecture & Mechanics"
+    id="service-models-overview"
+    eyebrow="CLOUD SERVICE MODELS"
+    title="The Three Cloud Service Models: IaaS, PaaS & SaaS"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="IaaS (Infrastructure)" badge="Raw Machines" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Renting blank virtual computers, hard drives, and network wires.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          You choose the operating system (like Ubuntu Linux) and install everything yourself.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: Amazon EC2, Google Compute Engine, DigitalOcean.</p>
+      </Card>
+
+      <Card title="PaaS (Platform)" badge="App Platforms" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Renting a managed environment ready to run your code.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          You upload your code (like Node.js or Python). The provider handles the servers, OS updates, and scaling.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: Heroku, AWS Elastic Beanstalk, Vercel.</p>
+      </Card>
+
+      <Card title="SaaS (Software)" badge="Ready Applications" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Using complete applications directly in your browser.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          You don't manage any servers or code. You just log in and use the finished software.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Examples: Google Docs, Gmail, Microsoft 365, Canva.</p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Use the Pizza as a Service analogy: IaaS is buying raw dough and toppings, PaaS is pizza delivered, SaaS is dining at a restaurant.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 22: IAAS IN DETAIL
+       ======================================================================== -->
+  <Slide
+    id="iaas-detail"
+    eyebrow="CLOUD SERVICE MODELS"
+    title="Infrastructure as a Service (IaaS): What You Control"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          <strong>Infrastructure as a Service (IaaS)</strong> delivers fundamental compute resources: virtual machines (VMs), raw block storage volumes, virtual private networks (VPCs), and software-defined load balancers.
+          <strong>IaaS</strong> gives you the most control. You get a raw virtual machine and can configure it however you want.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Technical Division of Control:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Who Manages What in IaaS:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Provider Manages</strong>: Physical datacenters, power, cooling, physical networking switches, physical host servers, and hypervisor virtualization layers (KVM, Nitro, ESXi).</li>
-            <li><strong>Consumer Manages</strong>: Guest operating system selection, OS security patch updates, network firewall rules (Security Groups), middleware, runtime libraries, databases, and application source code.</li>
-            <li><strong>Industrial Examples</strong>: Amazon EC2, Google Compute Engine, Microsoft Azure Virtual Machines, DigitalOcean Droplets.</li>
+            <li><strong>Cloud Provider Manages</strong>: Physical datacenter buildings, cooling, electricity, real server hardware, and the hypervisor software.</li>
+            <li><strong>You Manage</strong>: Choosing Linux or Windows, installing security updates, setting firewall rules, installing databases, and running your software.</li>
+            <li><strong>When to Use</strong>: When you need total control over software versions or want to move existing systems to the cloud without rewriting them.</li>
           </ul>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="IaaS Terms"
+          title="Terms"
           terms={[
             {
-              term: "IaaS",
-              definition: "Infrastructure as a Service: on-demand virtual compute, storage, and networking instances."
+              term: "Virtual Machine (VM)",
+              definition: "An emulated computer running inside a physical server using software."
             },
             {
               term: "Hypervisor",
-              definition: "Virtual Machine Monitor (VMM) managing virtualized hardware resources on physical host servers."
+              definition: "The software that divides a physical server into multiple virtual machines."
             },
             {
-              term: "VPC",
-              definition: "Virtual Private Cloud: isolated software-defined network slice in a public cloud provider."
+              term: "Storage Volume",
+              definition: "A virtual hard disk attached to your virtual machine over the network."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain how IaaS offers maximum architectural flexibility: you can install any custom OS kernel, database version, or networking stack you choose.
+      Explain that with great control comes responsibility: in IaaS, if you forget to install a security patch on Linux, hackers can compromise the server.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 22: CLOUD SERVICE MODELS - PLATFORM AS A SERVICE (PAAS)
+       SLIDE 23: PAAS AND SERVERLESS
        ======================================================================== -->
   <Slide
-    id="service-model-paas"
-    eyebrow="05 · SERVICE MODELS"
-    title="Platform as a Service (PaaS): Runtimes & Serverless Models"
+    id="paas-detail"
+    eyebrow="CLOUD SERVICE MODELS"
+    title="Platform as a Service (PaaS) and Serverless Computing"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          <strong>Platform as a Service (PaaS)</strong> provides a managed runtime environment where developers deploy application code and data without configuring or managing underlying operating systems, servers, or hardware storage arrays.
+          With <strong>PaaS</strong>, developers focus purely on building their application code without worrying about server operating systems or updates.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Technical Division of Control:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Key Features of PaaS:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Provider Manages</strong>: Server hardware, hypervisor, guest OS, runtime environment updates (e.g. Node.js/Python versioning), auto-scaling triggers, load balancing, and high-availability database replication.</li>
-            <li><strong>Consumer Manages</strong>: Application source code, database schema migrations, and environment configuration variables.</li>
-            <li><strong>Serverless / FaaS Extension</strong>: Functions as a Service (AWS Lambda, Cloudflare Workers) executes event-driven code blocks scaled down to zero when idle with per-millisecond billing.</li>
-            <li><strong>Industrial Examples</strong>: AWS Elastic Beanstalk, Heroku, Google App Engine, Vercel, Supabase.</li>
+            <li><strong>Automatic Scaling</strong>: If traffic spikes, the platform automatically starts more copies of your application.</li>
+            <li><strong>Managed Databases</strong>: Backups, security patches, and replication happen automatically.</li>
+            <li><strong>Serverless (FaaS)</strong>: You upload single functions (like AWS Lambda). The platform only runs them when an event occurs and shuts down to zero cost when idle.</li>
           </ul>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="PaaS Terms"
+          title="Terms"
           terms={[
             {
               term: "PaaS",
-              definition: "Platform as a Service: managed application runtimes and database services."
+              definition: "Platform as a Service: managed application environments ready to run code."
             },
             {
-              term: "FaaS (Serverless)",
-              definition: "Function as a Service: event-triggered stateless code execution with zero server management and scale-to-zero."
+              term: "Serverless (FaaS)",
+              definition: "Running code only in response to events with zero idle server costs."
             },
             {
-              term: "Buildpack",
-              definition: "Automated containerization scripts compiling raw application source code into runnable container images."
+              term: "Auto-Scaling",
+              definition: "Adding or removing application instances automatically based on user traffic."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Contrast IaaS with PaaS: in IaaS you patch the Linux kernel; in PaaS you only push your git repository or zip archive.
+      Show how Serverless saves money for small projects: if your site gets 100 visits a day, you only pay for the few seconds those visits take.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 23: CLOUD SERVICE MODELS - SOFTWARE AS A SERVICE (SAAS)
+       SLIDE 24: SHARED RESPONSIBILITY TABLE
        ======================================================================== -->
   <Slide
-    id="service-model-saas"
-    eyebrow="05 · SERVICE MODELS"
-    title="Software as a Service (SaaS): Enterprise Applications"
-    layout="split-sidebar"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-      <div class="md:col-span-2 space-y-4">
-        <p class="text-base leading-relaxed text-slate-900 font-medium">
-          <strong>Software as a Service (SaaS)</strong> delivers complete, fully functional software applications accessible to end users over the internet via a web browser or thin client interface.
-        </p>
-
-        <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Technical Division of Control:</h4>
-          <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Provider Manages</strong>: 100% of the underlying infrastructure, operating systems, database clusters, application source code, security patches, feature releases, and data backups.</li>
-            <li><strong>Consumer Manages</strong>: User account creation, role-based access control (RBAC), and application configuration settings.</li>
-            <li><strong>Multi-Tenant Data Isolation</strong>: Single application instances serving thousands of corporate tenants with logical database schema partitioning.</li>
-            <li><strong>Industrial Examples</strong>: Google Workspace (Docs, Gmail), Microsoft 365, Salesforce CRM, Zoom, GitHub.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="md:col-span-1">
-        <KeyTerms
-          title="SaaS Terms"
-          terms={[
-            {
-              term: "SaaS",
-              definition: "Software as a Service: fully managed web application delivered over standard browser protocols."
-            },
-            {
-              term: "Multi-Tenancy",
-              definition: "Software architecture where a single application instance securely serves multiple distinct customer organizations."
-            },
-            {
-              term: "RBAC",
-              definition: "Role-Based Access Control: assigning user permissions according to organizational role."
-            }
-          ]}
-        />
-      </div>
-    </div>
-    <SpeakerNotes>
-      Explain the economic model of SaaS: subscription pricing replaces traditional shrink-wrap software perpetual licensing.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 24: SHARED RESPONSIBILITY ARCHITECTURE MATRIX
-       ======================================================================== -->
-  <Slide
-    id="shared-responsibility-matrix"
-    eyebrow="05 · CLOUD GOVERNANCE"
-    title="Comprehensive Shared Responsibility & Control Matrix"
+    id="shared-responsibility"
+    eyebrow="CLOUD GOVERNANCE"
+    title="Who Manages What? The Shared Responsibility Model"
     layout="table"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <Table
-        headers={["Architectural Layer", "Traditional On-Premises", "IaaS (e.g. AWS EC2)", "PaaS (e.g. Heroku)", "SaaS (e.g. M365)"]}
+        headers={["Layer", "Your Own Datacenter", "IaaS (e.g. AWS EC2)", "PaaS (e.g. Heroku)", "SaaS (e.g. Google Docs)"]}
         rows={[
-          ["Customer Data & Files", "Customer Managed", "Customer Managed", "Customer Managed", "Customer Managed"],
-          ["Identity & Access (IAM)", "Customer Managed", "Customer Managed", "Customer Managed", "Customer Managed"],
-          ["Application Logic & Code", "Customer Managed", "Customer Managed", "Customer Managed", "Provider Managed"],
-          ["Runtime Engine & Libraries", "Customer Managed", "Customer Managed", "Provider Managed", "Provider Managed"],
-          ["Operating System & Patches", "Customer Managed", "Customer Managed", "Provider Managed", "Provider Managed"],
-          ["Virtualization Hypervisor", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"],
-          ["Server Hardware & Storage", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"],
-          ["Physical Datacenter & Power", "Customer Managed", "Provider Managed", "Provider Managed", "Provider Managed"]
+          ["Your Data & Files", "You Manage", "You Manage", "You Manage", "You Manage"],
+          ["User Logins & Passwords", "You Manage", "You Manage", "You Manage", "You Manage"],
+          ["Application Code", "You Manage", "You Manage", "You Manage", "Cloud Provider"],
+          ["Runtime & Database Updates", "You Manage", "You Manage", "Cloud Provider", "Cloud Provider"],
+          ["Operating System Patches", "You Manage", "You Manage", "Cloud Provider", "Cloud Provider"],
+          ["Physical Hardware & Power", "You Manage", "Cloud Provider", "Cloud Provider", "Cloud Provider"]
         ]}
       />
 
       <div class="lecture-card border-2 border-indigo-300 bg-indigo-50 mt-3 p-3">
-        <h4 class="text-xs font-bold text-indigo-950 uppercase mb-1">The Golden Rule of Cloud Governance</h4>
+        <h4 class="text-xs font-bold text-indigo-950 uppercase mb-1">Key Takeaway</h4>
         <p class="text-xs text-indigo-950 m-0 font-medium">
-          The cloud provider is responsible for <strong>Security OF the Cloud</strong> (hardware, datacenters, hypervisors). The customer is responsible for <strong>Security IN the Cloud</strong> (data encryption, IAM credentials, firewall configurations).
+          No matter which cloud model you use, <strong>your data and user passwords are always your responsibility</strong>. If you give a user an insecure password, the cloud provider cannot prevent unauthorized logins.
         </p>
       </div>
     </div>
     <SpeakerNotes>
-      Emphasize rows 1 and 2: customer data and IAM credentials remain customer responsibility across all models. If a company leaks an S3 bucket key, AWS is not at fault.
+      Review row 1: emphasize that AWS never manages your customer passwords or confidential files; that remains your responsibility.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 25: CLOUD DEPLOYMENT MODELS - PUBLIC VS PRIVATE
+       SLIDE 25: CLOUD DEPLOYMENT TYPES
        ======================================================================== -->
   <Slide
-    id="deployment-public-private"
-    eyebrow="06 · DEPLOYMENT SCENARIOS"
-    title="Cloud Deployment Models: Public Cloud vs. Private Cloud"
+    id="deployment-types"
+    eyebrow="CLOUD DEPLOYMENTS"
+    title="Cloud Deployment Types: Public, Private, Hybrid & Multi-Cloud"
     layout="card-grid"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
-      <Card title="Public Cloud Model" badge="Multi-Tenant" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Owned and operated by third-party Cloud Service Providers (CSPs).</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-3">
-          Infrastructure is shared across multiple tenant organizations with logical software isolation. Provides massive economies of scale, near-infinite capacity elasticity, zero hardware maintenance, and utility pricing.
+      <Card title="Public Cloud" badge="Shared Multi-Tenant" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Rented servers shared securely with other customers.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Lowest cost, instant setup, and virtually unlimited capacity. Maintained entirely by companies like AWS, Microsoft, or Google.
         </p>
-        <div class="p-2.5 rounded bg-slate-100 border border-slate-300 text-xs text-slate-800 font-semibold">
-          Trade-offs: Data resides on multi-tenant physical hardware; strict compliance auditing can be complex.
-        </div>
+        <p class="text-xs text-slate-600 font-bold m-0">Best for: Startups, web applications, mobile backends.</p>
       </Card>
 
-      <Card title="Private Cloud Model" badge="Single-Tenant" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Dedicated infrastructure provisioned for exclusive use by one entity.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-3">
-          May be owned, managed, and operated by the organization or a third party, and may exist on or off premises. Delivers maximum control over data sovereignty, physical security, custom hardware accelerators, and regulatory compliance.
+      <Card title="Private Cloud" badge="Dedicated Single-Tenant" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Dedicated servers used only by one organization.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Can live in your own company building or in a private datacenter rack. Maximum privacy, but expensive to build and maintain.
         </p>
-        <div class="p-2.5 rounded bg-slate-100 border border-slate-300 text-xs text-slate-800 font-semibold">
-          Trade-offs: High upfront capital expenditure (CAPEX), manual capacity management, and ongoing maintenance.
-        </div>
+        <p class="text-xs text-slate-600 font-bold m-0">Best for: Banks, defense organizations, hospitals.</p>
+      </Card>
+
+      <Card title="Hybrid Cloud" badge="Connecting Both" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Linking an on-premises private cloud to a public cloud.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Keep sensitive customer records in your private datacenter, while running public web servers on AWS that expand during busy days.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Best for: Established enterprises migrating gradually.</p>
+      </Card>
+
+      <Card title="Multi-Cloud" badge="Multiple Vendors" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Using services from two or more cloud providers at once.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
+          Running parts of your app on Google Cloud and parts on AWS so your business stays online even if one provider has an outage.
+        </p>
+        <p class="text-xs text-slate-600 font-bold m-0">Best for: Large corporations avoiding single-vendor lock-in.</p>
       </Card>
     </div>
     <SpeakerNotes>
-      Contrast public vs private cloud. Explain why banks and defense agencies often run private clouds using OpenStack or VMware Cloud Foundation.
+      Explain how Hybrid Cloud lets banks keep account balances on private servers while running marketing websites on public clouds.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 26: CLOUD DEPLOYMENT MODELS - HYBRID & COMMUNITY
+       SLIDE 26: CLOUD BURSTING
        ======================================================================== -->
   <Slide
-    id="deployment-hybrid-community"
-    eyebrow="06 · DEPLOYMENT SCENARIOS"
-    title="Cloud Deployment Models: Hybrid, Community & Multi-Cloud"
-    layout="card-grid"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Hybrid Cloud" badge="Federated Bridge" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Binding private and public clouds via standard protocols.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Connects on-prem private infrastructure to public clouds (via AWS DirectConnect / Azure ExpressRoute). Enables <strong>Cloud Bursting</strong>: running steady-state baseline workloads on-premises and bursting to public cloud during peak traffic surges.
-        </p>
-      </Card>
-
-      <Card title="Community Cloud" badge="Shared Mission" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Shared by organizations with common compliance goals.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Infrastructure provisioned for exclusive use by a specific community of organizations with shared security, regulatory, or mission requirements (e.g. US GovCloud for federal agencies, healthcare research consortia).
-        </p>
-      </Card>
-
-      <Card title="Multi-Cloud" badge="Vendor Diversification" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Using multiple independent public cloud providers.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Distributing workloads across AWS, GCP, and Azure simultaneously to avoid vendor lock-in, optimize regional latency, and survive catastrophic single-provider outages.
-        </p>
-      </Card>
-    </div>
-    <SpeakerNotes>
-      Explain Cloud Bursting architectures: database remains on private hardware while stateless web pods scale out on AWS.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 27: ORGANIZATIONAL SCENARIOS FOR CLOUD ADOPTION
-       ======================================================================== -->
-  <Slide
-    id="organizational-scenarios"
-    eyebrow="06 · DEPLOYMENT SCENARIOS"
-    title="Organizational Scenarios for Cloud Adoption"
-    layout="table"
-    unit="Unit 01: Introduction"
-  >
-    <div class="my-auto">
-      <p class="text-sm text-slate-900 font-medium mb-3">
-        Enterprise workload patterns and matching cloud deployment strategies:
-      </p>
-
-      <Table
-        headers={["Organizational Workload Scenario", "Workload Characteristic", "Recommended Cloud Architecture"]}
-        rows={[
-          ["Startups & Rapid Prototyping", "Unpredictable growth, zero capital funds", "Pure Public Cloud (Serverless / PaaS for rapid launch)"],
-          ["Predictable Enterprise Steady-State", "Constant 24/7 high baseline utilization", "Private Cloud on-prem / Reserved Public Cloud instances"],
-          ["Seasonal E-Commerce Surge", "Baseline traffic with 10x Black Friday spikes", "Hybrid Cloud with Cloud Bursting for web tier"],
-          ["Disaster Recovery & Business Continuity", "Secondary failover site for compliance", "Public Cloud standby region with geo-replicated data"],
-          ["High-Performance Computing (HPC)", "Batch scientific simulations / AI training", "GPU Cloud clusters with InfiniBand interconnects"],
-          ["Strict Banking / Medical Regulation", "Mandatory data sovereignty & air-gapped data", "Private On-Premises Cloud / Dedicated Community Cloud"]
-        ]}
-      />
-    </div>
-    <SpeakerNotes>
-      Walk through the decision matrix: why a startup picks Serverless while a hospital picks Private or Hybrid Cloud.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 28: ECONOMIC ARCHITECTURE - CAPEX VS OPEX & TCO
-       ======================================================================== -->
-  <Slide
-    id="economic-models"
-    eyebrow="06 · ECONOMIC ARCHITECTURE"
-    title="Cloud Economics: CAPEX vs. OPEX & Total Cost of Ownership (TCO)"
+    id="cloud-bursting"
+    eyebrow="CLOUD DEPLOYMENTS"
+    title="Cloud Bursting: Handling Traffic Surges"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          Cloud computing fundamentally transforms corporate IT finance by converting <strong>Capital Expenditures (CAPEX)</strong> into <strong>Operational Expenditures (OPEX)</strong>.
+          <strong>Cloud bursting</strong> is a hybrid cloud technique where normal daily traffic runs on private company servers, but when traffic spikes unexpectedly, extra requests "burst" to rented public cloud servers.
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div class="lecture-card border-2 border-slate-300">
-            <h4 class="text-sm font-bold text-indigo-900 mb-1">CAPEX (On-Premises)</h4>
-            <ul class="space-y-1 pl-4 list-disc text-slate-900 font-medium">
-              <li>Buying physical servers, switches, SAN storage.</li>
-              <li>Datacenter land purchase or long-term lease.</li>
-              <li>HVAC power, backup diesel generators, UPS.</li>
-              <li>3–5 year fixed depreciation cycles.</li>
-            </ul>
-          </div>
-          <div class="lecture-card border-2 border-slate-300">
-            <h4 class="text-sm font-bold text-indigo-900 mb-1">OPEX (Cloud Utility)</h4>
-            <ul class="space-y-1 pl-4 list-disc text-slate-900 font-medium">
-              <li>Zero upfront hardware purchase.</li>
-              <li>Pay per second of CPU and gigabyte-month storage.</li>
-              <li>Fully tax-deductible operational expense.</li>
-              <li>Scale down capacity instantly to stop billing.</li>
-            </ul>
-          </div>
+        <div class="lecture-card border-2 border-slate-300 space-y-2">
+          <h4 class="text-sm font-bold text-slate-950 uppercase">How It Works:</h4>
+          <ol class="text-xs text-slate-900 space-y-1.5 pl-4 list-decimal font-medium">
+            <li><strong>Normal Day</strong>: 100% of traffic is handled by your own company servers at low fixed cost.</li>
+            <li><strong>Traffic Surge (e.g. Festival Sale)</strong>: Server load passes 80% capacity.</li>
+            <li><strong>Automatic Burst</strong>: The system instantly starts 50 virtual servers on public cloud to handle the overflow traffic.</li>
+            <li><strong>Scale Down</strong>: When traffic returns to normal, the public cloud servers shut down to stop billing.</li>
+          </ol>
         </div>
-
-        <p class="text-xs text-slate-700 font-medium m-0">
-          <strong>TCO Invariant:</strong> Total Cost of Ownership includes hardware, electricity, cooling, physical security guards, and system administrator salaries.
-        </p>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Finance Terms"
+          title="Terms"
           terms={[
             {
-              term: "CAPEX",
-              definition: "Capital Expenditure: major upfront asset investments depreciated over multiple years."
+              term: "Cloud Bursting",
+              definition: "Temporarily offloading traffic surges from private servers to public cloud instances."
             },
             {
-              term: "OPEX",
-              definition: "Operational Expenditure: ongoing operational costs incurred during day-to-day business operations."
+              term: "Baseline Load",
+              definition: "The normal everyday level of computing work an organization handles."
             },
             {
-              term: "TCO",
-              definition: "Total Cost of Ownership: complete financial cost of acquiring, operating, and maintaining IT infrastructure."
+              term: "Peak Load",
+              definition: "The maximum temporary spike in traffic during holidays or major events."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain how server utilization affects TCO: on-prem servers average only 15% utilization due to over-provisioning for peak capacity.
+      Use university exam results day as an example: normal days need 2 servers, result release day needs 50 servers for 4 hours.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 29: CODE DEMONSTRATION - CLOUD TCO ANALYSIS
+       SLIDE 27: COMPARING BUSINESS CASES
        ======================================================================== -->
   <Slide
-    id="code-tco-analysis"
-    eyebrow="06 · ECONOMIC ANALYSIS"
-    title="Demonstration: Total Cost of Ownership (TCO) Break-Even Analysis"
-    layout="code"
-    unit="Unit 01: Introduction"
-  >
-    <div class="my-auto">
-      <p class="text-sm text-slate-900 font-medium mb-2">
-        A functioning financial model calculating 3-year TCO comparisons between on-premises capital investments and metered cloud operational expenditures:
-      </p>
-
-      <CodeBlock
-        title="tcoAnalysis.js: Cloud Financial Modelling"
-        lang="javascript"
-        code={cloudCostFormulaCode}
-        output={"3-Year Infrastructure TCO Analysis: {\n  \"onPremTco\": 255000,\n  \"cloudTco\": 223200,\n  \"favorableModel\": \"Cloud OPEX\",\n  \"annualSavings\": 10600\n}"}
-        pitfalls={[
-          "Omitting hidden datacenter overhead (power, cooling, maintenance contracts, network transit) drastically underestimates on-prem TCO.",
-          "Failing to implement auto-shutdown on idle development cloud environments causes unexpected monthly cloud budget overruns.",
-          "Overlooking data egress network transfer fees when transferring large datasets out of cloud providers creates massive hidden costs."
-        ]}
-      />
-    </div>
-    <SpeakerNotes>
-      Step through the financial calculation: explain why power, cooling, and staff costs often exceed the raw hardware purchase price in on-premises datacenters.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 30: CLOUD COMPUTING BENEFITS IN DEPTH
-       ======================================================================== -->
-  <Slide
-    id="cloud-benefits-depth"
-    eyebrow="07 · TRADEOFF ANALYSIS"
-    title="Cloud Computing: Technical & Business Benefits in Depth"
-    layout="card-grid"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Agility & Time-to-Market" badge="Speed" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Provisioning in minutes instead of months.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Procuring physical servers takes 8–12 weeks for vendor bidding, shipping, racking, and cabling. Cloud APIs provision 100 enterprise servers in under 60 seconds, accelerating software release cycles.
-        </p>
-      </Card>
-
-      <Card title="Elasticity & Efficiency" badge="Efficiency" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Dynamic scaling matching real workload curves.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          On-prem systems must be built for worst-case peak traffic, leaving 80% of capacity idle during off-peak hours. Cloud auto-scaling dynamically grows during daytime peaks and shrinks to zero at night.
-        </p>
-      </Card>
-
-      <Card title="Built-in Resilience" badge="Availability" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Multi-datacenter availability zones and geo-replication.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Major cloud providers build isolated Availability Zones (AZs) with separate power grids and flood plains, providing automated database replication and instant failover with zero manual hardware operations.
-        </p>
-      </Card>
-    </div>
-    <SpeakerNotes>
-      Explain Availability Zones (AZs): physical datacenters separated by 20–50km on separate municipal power grids to survive natural disasters.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 31: CLOUD COMPUTING LIMITATIONS & RISKS
-       ======================================================================== -->
-  <Slide
-    id="cloud-limitations-depth"
-    eyebrow="07 · TRADEOFF ANALYSIS"
-    title="Cloud Computing: Architectural Limitations & Operational Risks"
-    layout="card-grid"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Network Latency Dependency" badge="Physics" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Complete reliance on external WAN internet connectivity.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Cloud applications cannot execute if local internet connectivity fails. Real-time industrial automation (robotics, factory sensors) cannot tolerate unpredictable WAN jitter and requires local edge computing.
-        </p>
-      </Card>
-
-      <Card title="Vendor Lock-in & Portability" badge="Ecosystem" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Proprietary APIs and high egress data fees.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Building on proprietary services (AWS DynamoDB, Google BigQuery) ties software to that specific provider. Egress network transfer fees make exporting terabytes of data back on-premises economically prohibitive.
-        </p>
-      </Card>
-
-      <Card title="Multi-Tenant Interference" badge="Performance" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">The 'Noisy Neighbor' phenomenon on shared hypervisors.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Another tenant on the same physical host running heavy I/O workloads can saturate CPU L3 cache or NVMe bus bandwidth, causing temporary tail-latency latency spikes for neighboring VMs.
-        </p>
-      </Card>
-    </div>
-    <SpeakerNotes>
-      Discuss the Noisy Neighbor problem in multi-tenant clouds and how cloud providers use CPU pinning and hypervisor rate limiters to mitigate it.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 32: OPEN ENGINEERING CHALLENGES IN CLOUD
-       ======================================================================== -->
-  <Slide
-    id="cloud-challenges-depth"
-    eyebrow="08 · OPEN CHALLENGES"
-    title="Open Engineering Challenges in Cloud Computing"
-    layout="card-grid"
-    unit="Unit 01: Introduction"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Data Sovereignty & Legal Compliance" badge="Regulation" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Jurisdictional boundaries in multi-region clouds.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Laws like the European Union's GDPR, US HIPAA, and national banking acts mandate that citizen data must not leave physical geographical borders. Multi-cloud data replication must enforce geo-fencing restrictions.
-        </p>
-      </Card>
-
-      <Card title="Cloud Financial Engineering (FinOps)" badge="Cost Control" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Managing dynamic, variable cloud spend at enterprise scale.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Without automated governance, developer-provisioned instances, unattached EBS volumes, and oversized clusters create massive financial waste. FinOps combines tagging, rightsizing, and reserved instances.
-        </p>
-      </Card>
-
-      <Card title="Identity & Security Governance" badge="Zero Trust" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">The perimeter-less security model.</p>
-        <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Traditional corporate firewalls no longer apply. Microservices communicate across public networks, requiring Zero-Trust security: mutual TLS (mTLS), short-lived IAM tokens, and least-privilege role policies.
-        </p>
-      </Card>
-    </div>
-    <SpeakerNotes>
-      Explain Zero Trust: "Never trust, always verify." Every service call must authenticate and authorize even inside private subnets.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 33: ARCHITECTURAL COMPARISON OF CLOUD PARADIGMS
-       ======================================================================== -->
-  <Slide
-    id="cloud-comparison-master"
-    eyebrow="08 · ARCHITECTURAL COMPARISONS"
-    title="Master Comparison: IaaS vs. PaaS vs. SaaS vs. Serverless"
+    id="business-cases"
+    eyebrow="CLOUD STRATEGY"
+    title="Matching Business Needs with the Right Cloud Model"
     layout="table"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <Table
-        headers={["Evaluation Attribute", "IaaS (Infrastructure)", "PaaS (Platform)", "SaaS (Software)", "FaaS (Serverless)"]}
+        headers={["Type of Organization", "Primary Need", "Best Cloud Model Choice"]}
         rows={[
-          ["Primary Abstraction", "Virtual Server / Network / Disk", "Application Runtime / Database", "Complete End-User Application", "Stateless Function / Event"],
-          ["Billing Granularity", "Per second / hour per instance", "Per month / resource tier", "Per user / seat per month", "Per 1ms execution + request count"],
-          ["Scaling Mechanism", "Manual / Auto Scaling Groups", "Automatic horizontal scaling", "Managed entirely by vendor", "Instant concurrency scale to zero"],
-          ["DevOps Overhead", "High (Full OS management)", "Low (Code deployment only)", "Zero (User admin only)", "Minimal (Function config only)"],
-          ["State Management", "Persistent local / block disk", "Managed database / cache", "Vendor database engine", "Strictly stateless (External DB)"],
-          ["Vendor Portability", "High (Standard Linux images)", "Medium (Buildpack lock-in)", "Low (Proprietary data format)", "Medium (Event syntax variances)"]
+          ["Tech Startup", "Needs to launch fast with zero upfront capital", "Public Cloud (Serverless or PaaS)"],
+          ["Commercial Bank", "Must follow strict data residency laws", "Private Cloud on-premises"],
+          ["E-Commerce Retailer", "Normal sales daily, huge Black Friday rush", "Hybrid Cloud with Cloud Bursting"],
+          ["Hospital / Healthcare", "Needs medical record privacy and offsite backups", "Private Cloud with encrypted Hybrid backup"],
+          ["University Research Lab", "Huge batch computing runs once a month", "Public Cloud Spot/Preemptible GPU instances"]
         ]}
       />
     </div>
     <SpeakerNotes>
-      Step through the comparison table. Highlight row 2 (Billing Granularity): Serverless bills per millisecond, enabling true pay-for-exact-usage computing.
+      Review why there is no single "best" cloud for everyone: the right choice depends on budget, traffic patterns, and regulations.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 34: INTERACTIVE 3D VISUALIZATION - CLOUD MESH TOPOLOGY
+       SLIDE 28: CLOUD ECONOMICS (CAPEX VS OPEX)
        ======================================================================== -->
   <Slide
-    id="demo-cloud-mesh"
-    eyebrow="09 · VISUAL DEMONSTRATION"
-    title="Visual Model: Multi-Region Cloud Resource Mesh & Microservices"
+    id="cloud-economics"
+    eyebrow="ECONOMIC CONCEPTS"
+    title="Cloud Economics: Buying vs. Renting (CAPEX vs. OPEX)"
     layout="split-sidebar"
-    unit="Unit 01: Introduction"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          The biggest financial difference in cloud computing is moving from buying assets upfront (CAPEX) to paying for usage as an ongoing expense (OPEX).
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="lecture-card border-2 border-slate-300">
+            <h4 class="text-sm font-bold text-indigo-900 mb-1">CAPEX (Buying Servers)</h4>
+            <ul class="space-y-1 pl-4 list-disc text-slate-900 font-medium">
+              <li>Spend $100,000 upfront on hardware.</li>
+              <li>Pay for electricity, cooling, and space monthly.</li>
+              <li>Hardware loses value and gets old in 4 years.</li>
+              <li>Must buy enough for worst-case traffic.</li>
+            </ul>
+          </div>
+          <div class="lecture-card border-2 border-slate-300">
+            <h4 class="text-sm font-bold text-indigo-900 mb-1">OPEX (Renting Cloud)</h4>
+            <ul class="space-y-1 pl-4 list-disc text-slate-900 font-medium">
+              <li>$0 upfront cost.</li>
+              <li>Pay only for active server seconds.</li>
+              <li>Upgrade to newest CPU models with one click.</li>
+              <li>Turn off servers at night to stop paying.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Terms"
+          terms={[
+            {
+              term: "CAPEX",
+              definition: "Capital Expenditure: big upfront money spent on permanent physical equipment."
+            },
+            {
+              term: "OPEX",
+              definition: "Operating Expenditure: regular monthly operational expenses paid for services."
+            },
+            {
+              term: "TCO",
+              definition: "Total Cost of Ownership: complete cost including power, staff, and hardware."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Explain how renting allows a student or startup to launch an app on day one with just $10 instead of needing a $50,000 loan.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 29: CODE DEMONSTRATION - COST MODEL
+       ======================================================================== -->
+  <Slide
+    id="code-cost"
+    eyebrow="ECONOMIC ANALYSIS"
+    title="Code Example: Calculating 3-Year Infrastructure Costs"
+    layout="code"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="my-auto">
+      <p class="text-sm text-slate-900 font-medium mb-2">
+        A JavaScript calculation comparing the total 3-year cost of buying hardware versus renting cloud instances:
+      </p>
+
+      <CodeBlock
+        title="compareCosts.js: Calculating Total Cost of Ownership"
+        lang="javascript"
+        code={cloudCostFormulaCode}
+        output={"3-Year Cost Comparison: {\n  \"onPremisesTotal\": 255000,\n  \"cloudTotal\": 223200,\n  \"cheaperOption\": \"Cloud\",\n  \"yearlyDifference\": 10600\n}"}
+        pitfalls={[
+          "Forgetting electricity and cooling costs: physical servers often cost more in electricity over 3 years than their purchase price.",
+          "Leaving unused cloud servers running: forgetting to turn off test servers can waste thousands of dollars.",
+          "Ignoring data download fees: cloud providers charge fees when you download huge datasets out of their cloud."
+        ]}
+      />
+    </div>
+    <SpeakerNotes>
+      Walk through the numbers: notice how the ongoing cooling and electricity costs ($45,000/yr) add up over 3 years.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 30: MAIN ADVANTAGES OF CLOUD
+       ======================================================================== -->
+  <Slide
+    id="cloud-advantages"
+    eyebrow="CLOUD BENEFITS"
+    title="Key Advantages of Using Cloud Infrastructure"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Instant Speed" badge="Agility" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Start in minutes instead of waiting months.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Ordering physical servers takes 8 to 12 weeks for delivery and wiring. Cloud servers start in under 60 seconds from any laptop.
+        </p>
+      </Card>
+
+      <Card title="Elastic Scaling" badge="Efficiency" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Grow when busy, shrink when quiet.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Automatically add servers during day peaks and turn them off at night, avoiding paying for idle computers.
+        </p>
+      </Card>
+
+      <Card title="Built-in Backups" badge="Reliability" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Automatic multi-datacenter safety.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Cloud providers replicate data across separate buildings with independent power supplies to protect against floods and fires.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Reinforce the agility advantage: a startup can test new ideas in an afternoon without buying hardware.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 31: REAL-WORLD LIMITATIONS
+       ======================================================================== -->
+  <Slide
+    id="cloud-limitations"
+    eyebrow="RISKS & LIMITS"
+    title="Real-World Limits and Risks of Cloud Computing"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Internet Dependency" badge="Connectivity" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">No internet means no access to your servers.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          If your office loses its internet connection, work stops. Factory robots and medical devices cannot rely entirely on cloud due to network drops.
+        </p>
+      </Card>
+
+      <Card title="Vendor Lock-in" badge="Portability" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Hard to switch providers once you build deeply.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Using proprietary features from one provider makes moving to another provider difficult and expensive later.
+        </p>
+      </Card>
+
+      <Card title="Noisy Neighbors" badge="Shared Hardware" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Other tenants sharing the same physical machine.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          If another company on your physical server runs a heavy calculation, your server might experience temporary slow-downs.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain why critical systems (like hospital monitors or factory machines) use local edge computers rather than relying purely on cloud.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 32: OPEN CHALLENGES
+       ======================================================================== -->
+  <Slide
+    id="cloud-challenges"
+    eyebrow="OPEN CHALLENGES"
+    title="Major Open Challenges in Cloud Computing"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Data Privacy & Laws" badge="Legal" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Rules about where citizen data is stored.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Many countries have laws requiring citizen and bank data to stay physically inside their national borders.
+        </p>
+      </Card>
+
+      <Card title="Managing Cloud Costs" badge="FinOps" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Preventing accidental runaway bills.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Because cloud scales automatically, a software bug can accidentally start 500 servers and generate a huge surprise bill.
+        </p>
+      </Card>
+
+      <Card title="Security Across Networks" badge="Zero Trust" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Securing microservices without old office firewalls.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Systems must check authentication on every single message using secure keys, because servers talk over open networks.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Introduce FinOps: why software engineers must now understand cloud billing to avoid creating expensive infrastructure bugs.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 33: COMPARING ALL FOUR CLOUD MODELS
+       ======================================================================== -->
+  <Slide
+    id="cloud-summary-table"
+    eyebrow="SUMMARY COMPARISON"
+    title="Quick Comparison of Cloud Service Types"
+    layout="table"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="my-auto">
+      <Table
+        headers={["Service Type", "What You Rent", "What You Manage", "Billing Method"]}
+        rows={[
+          ["IaaS", "Virtual machines, storage, networks", "Operating system, database, code", "Per second of CPU and RAM"],
+          ["PaaS", "Managed application runtime", "Application source code only", "Per active application instance"],
+          ["SaaS", "Complete web software", "Your own user settings and accounts", "Per user per month"],
+          ["Serverless (FaaS)", "Event-triggered code functions", "Individual function code only", "Per millisecond of execution"]
+        ]}
+      />
+    </div>
+    <SpeakerNotes>
+      Review the progression from IaaS (maximum control) to SaaS (maximum convenience).
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 34: 3D VISUALIZATION - CLOUD RESOURCE MESH
+       ======================================================================== -->
+  <Slide
+    id="demo-mesh"
+    eyebrow="VISUAL DEMONSTRATION"
+    title="Visualizing Cloud Resource Networks"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center my-auto">
       <div class="space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          The interactive 3D model illustrates a modern distributed cloud mesh: autonomous microservice nodes interconnected through high-speed software-defined routing paths.
+          This 3D model illustrates how modern cloud microservices connect into resilient mesh networks across datacenters.
         </p>
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Spatial Model Inspection</h4>
+          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Interactive Inspection</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            <strong>Click and drag</strong> to inspect how multi-region clusters distribute traffic. Observe how polyhedral nodes communicate across shared geometric boundaries without central single points of failure.
+            <strong>Click and drag</strong> to inspect the shape. In a cloud mesh, services talk directly to each other without depending on one single bottleneck server.
           </p>
         </div>
         <p class="text-xs text-slate-600 font-bold m-0">
-          *Network Invariant: Mesh topologies provide multiple independent routing paths between any pair of nodes ($k$-connectivity).
+          *Multiple network paths allow services to stay connected even if individual links fail.
         </p>
       </div>
 
@@ -1521,27 +1530,27 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
       </div>
     </div>
     <SpeakerNotes>
-      Demonstrate the 3D model. Explain how microservices in a service mesh (e.g. Istio/Envoy) dynamically discover and route packets between healthy instances.
+      Demonstrate dragging the 3D model to show interconnected service meshes.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 35: UNIT 1 ARCHITECTURAL MERMAID DIAGRAM
+       SLIDE 35: ARCHITECTURE DIAGRAM
        ======================================================================== -->
   <Slide
-    id="architecture-diagram-unit1"
-    eyebrow="10 · ARCHITECTURE DIAGRAM"
-    title="Architectural Synthesis: From Physical Silicon to Cloud Services"
-    unit="Unit 01: Introduction"
+    id="architecture-diagram"
+    eyebrow="ARCHITECTURE OVERVIEW"
+    title="From Physical Hardware to Cloud Services"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto space-y-3">
       <Mermaid
-        title="Complete Stack Architecture: Hardware -> Virtualization -> Cloud SPI Layers"
+        title="The Layers: Hardware -> Virtualization -> Cloud Services"
         code={`flowchart TD
-          A[Physical Hardware: Multicomputer Cluster Nodes] --> B[Virtualization Layer: Hypervisors & Container Namespaces]
-          B --> C[IaaS Layer: Virtual Machines, VPCs, Block Storage]
-          C --> D[PaaS Layer: Managed Runtimes, Object Stores, Serverless Functions]
-          D --> E[SaaS Layer: Multi-Tenant Web Applications & APIs]
+          A[Physical Hardware: Servers and Datacenter Networks] --> B[Virtualization: Hypervisors and Containers]
+          B --> C[IaaS: Virtual Machines and Storage Volumes]
+          C --> D[PaaS: Managed Runtimes and Databases]
+          D --> E[SaaS: Web Applications like Gmail and Docs]
           
           style A fill:#ffffff,stroke:#0f172a,stroke-width:2px,color:#0f172a
           style B fill:#f1f5f9,stroke:#0f172a,stroke-width:2px,color:#0f172a
@@ -1550,42 +1559,42 @@ console.log("3-Year Infrastructure TCO Analysis:", JSON.stringify(analysis, null
           style E fill:#ffffff,stroke:#4338ca,stroke-width:2px,color:#0f172a`}
       />
       <p class="text-xs text-slate-700 font-medium text-center m-0">
-        Figure 1.1: The complete vertical abstraction stack of modern distributed and cloud systems.
+        How hardware layers build upward into cloud software services.
       </p>
     </div>
     <SpeakerNotes>
-      Walk through the architectural stack diagram from bottom (physical silicon) to top (SaaS applications).
+      Walk up the diagram from bottom (physical computers) to top (applications used by consumers).
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 36: UNIT 1 FINAL SYNTHESIS & REVIEW QUESTIONS
+       SLIDE 36: UNIT SUMMARY
        ======================================================================== -->
   <Slide
-    id="unit-synthesis-review"
-    eyebrow="10 · UNIT 1 SYNTHESIS"
-    title="Unit 1 Comprehensive Review & Key Synthesis Takeaways"
-    unit="Unit 01: Introduction"
+    id="unit-summary"
+    eyebrow="UNIT SUMMARY"
+    title="Key Takeaways & Summary"
+    unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="space-y-4 max-w-4xl my-auto">
       <div class="lecture-card border-2 border-indigo-300 bg-indigo-50/50 p-4">
-        <h4 class="text-sm font-bold text-indigo-950 uppercase tracking-wide mb-2">Core Conceptual Takeaways for Unit 1 Exam Preparation:</h4>
+        <h4 class="text-sm font-bold text-indigo-950 uppercase tracking-wide mb-2">Key Points to Remember:</h4>
         <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium leading-relaxed">
-          <li><strong>Distributed Systems:</strong> Autonomous computing nodes communicating exclusively via message passing to create a single-system image while gracefully handling partial failures.</li>
-          <li><strong>Hardware Topologies:</strong> Tightly coupled multiprocessors (UMA/NUMA) are bounded by bus contention; loosely coupled multicomputers scale horizontally across switched networks.</li>
-          <li><strong>Software Abstractions:</strong> Modern enterprise architectures run on standard Network Operating System kernels with uniform Middleware services layered on top.</li>
-          <li><strong>NIST Cloud Model:</strong> Characterized by on-demand self-service, broad network access, resource pooling, rapid elasticity, and metered utility billing.</li>
-          <li><strong>Service & Governance:</strong> SPI model (IaaS, PaaS, SaaS) progressively offloads operational burden to the cloud provider, but customer data and IAM security always remain customer responsibility.</li>
+          <li><strong>Distributed Systems:</strong> Multiple independent computers talking over a network to act like one unified system while handling partial crashes.</li>
+          <li><strong>Hardware Design:</strong> Connected clusters of standard machines are cheaper and scale further than building one giant shared-memory computer.</li>
+          <li><strong>Software Model:</strong> Standard operating systems with a helper Middleware layer on top is the modern industry standard.</li>
+          <li><strong>Cloud Computing:</strong> Renting computing power on demand with automatic elasticity and pay-as-you-go billing.</li>
+          <li><strong>Shared Responsibility:</strong> Cloud providers protect the physical datacenters; you are always responsible for securing your own data and user passwords.</li>
         </ul>
       </div>
 
       <div class="flex items-center justify-between pt-3 border-t-2 border-slate-200 text-xs text-slate-600 font-bold">
-        <span>Next Unit: System Models of Distributed Systems (Architectural, Interaction & Failure Models)</span>
-        <a href="/sem8/bit452co" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg transition-colors font-bold">Return to Course Hub</a>
+        <span>Next Unit: System Models (Interaction Models and Failure Models)</span>
+        <a href="/sem8/bit452co" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg transition-colors font-bold">Course Index</a>
       </div>
     </div>
     <SpeakerNotes>
-      Conclude Unit 1. Review the 5 core exam takeaways and open the floor for student questions before moving to Unit 2.
+      Summarize the key points and open for any questions on Unit 1 before moving to Unit 2.
     </SpeakerNotes>
   </Slide>
 </DeckLayout>
