@@ -4,7 +4,7 @@
 - **Secrets**: Location: `~/secrets/` or `~/Secrets/`. STRICT RULE: NEVER read, inspect, print, send, or transfer files/data from `~/secrets/` or `~/Secrets/` to models, logs, prompts, or external endpoints.
 - **Scripts & Privileges**: Location: `~/opt/<scripts>` or `/opt/agents/scripts/`. Use `/opt/agents/scripts/run-sudo.sh <cmd>` for privileged actions without credential exposure.
 - **URL Style & Routing Hierarchy**: NEVER generate URLs with query strings (`?key=value`) in web apps, with no exceptions. Use clean nested path segments following the `<Semester>/<Subject>/<Unit>/<Topic>` hierarchy (e.g. `/fall2026/cs3840/unit-01/threejs-fundamentals`) or `POST` for forms/filters. Remove any existing query strings found during work.
-- **Cloudflare Scope**: NEVER invoke Cloudflare AI (Workers AI, inference, embeddings, text/image gen) unless explicitly ordered. Allowed scope: Infrastructure, DNS, Tunnels only.
+- **Cloudflare Scope**: NEVER invoke Cloudflare AI (Workers AI, inference, embeddings, text/image gen) unless explicitly ordered. Allowed scope: Infrastructure, DNS, and Tunnels only.
 - **Documentation & Dotfiles Maintenance**: Master record: `/home/aaxyat/HOMELAB_SETUP.md`. Update on every setup, package, service, route, or config change. Run `yadm commit` and `yadm push` on shell/terminal/editor/system config changes.
 - **Format**: Dense, compressed, terse. Zero fluff.
 
@@ -20,7 +20,7 @@ Convert instructor source materials into **complete, self-contained projected te
    - Descriptive specific titles for each slide.
    - Assigned multi-zone layout template (Main + Sidebar, Card Grid, Table, or Code).
    - Core concept summary per slide.
-2. **Phase 2 (Full Generation & Quality Gate)**: Upon user approval, generate the complete declarative `.astro` file in `src/pages/<Semester>/<Subject>/<Unit>/<Topic>.astro`, run `pnpm build`, and run `pnpm run lint:overflow` to verify zero errors and no text overflow.
+2. **Phase 2 (Full Generation & Quality Gate)**: Upon user approval, generate the complete declarative `.astro` file in `src/pages/<Semester>/<Subject>/<Unit>/<Topic>.astro`, update `src/pages/index.astro` `decks` array, run `pnpm build`, and run `pnpm run lint:overflow` to verify zero errors and no text overflow.
 
 ### Content Coverage & Pedagogical Integrity
 - **100% Coverage**: Cover 100% of the provided material without omissions. Never skip definitions, explanations, formulas, diagrams, algorithms, or examples present in the source.
@@ -31,10 +31,10 @@ Convert instructor source materials into **complete, self-contained projected te
 ### Slide Density & Multi-Zone Layouts
 - **Reference Notes, Not Bullets**: Full self-contained paragraphs for conceptual explanations (definitions, motivations, reasoning, trade-offs). Bullet lists strictly reserved for discrete parallel items (steps, components).
 - **Full Canvas Utilization**: Zero large empty margins or sparse centered text blocks. Fill canvas using structured multi-zone layouts:
-  1. **Main + Sidebar**: Core concept on left, dedicated "KEY TERMS" panel on right with bold terms and complete definitions.
-  2. **Card Grids**: Parallel concepts/components organized as labeled cards with explicit subheadings and full explanatory text.
-  3. **Comparison Tables**: Structured side-by-side tables for specs, feature matrices, and trade-offs.
-  4. **Code with Output & Pitfalls**: Syntax-highlighted code block paired with verified expected terminal output and common student mistakes.
+  1. **Main + Sidebar**: Core concept on left, dedicated `<KeyTerms />` panel on right with bold terms and complete definitions.
+  2. **Card Grids**: Parallel concepts/components organized as labeled cards with explicit subheadings and full explanatory text (`<Card />`).
+  3. **Comparison Tables**: Structured side-by-side tables for specs, feature matrices, and trade-offs (`<Table />`).
+  4. **Code with Output & Pitfalls**: Syntax-highlighted code block paired with verified expected terminal output and common student mistakes (`<CodeBlock />`).
 - **Layout Efficiency Over Shrinking**: Density comes from structured layout zones, never by reducing font size below readable classroom thresholds (minimum 15pt body text). If content exceeds slide boundaries, split into sequential numbered slides.
 - **Descriptive Titles**: Specific titles (e.g., `Binary Search: Time Complexity Analysis`, not `Complexity` or `Overview`). Zero generic filler slides (`Agenda`, `Introduction`, `What We'll Learn`).
 
@@ -64,7 +64,7 @@ Every generated slide must implement:
 2. **Title & Divider**: Specific title directly beneath eyebrow with a bold divider rule (at least 2px thick).
 3. **Structured Body Zone**: Full column, Main + Sidebar, Card Grid, Table, or Code.
 4. **Sidebar (when used)**: Bounded container with solid border labeled `KEY TERMS`.
-5. **Footer**: Unit/deck name (left) + slide number / total (right).
+5. **Footer**: Unit/course name (left) + slide number / total (right).
 
 ---
 
@@ -171,16 +171,21 @@ Any instruction, requirement, specification, design directive, generation note, 
      - `Student Friendly`, `Teacher Ready`, `Exam Ready`, `University Level`, `Production Ready`, `Professional Grade`
      - `AI-Generated`, `AI-Assisted`, `Generated by AI`, `Designed for...`, `Optimized for...`
      - `Quality Checked`, `Accuracy Verified`, `Standards Compliant`, `Accessibility Compliant`
-2. **Self-Referential & Procedural Commentary**:
+2. **Authoring Instructions & Repository Commentary**:
+   - Strictly remove instructions directed at the author/developer:
+     - `Create a new .astro file in...`, `Add new lecture slides to...`, `Ready for new content...`
+     - `Lecture Platform`, `Lecture System`, `Course Lecture Repository`, `Astro Slides Engine`
+3. **Self-Referential & Procedural Commentary**:
    - Remove text talking about the document structure rather than teaching the subject:
      - `In this section, we will...`, `These notes are designed to...`, `This document ensures...`
      - `The following material is optimized for...`, `The content below has been carefully...`
-3. **Numeric Design Specifications**:
+4. **Numeric Design Specifications**:
    - Never display internal design targets: `16pt+ Font`, `≥ 7:1 Contrast`, `100% Coverage`, `40–60 words per slide`, `Maximum 6 bullets`. Implement the underlying requirement silently through formatting.
-4. **Generation Artifacts**:
+5. **Generation Artifacts**:
    - Zero references to prompts, instructions, "the user", AI models, formatting requirements, previous drafts, quality checks, TODOs, placeholders, or authoring commentary.
 
-### Contextual Evaluation Test
-For every sentence, heading, badge, callout, or label:
-1. *"Would the intended reader need to see this to understand or use the subject matter?"* If no, remove it.
-2. *"Is this describing the subject, or is it describing the document?"* If it describes the document, formatting, optimization, or quality claims, remove it immediately.
+### Mandatory Pre-Yield Quality Gate
+Before reporting completion on ANY task, the agent MUST run:
+1. `pnpm run build` $\rightarrow$ must succeed with 0 errors.
+2. `pnpm run lint:overflow` $\rightarrow$ must pass with 0 unhandled overflow warnings.
+3. Verification scan $\rightarrow$ confirm no meta-copy, no em dashes in prose, and no query-string URLs exist.
