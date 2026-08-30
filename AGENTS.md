@@ -3,7 +3,7 @@
 ## 1. System & Security Directives
 - **Secrets**: Location: `~/secrets/` or `~/Secrets/`. STRICT RULE: NEVER read, inspect, print, send, or transfer files/data from `~/secrets/` or `~/Secrets/` to models, logs, prompts, or external endpoints.
 - **Scripts & Privileges**: Location: `~/opt/<scripts>` or `/opt/agents/scripts/`. Use `/opt/agents/scripts/run-sudo.sh <cmd>` for privileged actions without credential exposure.
-- **URL Style**: NEVER generate URLs with query strings (`?key=value`) in web apps, with no exceptions. Use clean path segments (`/decks/lecture-01`) or `POST` for forms/filters. Remove any existing query strings found during work.
+- **URL Style & Routing Hierarchy**: NEVER generate URLs with query strings (`?key=value`) in web apps, with no exceptions. Use clean nested path segments following the `<Semester>/<Subject>/<Unit>/<Topic>` hierarchy (e.g. `/fall2026/cs3840/unit-01/threejs-fundamentals`) or `POST` for forms/filters. Remove any existing query strings found during work.
 - **Cloudflare Scope**: NEVER invoke Cloudflare AI (Workers AI, inference, embeddings, text/image gen) unless explicitly ordered. Allowed scope: Infrastructure, DNS, Tunnels only.
 - **Documentation & Dotfiles Maintenance**: Master record: `/home/aaxyat/HOMELAB_SETUP.md`. Update on every setup, package, service, route, or config change. Run `yadm commit` and `yadm push` on shell/terminal/editor/system config changes.
 - **Format**: Dense, compressed, terse. Zero fluff.
@@ -14,6 +14,13 @@
 
 ### Core Mission
 Convert instructor source materials into **complete, self-contained projected teaching notes**, not presentation cue cards or high-level outlines. A student absent from lecture must be able to master 100% of the concept directly from the slide deck.
+
+### Generation Workflow (Two-Phase Authoring)
+1. **Phase 1 (Outline Approval)**: When the user provides lecture notes or a topic, first present an explicit slide outline specifying:
+   - Descriptive specific titles for each slide.
+   - Assigned multi-zone layout template (Main + Sidebar, Card Grid, Table, or Code).
+   - Core concept summary per slide.
+2. **Phase 2 (Full Generation & Quality Gate)**: Upon user approval, generate the complete declarative `.astro` file in `src/pages/<Semester>/<Subject>/<Unit>/<Topic>.astro`, run `pnpm build`, and run `pnpm run lint:overflow` to verify zero errors and no text overflow.
 
 ### Content Coverage & Pedagogical Integrity
 - **100% Coverage**: Cover 100% of the provided material without omissions. Never skip definitions, explanations, formulas, diagrams, algorithms, or examples present in the source.
@@ -27,6 +34,7 @@ Convert instructor source materials into **complete, self-contained projected te
   1. **Main + Sidebar**: Core concept on left, dedicated "KEY TERMS" panel on right with bold terms and complete definitions.
   2. **Card Grids**: Parallel concepts/components organized as labeled cards with explicit subheadings and full explanatory text.
   3. **Comparison Tables**: Structured side-by-side tables for specs, feature matrices, and trade-offs.
+  4. **Code with Output & Pitfalls**: Syntax-highlighted code block paired with verified expected terminal output and common student mistakes.
 - **Layout Efficiency Over Shrinking**: Density comes from structured layout zones, never by reducing font size below readable classroom thresholds (minimum 15pt body text). If content exceeds slide boundaries, split into sequential numbered slides.
 - **Descriptive Titles**: Specific titles (e.g., `Binary Search: Time Complexity Analysis`, not `Complexity` or `Overview`). Zero generic filler slides (`Agenda`, `Introduction`, `What We'll Learn`).
 
@@ -37,6 +45,11 @@ Assume presentation on low-lumen, low-resolution projectors onto off-white/cream
 - **Accents & Rules**: Reserve accent colors (indigo, blue, amber) for large structural elements (eyebrows, headers, card borders, icons). All divider rules and borders must be bold and thick (at least 2px), never hairlines.
 - **Dual-Channel Distinction**: Never rely on color alone. Always pair color with bold weight, badges, or text labels.
 - **Typography**: Plain, clean sans-serif (Inter, Arial, Helvetica) in medium/semibold weight for body text.
+
+### Technical Diagramming Standards
+- **Primary**: Structured HTML/CSS architecture boxes with bold 2px borders for maximum projector contrast and instant loading.
+- **Mermaid.js**: Use `<Mermaid code={...} />` for state machines, sequence diagrams, and class hierarchies with the built-in high-contrast projector theme.
+- **Verification Rule**: Re-verify every diagram and figure for technical and mathematical correctness before delivery.
 
 ### Programming & Technical Standards
 - **Syntax & Construct Analysis**: Explain syntax mechanics and every keyword introduced, not just high-level behavior.
@@ -49,7 +62,7 @@ Assume presentation on low-lumen, low-resolution projectors onto off-white/cream
 Every generated slide must implement:
 1. **Eyebrow Label**: `01 · SECTION NAME` in bold accent color, small-caps, high-contrast top-left.
 2. **Title & Divider**: Specific title directly beneath eyebrow with a bold divider rule (at least 2px thick).
-3. **Structured Body Zone**: Full column, Main + Sidebar, Card Grid, or Table.
+3. **Structured Body Zone**: Full column, Main + Sidebar, Card Grid, Table, or Code.
 4. **Sidebar (when used)**: Bounded container with solid border labeled `KEY TERMS`.
 5. **Footer**: Unit/deck name (left) + slide number / total (right).
 

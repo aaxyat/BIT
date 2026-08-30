@@ -1,0 +1,60 @@
+---
+interface Props {
+  code: string;
+  title?: string;
+  class?: string;
+}
+
+const { code, title, class: className = '' } = Astro.props;
+const uniqueId = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
+const trimmedCode = code.trim();
+---
+
+<div class={`my-3 p-4 rounded-lg bg-slate-50 border-2 border-slate-300 ${className}`}>
+  {title && (
+    <div class="text-xs font-bold text-slate-800 uppercase tracking-wide border-b-2 border-slate-200 pb-2 mb-3">
+      {title}
+    </div>
+  )}
+  <div class="mermaid flex justify-center items-center overflow-x-auto text-xs" id={uniqueId}>
+    {trimmedCode}
+  </div>
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  function initMermaid() {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        darkMode: false,
+        background: '#ffffff',
+        primaryColor: '#e0e7ff',
+        primaryTextColor: '#020617',
+        primaryBorderColor: '#4338ca',
+        lineColor: '#0f172a',
+        secondaryColor: '#f1f5f9',
+        tertiaryColor: '#f8fafc',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '13px',
+      },
+      securityLevel: 'loose',
+    });
+
+    const elements = document.querySelectorAll<HTMLElement>('.mermaid:not([data-processed="true"])');
+    if (elements.length > 0) {
+      mermaid.run({
+        nodes: Array.from(elements),
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaid);
+  } else {
+    initMermaid();
+  }
+  document.addEventListener('astro:page-load', initMermaid);
+</script>

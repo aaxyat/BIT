@@ -16,7 +16,25 @@ The system converts instructor source materials into **complete, self-contained 
 
 ---
 
-## 2. Defensive Projector Visual Design System
+## 2. Directory & Route Hierarchy
+
+Decks are organized in a clean nested academic hierarchy under `src/pages/`:
+
+```
+src/pages/
+└── <Semester>/
+    └── <Subject>/
+        └── <Unit>/
+            └── <Topic>.astro
+```
+
+**Example Route:**
+`src/pages/fall2026/cs3840/unit-01/threejs-fundamentals.astro`  
+$\rightarrow$ URLs resolve cleanly to `/fall2026/cs3840/unit-01/threejs-fundamentals` with **zero query strings**.
+
+---
+
+## 3. Defensive Projector Visual Design System
 
 Classroom environments frequently feature low-lumen projectors, ambient window/fluorescent light, and off-white/cream projection screens. The design system enforces high-contrast readability under these conditions:
 
@@ -32,7 +50,7 @@ Classroom environments frequently feature low-lumen projectors, ambient window/f
 
 ---
 
-## 3. Fixed Slide Typography Scale (`pt`)
+## 4. Fixed Slide Typography Scale (`pt`)
 
 Presentations render at a fixed 16:9 canvas ($1280\times720\text{px}$). All slide typography uses predictable point (`pt`) sizes to prevent text clipping and ensure readability from the back of the classroom:
 
@@ -44,13 +62,9 @@ Presentations render at a fixed 16:9 canvas ($1280\times720\text{px}$). All slid
 - **Code & Syntax Blocks**: `13pt` – `14pt` — Monospace (`JetBrains Mono`), `#0F172A`
 - **Footer Metadata**: `10pt` – `11pt` — `#64748B`, bold slide counter
 
-*Hard Rule: Density is achieved through multi-zone layout efficiency, never by shrinking text below 14pt body size. If content overflows, split across sequential numbered slides.*
-
 ---
 
-## 4. Multi-Zone Slide Layout Templates
-
-Every slide utilizes one of four structured layout templates to maximize canvas utilization without visual clutter:
+## 5. Multi-Zone Slide Layout Templates
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -70,24 +84,27 @@ Every slide utilizes one of four structured layout templates to maximize canvas 
 
 ### Template A: Main Column + Key Terms Sidebar (`layout="split-sidebar"`)
 - **Left Zone (65%)**: Full explanatory text, conceptual reasoning, and mathematical formulas.
-- **Right Zone (35%)**: Distinct "KEY TERMS" sidebar box with thick border, containing bolded vocabulary and complete definitions.
+- **Right Zone (35%)**: Distinct "KEY TERMS" sidebar box (`<KeyTerms />`) with thick border, containing bolded vocabulary and complete definitions.
 
 ### Template B: Structured Card Grid (`layout="card-grid"`)
-- Deconstructs parallel components (e.g., OSI layers, architectural tiers, design patterns) into distinct cards.
+- Deconstructs parallel components (e.g., OSI layers, architectural tiers, design patterns) into distinct cards (`<Card />`).
 - Each card contains an explicit bold title, category badge, and full explanatory paragraph.
 
 ### Template C: High-Contrast Comparison Table (`layout="table"`)
-- Formats feature matrices, trade-offs, time complexities, or protocol comparisons.
+- Formats feature matrices, trade-offs, time complexities, or protocol comparisons via `<Table />`.
 - Thick cell borders ($2\text{px}$), bold column headers with subtle tinted backgrounds, alternating high-contrast rows.
 
 ### Template D: Programming Construct & Verified Output (`layout="code"`)
 - Top: Syntax breakdown and keyword definitions.
-- Middle: Syntactically correct, realistic, non-toy code example with syntax highlighting.
-- Bottom Split: **Expected Output** box + **Common Student Pitfalls** callout box (highlighting off-by-one, scoping, null pointer errors).
+- Middle: Syntactically correct, realistic code example via `<CodeBlock />`.
+- Bottom: **Expected Output** box + **Common Student Pitfalls** callout box.
+
+### Template E: Architecture & Flow Diagrams (`<Mermaid />`)
+- Visualizes state machines, sequence diagrams, and class hierarchies with custom high-contrast light theme.
 
 ---
 
-## 5. Component Library & API Specifications
+## 6. Component Library & API Specifications
 
 ```
 src/
@@ -95,61 +112,29 @@ src/
 │   ├── slides/
 │   │   ├── Slide.astro              # Base slide container with eyebrow, title, divider & footer
 │   │   ├── VerticalStack.astro      # 2D vertical drill-down container
-│   │   ├── Step.astro               # Progressive bullet/paragraph reveal fragment
+│   │   ├── Step.astro               # Progressive reveal fragment
 │   │   ├── KeyTerms.astro           # Bounded sidebar panel for definitions
-│   │   ├── CardGrid.astro           # Responsive dynamic card grid
 │   │   ├── Card.astro               # Bounded content card with header & badge
 │   │   ├── CodeBlock.astro          # Syntax block with expected output & pitfalls
 │   │   ├── Table.astro              # High-contrast projector-ready comparison table
+│   │   ├── Mermaid.astro            # High-contrast client-side Mermaid.js diagram
 │   │   └── SpeakerNotes.astro       # Hidden presenter notes (S key)
 │   └── decks/
 │       ├── DeckHeader.astro         # Top HUD toolbar (Overview, Shortcuts, Exit)
 │       └── KeyboardShortcuts.astro  # Modal shortcut guide (? key)
 ```
 
-### `<Slide>` Component API
-```astro
 ---
-interface Props {
-  id?: string;
-  unit?: string;           // e.g. "01 · DISTRIBUTED COMPUTING"
-  title: string;           // Specific, descriptive title
-  layout?: 'split-sidebar' | 'card-grid' | 'table' | 'code' | 'default' | 'center';
-  transition?: 'slide' | 'fade' | 'none';
-  class?: string;
-}
----
+
+## 7. Slide Overflow Verification Tool
+
+To ensure that text stays within safe bounds and never overflows slide containers on physical projection screens, run:
+
+```bash
+pnpm run lint:overflow
 ```
 
-### `<CodeBlock>` Component API
-```astro
----
-interface Props {
-  code: string;
-  lang?: string;
-  title?: string;
-  lines?: string;
-  output?: string;         // Expected execution output
-  pitfalls?: string[];     // Common student mistakes to call out
-}
----
-```
-
----
-
-## 6. Pedagogical Tone & Quality Directives
-
-- **Instructional Tone**: Write the way an experienced professor speaks in a lecture hall. Direct, rigorous, and technically precise.
-- **Zero Fluff**: Eliminate stock transition phrases ("let's dive in", "now that we understand", "as you can see").
-- **Real-World Scenarios**: Programming examples must be practical, functioning code (such as a student grade calculator, packet router, or database connection pool), never `foo`/`bar`.
-- **Accuracy Gate**: Double-check that all technical claims, equations, and code snippets execute without syntax errors.
-
----
-
-## 7. URL & Navigation Rules
-
-- **Clean Path Segments**: All deck URLs use clean routing (`/`, `/decks/distributed-systems`, `/decks/algorithms-01`).
-- **Zero Query Strings**: Strictly no `?query=param` URLs in the application.
+Scans generated slide files in `src/pages/` for paragraph word budgets ($\le 90$ words), code line budgets ($\le 25$ lines), and card word counts ($\le 65$ words).
 
 ---
 
