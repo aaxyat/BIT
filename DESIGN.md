@@ -4,15 +4,15 @@ Specialized high-density lecture slide presentation framework built with **Astro
 
 ---
 
-## 1. Core Architectural Mission
+## 1. Core Architectural Mission & 4 Note Characteristics
 
-Convert instructor source materials into **complete, self-contained projected teaching notes**. Not minimalist speaker cue cards. Dense reference pages allowing student absent from lecture to master 100% of concept directly from slide deck.
+Convert instructor source materials into **complete, self-contained projected teaching notes**. Functions as full student notes replacement for absent students.
 
-### Key Guarantees
-- **100% Curriculum Coverage**: Zero omission of definitions, proofs, formulas, diagrams, examples.
-- **Pedagogical Sequence Integrity**: Preserve step-by-step logical order of instructor material.
-- **Dense Reference Pages**: Full explanatory paragraphs for conceptual rigor; bullets strictly for discrete parallel items.
-- **Defensive Projector Visibility**: Pure white high-contrast backdrops, dark navy text, bold $\ge 2\text{px}$ rules, zero low-contrast pastels.
+### 4 Core Note Characteristics
+1. **Simple Language with Formal Rigor**: Intuitive, plain explanations paired with exact formal definitions, mathematical formulas, syntax specifications in `<KeyTerms />` and formula blocks.
+2. **Natural Flow & Understandable Pacing**: Step-by-step concept progression: Intuitive Problem/Motivation -> Formal Definition -> Architectural/Code Model -> Edge Cases & Trade-offs. Pacing prevents cognitive overload.
+3. **Purposeful Visual Animations (Three.js & Step Fragments)**: Embed `<ThreeCanvas />` 3D WebGL models and `<Step />` fragments to visualize abstract spatial coordinate frames, memory architectures, network topology, packet flows. Animations drive comprehension, never decoration.
+4. **Content-Dense Notes Replacement**: Dense reference pages, not cue cards. Multi-zone layouts (Main+Sidebar, Card Grids, Tables, Code+Output+Pitfalls) utilize full 16:9 canvas without clutter.
 
 ---
 
@@ -29,8 +29,8 @@ src/pages/
 ```
 
 **Example Route:**
-`src/pages/fall2026/cs3840/unit-01/threejs-fundamentals.astro`  
-$\rightarrow$ URL: `/fall2026/cs3840/unit-01/threejs-fundamentals` with **zero query strings**.
+`src/pages/sem4/bit255co/unit-01/oop-foundations.astro`  
+$\rightarrow$ URL: `/sem4/bit255co/unit-01/oop-foundations` with **zero query strings**.
 
 ---
 
@@ -78,7 +78,7 @@ Fixed 16:9 canvas ($1280\times720\text{px}$). Point (`pt`) sizes ensure back-of-
 │  mathematical properties.               │ with complete definitions.   │
 │                                         │                              │
 │ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ │
-│ Unit 01: Distributed Systems                       Slide 08 / 24       │
+│ CS 4400: Distributed Systems                       Slide 08 / 24       │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -87,7 +87,7 @@ Fixed 16:9 canvas ($1280\times720\text{px}$). Point (`pt`) sizes ensure back-of-
 - **Right Zone (35%)**: Distinct "KEY TERMS" sidebar box (`<KeyTerms />`) with thick border, bold terms + definitions.
 
 ### Template B: Structured Card Grid (`layout="card-grid"`)
-- Deconstruct parallel components into distinct cards (`<Card />`).
+- Deconstruct parallel concepts/components into distinct cards (`<Card />`).
 - Each card has bold title, category badge, full explanatory paragraph.
 
 ### Template C: High-Contrast Comparison Table (`layout="table"`)
@@ -99,7 +99,10 @@ Fixed 16:9 canvas ($1280\times720\text{px}$). Point (`pt`) sizes ensure back-of-
 - Middle: Syntactically correct realistic code via `<CodeBlock />`.
 - Bottom: **Expected Output** box + **Common Student Pitfalls** callout box.
 
-### Template E: Architecture & Flow Diagrams (`<Mermaid />`)
+### Template E: Three.js 3D Visual Model
+- Visualizes spatial transformations, 3D coordinate meshes, and hardware components via `<ThreeCanvas />`.
+
+### Template F: Architecture & Flow Diagrams (`<Mermaid />`)
 - State machines, sequence diagrams, class hierarchies with high-contrast projector theme.
 
 ---
@@ -119,6 +122,9 @@ src/
 │   │   ├── Table.astro              # High-contrast projector-ready comparison table
 │   │   ├── Mermaid.astro            # High-contrast client-side Mermaid.js diagram
 │   │   └── SpeakerNotes.astro       # Hidden presenter notes (S key)
+│   ├── three/
+│   │   ├── ThreeCanvas.astro        # Embedded interactive 3D model component
+│   │   └── ThreeBackground.astro    # WebGL background layer
 │   └── decks/
 │       ├── DeckHeader.astro         # Top HUD toolbar (Overview, Shortcuts, Exit)
 │       └── KeyboardShortcuts.astro  # Modal shortcut guide (? key)

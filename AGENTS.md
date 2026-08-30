@@ -3,7 +3,7 @@
 ## 1. System & Security Directives
 - **Secrets**: `~/secrets/` or `~/Secrets/`. STRICT RULE: NEVER read, inspect, print, send, transfer files/data from `~/secrets/` or `~/Secrets/` to models, logs, prompts, external endpoints.
 - **Scripts & Privileges**: `~/opt/<scripts>` or `/opt/agents/scripts/`. Use `/opt/agents/scripts/run-sudo.sh <cmd>` for privileged actions without credential exposure.
-- **URL Style & Routing Hierarchy**: NEVER generate URLs with query strings (`?key=value`) in web apps, no exceptions. Use clean nested path segments following `<Semester>/<Subject>/<Unit>/<Topic>` hierarchy (`/fall2026/cs3840/unit-01/threejs-fundamentals`) or `POST` for forms/filters. Remove existing query strings found during work.
+- **URL Style & Routing Hierarchy**: NEVER generate URLs with query strings (`?key=value`) in web apps, no exceptions. Use clean nested path segments following `<Semester>/<Subject>/<Unit>/<Topic>` hierarchy (`/sem4/bit255co/unit-01/oop-foundations`) or `POST` for forms/filters. Remove existing query strings found during work.
 - **Cloudflare Scope**: NEVER invoke Cloudflare AI (Workers AI, inference, embeddings, text/image gen) unless explicitly ordered. Allowed scope: Infrastructure, DNS, Tunnels only.
 - **Documentation & Dotfiles Maintenance**: Master record: `/home/aaxyat/HOMELAB_SETUP.md`. Update on every setup, package, service, route, config change. Run `yadm commit` + `yadm push` on shell/terminal/editor/system config changes.
 - **Format**: Dense, compressed, terse. Zero fluff.
@@ -12,15 +12,20 @@
 
 ## 2. Lecture Slide-Creation Directives
 
-### Core Mission
-Convert instructor source materials into **complete, self-contained projected teaching notes**, not presentation cue cards or high-level outlines. Student absent from lecture must master 100% of concept directly from slide deck.
+### Core Mission & 4 Core Pillars
+Convert instructor materials into **complete, self-contained projected teaching notes** acting as full student notes replacements. Absent students must master 100% of concept directly from slide deck.
+
+1. **Simple Language with Formal Rigor**: Plain, direct, accessible explanations paired with all necessary formal definitions, mathematical formulas, and exact syntax. Intuition first, followed by formal specification.
+2. **Natural Flow & Understandable Pacing**: Step-by-step pedagogical progression. Build concept intuitively -> state formal definition -> show code/architecture model -> analyze trade-offs and edge cases. Never jump complexity levels abruptly.
+3. **Purposeful Visual Animations (Three.js & Steps)**: Use Three.js WebGL models (`<ThreeCanvas />`) and step fragments (`<Step />`) to visualize abstract concepts (coordinate frames, memory allocation, packet flow, state machines) to drive understanding. Never use animation for pure decoration.
+4. **Content-Dense Notes Replacement**: Dense reference pages, not cue cards. Full paragraphs for conceptual reasoning. Bullet lists strictly for parallel items. Multi-zone layouts fill the canvas cleanly.
 
 ### Generation Workflow (Two-Phase Authoring)
 1. **Phase 1 (Outline Approval)**: User provide notes/topic -> present slide outline:
    - Descriptive specific titles per slide.
-   - Assigned multi-zone layout template (Main + Sidebar, Card Grid, Table, or Code).
-   - Core concept summary per slide.
-2. **Phase 2 (Full Generation & Quality Gate)**: User approve -> generate complete declarative `.astro` file in `src/pages/<Semester>/<Subject>/<Unit>/<Topic>.astro`, update `src/pages/index.astro` `decks` array, run `pnpm build`, run `pnpm run lint:overflow` verify zero errors + zero text overflow.
+   - Assigned multi-zone layout template (Main + Sidebar, Card Grid, Table, Code, or 3D Visual).
+   - Core concept summary + pacing plan per slide.
+2. **Phase 2 (Full Generation & Quality Gate)**: User approve -> generate complete declarative `.astro` file in `src/pages/<Semester>/<Subject>/<Unit>/<Topic>.astro`, update `src/data/curriculum.ts`, run `pnpm build`, run `pnpm run lint:overflow` verify zero errors + zero text overflow.
 
 ### Content Coverage & Pedagogical Integrity
 - **100% Coverage**: Cover 100% provided material without omissions. Never skip definitions, explanations, formulas, diagrams, algorithms, examples in source.
@@ -35,6 +40,7 @@ Convert instructor source materials into **complete, self-contained projected te
   2. **Card Grids**: Parallel concepts/components as labeled cards with explicit subheadings + full explanatory text (`<Card />`).
   3. **Comparison Tables**: Structured side-by-side tables for specs, feature matrices, trade-offs (`<Table />`).
   4. **Code with Output & Pitfalls**: Syntax-highlighted code block paired with verified expected terminal output + common student mistakes (`<CodeBlock />`).
+  5. **3D Visualizations**: Embedded `<ThreeCanvas />` interactive models for spatial/hardware/architecture concepts.
 - **Layout Efficiency Over Shrinking**: Density from structured layout zones, never reducing font size below readable classroom thresholds (minimum 15pt body text). Content exceeds boundaries -> split into sequential numbered slides.
 - **Descriptive Titles**: Specific titles (`Binary Search: Time Complexity Analysis`, not `Complexity` or `Overview`). Zero generic filler slides (`Agenda`, `Introduction`, `What We'll Learn`).
 
@@ -46,8 +52,9 @@ Assume presentation on low-lumen, low-resolution projectors on off-white/cream/t
 - **Dual-Channel Distinction**: Never rely on color alone. Pair color with bold weight, badges, text labels.
 - **Typography**: Plain, clean sans-serif (Inter, Arial, Helvetica) in medium/semibold weight for body text.
 
-### Technical Diagramming Standards
+### Technical Diagramming & 3D Standards
 - **Primary**: Structured HTML/CSS architecture boxes with bold 2px borders for projector contrast + instant loading.
+- **Three.js Visualizations**: Use `<ThreeCanvas model="..." />` to visualize spatial math, 3D meshes, hardware sensors, and network nodes.
 - **Mermaid.js**: Use `<Mermaid code={...} />` for state machines, sequence diagrams, class hierarchies with high-contrast projector theme.
 - **Verification Rule**: Re-verify every diagram + figure for technical/mathematical correctness before delivery.
 
@@ -62,7 +69,7 @@ Assume presentation on low-lumen, low-resolution projectors on off-white/cream/t
 Every generated slide implement:
 1. **Eyebrow Label**: `01 · SECTION NAME` in bold accent color, small-caps, high-contrast top-left.
 2. **Title & Divider**: Specific title under eyebrow with bold divider rule (at least 2px thick).
-3. **Structured Body Zone**: Full column, Main + Sidebar, Card Grid, Table, or Code.
+3. **Structured Body Zone**: Full column, Main + Sidebar, Card Grid, Table, Code, or 3D Visual.
 4. **Sidebar (when used)**: Bounded container with solid border labeled `KEY TERMS`.
 5. **Footer**: Unit/course name (left) + slide number / total (right).
 
