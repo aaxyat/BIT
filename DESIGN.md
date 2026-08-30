@@ -1,4 +1,4 @@
-# Lecture Slide-Creation System — Design & Architecture Specification
+# Lecture Slide-Creation System: Design & Architecture Specification
 
 A specialized, high-density lecture slide presentation framework built with **Astro**, **Reveal.js**, and **Tailwind CSS**. Engineered specifically for academic and technical instruction projected in real-world classrooms with ambient light, low-lumen projectors, and imperfect off-white screen surfaces.
 
@@ -69,7 +69,7 @@ Every slide utilizes one of four structured layout templates to maximize canvas 
 ```
 
 ### Template A: Main Column + Key Terms Sidebar (`layout="split-sidebar"`)
-- **Left Zone (65%)**: Comprehensive explanatory text, conceptual reasoning, and mathematical formulas.
+- **Left Zone (65%)**: Full explanatory text, conceptual reasoning, and mathematical formulas.
 - **Right Zone (35%)**: Distinct "KEY TERMS" sidebar box with thick border, containing bolded vocabulary and complete definitions.
 
 ### Template B: Structured Card Grid (`layout="card-grid"`)
@@ -141,7 +141,7 @@ interface Props {
 
 - **Instructional Tone**: Write the way an experienced professor speaks in a lecture hall. Direct, rigorous, and technically precise.
 - **Zero Fluff**: Eliminate stock transition phrases ("let's dive in", "now that we understand", "as you can see").
-- **Real-World Scenarios**: Programming examples must be practical, functioning code (e.g., student grade calculator, packet router, database connection pool) — never `foo`/`bar`.
+- **Real-World Scenarios**: Programming examples must be practical, functioning code (such as a student grade calculator, packet router, or database connection pool), never `foo`/`bar`.
 - **Accuracy Gate**: Double-check that all technical claims, equations, and code snippets execute without syntax errors.
 
 ---

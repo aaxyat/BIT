@@ -80,8 +80,8 @@ renderLoop();`;
 ---
 
 <DeckLayout
-  title="CS 3840: Computer Graphics — Introduction to Three.js & WebGL"
-  description="Comprehensive 1-hour university lecture notes on WebGL pipeline, Three.js architecture, spatial math, shading models, and GPU optimization."
+  title="CS 3840: Computer Graphics: Introduction to Three.js & WebGL"
+  description="Full 1-hour university lecture notes on WebGL pipeline, Three.js architecture, spatial math, shading models, and GPU optimization."
 >
   <!-- Slide 1: Course Title & Pedagogical Scope -->
   <Slide
@@ -214,7 +214,7 @@ renderLoop();`;
           Three.js uses a <strong>Right-Handed Cartesian Coordinate System</strong>: positive $X$ points right, positive $Y$ points vertically up, and positive $Z$ points directly toward the viewer out of the screen.
         </p>
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          While intuitive, <strong>Euler angle rotations</strong> (specifying yaw, pitch, and roll in degrees/radians) suffer from two catastrophic mathematical limitations: rotation order dependency (rotating $X \rightarrow Y \rightarrow Z$ yields different orientations than $Z \rightarrow Y \rightarrow X$) and <strong>Gimbal Lock</strong> — the loss of one rotational degree of freedom when two rotation axes align parallel to each other.
+          While intuitive, <strong>Euler angle rotations</strong> (specifying yaw, pitch, and roll in degrees/radians) suffer from two major mathematical limitations: rotation order dependency (rotating X then Y then Z yields different orientations than Z then Y then X) and <strong>Gimbal Lock</strong>, which is the loss of one rotational degree of freedom when two rotation axes align parallel to each other.
         </p>
         <div class="lecture-card border-2 border-slate-300">
           <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">The Quaternion Solution</h4>
@@ -390,7 +390,7 @@ renderLoop();`;
       </p>
 
       <CodeBlock
-        title="renderLoop.js — Frame-Rate Independent Animation"
+        title="renderLoop.js: Frame-Rate Independent Animation"
         lang="javascript"
         code={animationLoopCode}
         output={"[Renderer] V-Sync loop active: 60.0 FPS | Clock Delta: 0.0166s"}
@@ -409,7 +409,7 @@ renderLoop();`;
   <!-- Slide 9: Complete Integrated Program -->
   <Slide
     id="complete-code"
-    eyebrow="08 · COMPREHENSIVE IMPLEMENTATION"
+    eyebrow="08 · COMPLETE IMPLEMENTATION"
     title="Complete Runnable Three.js Application"
     layout="code"
     unit="Unit 01: Three.js Fundamentals"
@@ -420,7 +420,7 @@ renderLoop();`;
       </p>
 
       <CodeBlock
-        title="main.ts — Complete Standalone Application"
+        title="main.ts: Complete Standalone Application"
         lang="typescript"
         lines="3-11|13-18|20-28|30-35|37-46|48-53"
         code={minimalThreeJsCode}
