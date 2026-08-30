@@ -1,0 +1,98 @@
+---
+import type { CourseItem } from '../../data/curriculum';
+import BookOpen from 'lucide-astro/BookOpen';
+import Layers from 'lucide-astro/Layers';
+import ArrowRight from 'lucide-astro/ArrowRight';
+
+interface Props {
+  course: CourseItem;
+}
+
+const { course } = Astro.props;
+
+const totalTopics = course.units.reduce((acc, u) => acc + u.topics.length, 0);
+
+const colorStyles = {
+  indigo: {
+    border: 'border-indigo-200 hover:border-indigo-500',
+    badge: 'bg-indigo-100 text-indigo-900 border-indigo-300',
+    iconBg: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+    btn: 'bg-indigo-700 hover:bg-indigo-800',
+  },
+  cyan: {
+    border: 'border-cyan-200 hover:border-cyan-500',
+    badge: 'bg-teal-100 text-teal-900 border-teal-300',
+    iconBg: 'bg-teal-50 text-teal-800 border-teal-200',
+    btn: 'bg-teal-700 hover:bg-teal-800',
+  },
+  amber: {
+    border: 'border-amber-200 hover:border-amber-500',
+    badge: 'bg-amber-100 text-amber-900 border-amber-300',
+    iconBg: 'bg-amber-50 text-amber-800 border-amber-200',
+    btn: 'bg-amber-700 hover:bg-amber-800',
+  },
+  rose: {
+    border: 'border-rose-200 hover:border-rose-500',
+    badge: 'bg-rose-100 text-rose-900 border-rose-300',
+    iconBg: 'bg-rose-50 text-rose-800 border-rose-200',
+    btn: 'bg-rose-700 hover:bg-rose-800',
+  },
+};
+
+const style = colorStyles[course.color];
+---
+
+<div class={`group flex flex-col justify-between p-6 rounded-xl bg-white border-2 ${style.border} shadow-sm transition-all duration-200`}>
+  <div>
+    <!-- Top Metadata -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-slate-800">
+        {course.code}
+      </span>
+      <span class={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${style.badge}`}>
+        {course.semester}
+      </span>
+    </div>
+
+    <!-- Course Title & Description -->
+    <h3 class="text-xl font-extrabold text-slate-950 mb-2 tracking-tight">
+      {course.title}
+    </h3>
+    <p class="text-xs text-slate-700 font-medium leading-relaxed mb-5">
+      {course.description}
+    </p>
+
+    <!-- Syllabus Unit Outline List -->
+    <div class="border-t border-slate-200 pt-3 mb-5 space-y-1.5">
+      <div class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+        <Layers class="w-3.5 h-3.5 text-slate-600" />
+        <span>Curriculum Units ({course.units.length})</span>
+      </div>
+      {course.units.slice(0, 4).map((unit) => (
+        <div class="flex items-start gap-1.5 text-xs text-slate-700 font-medium">
+          <span class="text-slate-400 font-mono">0{unit.number}.</span>
+          <span class="truncate">{unit.title}</span>
+        </div>
+      ))}
+      {course.units.length > 4 && (
+        <div class="text-xs text-slate-500 font-semibold pl-4">
+          + {course.units.length - 4} more units
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="pt-4 border-t-2 border-slate-100 flex items-center justify-between">
+    <span class="text-xs font-mono text-slate-500 font-bold">
+      {totalTopics} lecture modules
+    </span>
+    <a
+      href={`/${course.slug}`}
+      class={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg ${style.btn} text-white text-xs font-bold transition-all shadow-sm group-hover:translate-x-0.5`}
+    >
+      <span>Course Syllabus</span>
+      <ArrowRight class="w-3.5 h-3.5" />
+    </a>
+  </div>
+</div>

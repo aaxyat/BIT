@@ -1,30 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DeckCard from '../components/decks/DeckCard.astro';
+import CourseCard from '../components/curriculum/CourseCard.astro';
+import { COURSES } from '../data/curriculum';
+import Presentation from 'lucide-astro/Presentation';
 import Layers from 'lucide-astro/Layers';
 import Keyboard from 'lucide-astro/Keyboard';
-
-interface DeckItem {
-  title: string;
-  description: string;
-  slug: string;
-  category: string;
-  slideCount: number;
-  duration: string;
-  glow?: 'indigo' | 'cyan' | 'rose' | 'amber';
-  featured?: boolean;
-}
-
-const decks: DeckItem[] = [];
+import BookOpen from 'lucide-astro/BookOpen';
 ---
 
-<BaseLayout title="BIT — Presentations" description="Course notes and presentations.">
+<BaseLayout title="BIT Course Lectures" description="Course notes and lecture presentations for Bachelor of Information Technology.">
   <div class="relative min-h-screen flex flex-col justify-between px-6 py-10 max-w-7xl mx-auto bg-slate-50 text-slate-900">
     <!-- Header -->
     <header class="flex items-center justify-between pb-6 border-b-2 border-slate-200">
-      <div>
-        <h1 class="text-2xl font-extrabold text-slate-950 tracking-tight m-0">BIT</h1>
-        <p class="text-xs text-slate-600 font-semibold m-0">Presentations & Course Notes</p>
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-lg bg-indigo-100 border-2 border-indigo-300 text-indigo-900">
+          <Presentation class="w-6 h-6" />
+        </div>
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-indigo-900 font-extrabold block">Bachelor of Information Technology</span>
+          <h1 class="text-xl font-extrabold text-slate-950 tracking-tight m-0">Course Lecture Repository</h1>
+        </div>
       </div>
     </header>
 
@@ -32,32 +27,28 @@ const decks: DeckItem[] = [];
     <main class="my-auto py-8">
       <div class="max-w-3xl mb-8">
         <h2 class="text-slate-950 font-black text-3xl sm:text-4xl tracking-tight leading-tight mb-2">
-          Course Notes
+          Academic Course Decks
         </h2>
         <p class="text-sm text-slate-700 font-medium leading-relaxed max-w-2xl">
-          Select a topic to open the presentation notes.
+          Complete, self-contained projected lecture notes organized by semester, subject, and syllabus unit.
         </p>
       </div>
 
-      <!-- Decks Section -->
+      <!-- Course Grid -->
       <section class="space-y-6">
-        {decks.length > 0 ? (
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {decks.map((deck) => (
-              <DeckCard {...deck} />
-            ))}
-          </div>
-        ) : (
-          <div class="p-8 rounded-xl bg-white border-2 border-slate-300 text-center max-w-lg mx-auto my-6 shadow-sm">
-            <div class="w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-700 flex items-center justify-center mx-auto mb-3">
-              <Layers class="w-5 h-5" />
-            </div>
-            <h3 class="text-base font-bold text-slate-950 mb-1">No presentations published yet</h3>
-            <p class="text-xs text-slate-600 font-medium m-0">
-              Presentations will appear here once added.
-            </p>
-          </div>
-        )}
+        <div class="flex items-center justify-between">
+          <h3 class="text-xl font-extrabold text-slate-950 tracking-tight flex items-center gap-2">
+            <BookOpen class="w-5 h-5 text-indigo-700" />
+            <span>Active Courses ({COURSES.length})</span>
+          </h3>
+          <span class="text-xs font-mono text-slate-600 font-bold">Select a subject to view syllabus</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {COURSES.map((course) => (
+            <CourseCard course={course} />
+          ))}
+        </div>
       </section>
 
       <!-- Keyboard Shortcuts Quick Guide -->
@@ -67,9 +58,9 @@ const decks: DeckItem[] = [];
             <Keyboard class="w-5 h-5" />
           </div>
           <div>
-            <h4 class="text-sm font-bold text-slate-950 mb-0.5">Navigation Shortcuts</h4>
+            <h4 class="text-sm font-bold text-slate-950 mb-0.5">Presentation Controls</h4>
             <p class="text-xs text-slate-700 font-medium m-0">
-              <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">SPACE</kbd> next slide, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">S</kbd> speaker notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">ESC</kbd> overview grid, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">?</kbd> shortcuts guide.
+              Inside any slide deck: <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">SPACE</kbd> next slide, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">S</kbd> speaker notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">ESC</kbd> overview grid, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">?</kbd> shortcuts guide.
             </p>
           </div>
         </div>
@@ -77,8 +68,9 @@ const decks: DeckItem[] = [];
     </main>
 
     <!-- Footer -->
-    <footer class="pt-6 border-t-2 border-slate-200 text-xs text-slate-600 font-medium">
-      <span>BIT</span>
+    <footer class="pt-6 border-t-2 border-slate-200 flex items-center justify-between text-xs text-slate-600 font-medium">
+      <span>Bachelor of Information Technology (BIT)</span>
+      <span>Semesters 4, 5, 7, 8</span>
     </footer>
   </div>
 </BaseLayout>
