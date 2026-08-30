@@ -26,7 +26,7 @@ class DistributedNode {
     const target = this.peers.get(targetNodeId);
     if (!target) throw new Error(\`Node \${targetNodeId} unreachable\`);
     
-    // Simulate network latency
+    // Simulate real network cable transit time
     await new Promise(resolve => setTimeout(resolve, this.networkLatencyMs));
     return target.receive(this.nodeId, message);
   }
@@ -41,7 +41,7 @@ class DistributedNode {
   }
 }
 
-// Connect two nodes and send data
+// Connect two separate nodes across regions
 const nodeA = new DistributedNode("node-us-east-1", 10);
 const nodeB = new DistributedNode("node-eu-west-1", 85);
 nodeA.registerPeer(nodeB);
@@ -50,11 +50,11 @@ console.log("Sending data across network...");
 nodeA.send("node-eu-west-1", { key: "cluster_config", value: "replicated" })
   .then(res => console.log("Response:", JSON.stringify(res)));`;
 
-const cloudCostFormulaCode = `// Comparing On-Premises Cost vs Cloud Cost
+const cloudCostFormulaCode = `// Comparing On-Premises Cost vs Cloud Utility Cost
 function compareCosts({
-  onPremHardwareCost,    // Upfront cost to buy servers
-  datacenterOpexYearly,  // Electricity, cooling, building rent
-  cloudMonthlyCost,      // Monthly cloud bill
+  onPremHardwareCost,    // Upfront cost to buy physical servers
+  datacenterOpexYearly,  // Power, cooling, and building rent
+  cloudMonthlyCost,      // Monthly pay-as-you-go cloud bill
   years = 3
 }) {
   const onPremTotal = onPremHardwareCost + (datacenterOpexYearly * years);
@@ -81,7 +81,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
 
 <DeckLayout
   title="Distributed & Cloud Computing: Introduction"
-  description="Introduction to distributed systems, hardware memory models, software layers, and cloud computing architectures."
+  description="From single machines to networked clusters, the birth of AWS, and modern cloud computing."
 >
   <!-- ========================================================================
        SLIDE 1: TITLE SLIDE
@@ -89,74 +89,108 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
   <Slide
     id="title-slide"
     eyebrow="DISTRIBUTED & CLOUD COMPUTING"
-    title="Introduction to Distributed Systems & Cloud Computing"
-    subtitle="Core Concepts, Hardware Models, and Cloud Architectures"
+    title="From Single Machines to Global Cloud Platforms"
+    subtitle="Introduction: Why We Need Multiple Computers, How They Work, and the Cloud Revolution"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="space-y-4 max-w-4xl">
       <div class="p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
-        <h4 class="text-sm font-extrabold text-slate-950 uppercase tracking-wide mb-1">Topics in this Unit</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-800 font-medium">
-          <div>• What are distributed systems and why do we build them?</div>
-          <div>• Hardware models: shared memory vs separate computers</div>
-          <div>• Software layers: operating systems and middleware</div>
-          <div>• Common design challenges: handling errors and scaling up</div>
-          <div>• Cloud computing basics and service models (IaaS, PaaS, SaaS)</div>
-          <div>• Cloud deployment types and cost comparisons</div>
+        <h4 class="text-sm font-extrabold text-slate-950 uppercase tracking-wide mb-2">The Story of this Unit</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs text-slate-800 font-medium">
+          <div><strong>1. The Need:</strong> Why one computer is never enough for modern software</div>
+          <div><strong>2. The Concept:</strong> How multiple computers talk and work as a team</div>
+          <div><strong>3. The Mechanics:</strong> Hardware, software layers, and network realities</div>
+          <div><strong>4. The Commercial Breakthrough:</strong> How Amazon turned extra servers into AWS</div>
+          <div><strong>5. Modern Cloud:</strong> IaaS, PaaS, SaaS, and how businesses build today</div>
+          <div><strong>6. Trade-offs:</strong> Benefits, real-world risks, and future challenges</div>
         </div>
       </div>
       <p class="text-sm leading-relaxed text-slate-700 font-medium">
-        This unit explains how multiple computers connect together over networks to share work, and how cloud providers package these systems into services you can use on demand.
+        This unit introduces the journey of modern computing: how software outgrew single machines, how distributed networks solved the problem, and how cloud platforms made global infrastructure available to anyone with an internet connection.
       </p>
     </div>
     <SpeakerNotes>
-      Welcome everyone to the first unit of Distributed and Cloud Computing. Explain that cloud computing is built on top of distributed systems ideas developed over the last several decades.
+      Welcome students. Set the stage: this is not just theory, but the story of how every modern app they use (Instagram, YouTube, Uber) actually runs behind the scenes.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 2: MOTIVATION
+       SLIDE 2: THE STORY OF A GROWING APP
        ======================================================================== -->
   <Slide
-    id="motivation"
-    eyebrow="DISTRIBUTED FOUNDATIONS"
-    title="Why Do We Connect Multiple Computers Together?"
+    id="story-growing-app"
+    eyebrow="THE NEED FOR DISTRIBUTED SYSTEMS"
+    title="The Story of a Growing App: When One Computer Fails"
     layout="card-grid"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="Limits of One Machine" badge="Physical Limits" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">One computer can only get so big and fast.</p>
+      <Card title="Stage 1: Day One" badge="100 Users" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Everything runs on a single laptop or server.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Making a single computer faster hits heat and power limits. Buying one giant super-computer is very expensive. Buying many standard computers and linking them together gives more power for less money.
+          Your code, web server, and database all live on one machine. It is simple to build, cheap to run, and easy to debug.
         </p>
       </Card>
 
-      <Card title="Keeping Systems Running" badge="Reliability" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">If one machine breaks, others keep working.</p>
+      <Card title="Stage 2: Going Viral" badge="100,000 Users" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">The server CPU hits 100% and memory runs out.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          If an entire website runs on a single server and that server crashes, the site goes down. When work is spread across ten servers, three can fail and the website stays online without interruption.
+          You buy a bigger server with 32 CPU cores and 128 GB RAM (Vertical Scaling). It handles the traffic, but costs 10x more.
         </p>
       </Card>
 
-      <Card title="Reaching Users Worldwide" badge="Speed" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Signals take time to travel long distances.</p>
+      <Card title="Stage 3: Global Scale" badge="10 Million Users" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">No single computer on Earth can handle the load.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Data traveling through undersea cables takes time. Placing servers in different countries close to users makes websites load in milliseconds instead of seconds.
+          The largest server money can buy crashes under peak traffic. The only choice left is to split the work across hundreds of networked computers (Horizontal Scaling).
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Give everyday examples like Netflix or Google: a single computer could never store all the videos or handle millions of searches at the same second.
+      Walk students through the startup journey: from a dorm room project on one laptop to a global product that requires distributed machines.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 3: DEFINITION
+       SLIDE 3: VERTICAL VS HORIZONTAL SCALING
        ======================================================================== -->
   <Slide
-    id="definition"
-    eyebrow="DISTRIBUTED FOUNDATIONS"
+    id="scaling-comparison"
+    eyebrow="THE NEED FOR DISTRIBUTED SYSTEMS"
+    title="Scaling Up vs. Scaling Out: Two Different Paths"
+    layout="table"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="my-auto">
+      <Table
+        headers={["Feature", "Scale Up (Vertical Scaling)", "Scale Out (Horizontal / Distributed Scaling)"]}
+        rows={[
+          ["Basic Idea", "Buy one bigger, more powerful server", "Add many standard, affordable computers to a network"],
+          ["Hardware Cost", "Gets exponentially expensive at high tiers", "Grows linearly with affordable commodity machines"],
+          ["Maximum Limit", "Hard ceiling (limited by physical motherboard size)", "Virtually unlimited (can connect tens of thousands of nodes)"],
+          ["What Happens When It Fails?", "Total outage (single point of failure)", "Other nodes take over instantly with zero downtime"],
+          ["Software Complexity", "Simple (code runs in one memory space)", "Higher (must handle network messages and timeouts)"]
+        ]}
+      />
+
+      <div class="lecture-card border-2 border-indigo-300 bg-indigo-50 mt-3 p-3">
+        <h4 class="text-xs font-bold text-indigo-950 uppercase mb-1">The Industry Shift</h4>
+        <p class="text-xs text-indigo-950 m-0 font-medium">
+          The entire technology industry shifted from buying massive proprietary mainframes to building software that runs across large clusters of standard networked computers.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Explain why Google succeeded: instead of buying million-dollar supercomputers, Google built their search engine using thousands of cheap PCs in custom racks.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 4: WHAT IS A DISTRIBUTED SYSTEM?
+       ======================================================================== -->
+  <Slide
+    id="what-is-distributed-system"
+    eyebrow="INTRODUCTION TO DISTRIBUTED SYSTEMS"
     title="What Is a Distributed System?"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
@@ -164,14 +198,15 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A <strong>distributed system</strong> is a group of independent computers that talk to each other over a network by sending messages, while appearing to users as if they were just one single computer.
+          A <strong>distributed system</strong> is a collection of autonomous computers that communicate over a network by sending messages, while presenting themselves to users as a single, unified system.
         </p>
+
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Three Core Rules of Distributed Systems:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Three Defining Characteristics:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Running at the same time</strong>: Many computers run their own tasks at the same exact moment.</li>
-            <li><strong>No shared master clock</strong>: Each computer has its own timer. They must agree on order of events using network messages.</li>
-            <li><strong>Separate failures</strong>: One computer can crash or lose its internet cable without stopping the other computers.</li>
+            <li><strong>Independent Computers (Nodes)</strong>: Each machine has its own processor, its own RAM, and its own operating system.</li>
+            <li><strong>Message Passing</strong>: Computers do not share memory wires; they coordinate by sending data packets over network cables.</li>
+            <li><strong>Single System Illusion</strong>: Users interact with a website or database without knowing which specific server answered their request.</li>
           </ul>
         </div>
       </div>
@@ -182,189 +217,128 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           terms={[
             {
               term: "Node",
-              definition: "A single computer in a network with its own processor, memory, and operating system."
+              definition: "An individual computer in a distributed system with its own CPU and memory."
             },
             {
-              term: "Message",
-              definition: "A packet of data sent over the network from one computer to another."
+              term: "Cluster",
+              definition: "A group of interconnected nodes working together on common tasks."
             },
             {
-              term: "Single System",
-              definition: "Making many separate computers look like one simple service to the user."
+              term: "Single System Image",
+              definition: "Making many separate computers look like one unified service to the user."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Emphasize that the user does not need to know which specific computer answered their request.
+      Use the orchestra analogy: each musician plays their own instrument, but the audience hears one harmonious symphony.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 4: THE FOUR GOALS
+       SLIDE 5: THE FOUR CORE GOALS
        ======================================================================== -->
   <Slide
     id="four-goals"
-    eyebrow="DISTRIBUTED FOUNDATIONS"
-    title="The Four Main Goals of Building Distributed Systems"
+    eyebrow="INTRODUCTION TO DISTRIBUTED SYSTEMS"
+    title="The Four Main Goals of Distributed Systems"
     layout="card-grid"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
       <Card title="1. Sharing Resources" badge="Sharing" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Letting users share hardware and files easily.</p>
+        <p class="text-xs text-slate-700 font-bold mb-1">Letting users and apps share hardware and data.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Allowing many people in an office or across the world to share files, printers, databases, and computing power safely without stepping on each other.
+          Allowing teams across the world to share storage drives, databases, expensive GPUs, and printers securely without conflicts.
         </p>
       </Card>
 
-      <Card title="2. Hiding the Complexity" badge="Transparency" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Making remote systems feel like local ones.</p>
+      <Card title="2. Distribution Transparency" badge="Simplicity" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Hiding the messy network details from users.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Hiding where files are stored, how many copies exist, or whether a server restarted so users can focus on their work.
+          Hiding where files live, how many backup copies exist, or whether a server crashed so developers and users can focus on their work.
         </p>
       </Card>
 
-      <Card title="3. Staying Open & Compatible" badge="Openness" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Using clear rules so different systems work together.</p>
+      <Card title="3. Openness" badge="Compatibility" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Using standard rules so different technologies work together.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Writing clear API rules so a phone app written in Swift, a backend in Java, and a server running Linux can exchange data without issues.
+          Using standard protocols (like HTTP and JSON) so an iPhone app, a Python script, and a Java server can exchange data seamlessly.
         </p>
       </Card>
 
-      <Card title="4. Easy to Scale" badge="Scalability" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Growing smoothly when more users arrive.</p>
+      <Card title="4. Scalability" badge="Growth" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Handling growth without slowing down.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Handling ten users today and ten million users next month by adding more standard computers, without rewriting the whole system.
+          Expanding from 100 users to 100 million users smoothly by adding more standard machines to the cluster.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Review each goal with simple real-world examples: sharing a Google Drive file, using standard HTTP, and handling spikes in user traffic.
+      Explain how each goal addresses a specific practical problem in software development.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 5: TRANSPARENCY TYPES (PART 1)
+       SLIDE 6: DISTRIBUTION TRANSPARENCY
        ======================================================================== -->
   <Slide
-    id="transparency-part1"
-    eyebrow="DISTRIBUTION TRANSPARENCY"
-    title="Hiding System Details: Access, Location & Migration"
-    layout="split-sidebar"
-    unit="BIT 542CO: Distributed & Cloud Computing"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-      <div class="md:col-span-2 space-y-4">
-        <div class="lecture-card border-2 border-slate-300 space-y-3">
-          <div>
-            <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">1. Access Transparency</h4>
-            <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              You read or write data using the same commands, whether the file is on your laptop or on a server in another country running a different operating system.
-            </p>
-          </div>
-
-          <div>
-            <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">2. Location Transparency</h4>
-            <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              You find resources by name (like typing <code>google.com</code>) without needing to know which physical building, room, or IP address hosts the data.
-            </p>
-          </div>
-
-          <div>
-            <h4 class="text-sm font-bold text-indigo-900 uppercase mb-1">3. Migration Transparency</h4>
-            <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              An engineer can move a database from Server A to Server B while it is idle, and your apps keep working without updating their settings.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="md:col-span-1">
-        <KeyTerms
-          title="Terms"
-          terms={[
-            {
-              term: "Access Transparency",
-              definition: "Hiding differences in how different computers format numbers and files."
-            },
-            {
-              term: "Location Transparency",
-              definition: "Using simple names instead of physical server coordinates."
-            },
-            {
-              term: "Migration",
-              definition: "Moving files or databases between machines without breaking links."
-            }
-          ]}
-        />
-      </div>
-    </div>
-    <SpeakerNotes>
-      Remind students that URLs are the best example of location transparency: you type a domain name and never worry about which server rack answers.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 6: TRANSPARENCY TYPES (PART 2)
-       ======================================================================== -->
-  <Slide
-    id="transparency-part2"
-    eyebrow="DISTRIBUTION TRANSPARENCY"
-    title="Hiding System Details: Copies, Concurrent Access & Errors"
+    id="transparency-table"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Distribution Transparency: What We Hide from Users"
     layout="table"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
+      <p class="text-sm text-slate-900 font-medium mb-3">
+        Transparency means hiding physical network complexities so software feels like it runs locally:
+      </p>
+
       <Table
-        headers={["Transparency Type", "What Is Hidden from the User", "Simple Example"]}
+        headers={["Transparency Type", "What Is Hidden from the User", "Real-World Example"]}
         rows={[
-          ["Relocation", "Moving a service while it is actively in use", "Moving a virtual server to a new machine without dropping active calls"],
-          ["Replication", "That multiple duplicate copies of data exist", "Saving a photo on cloud storage and it automatically saves across 3 cities"],
-          ["Concurrency", "That other people are using the same data at the exact same moment", "Two people buying seats on an airline app without booking the same seat"],
-          ["Failure", "That a machine crashed or restarted behind the scenes", "A web page automatically reloads from a backup server when one server loses power"]
+          ["Access", "Differences in how different computers format numbers and files", "Opening a file using the same function call on Linux and Windows"],
+          ["Location", "Where a resource physically lives in the world", "Typing google.com without knowing which city's server answered"],
+          ["Migration", "Moving files or databases between machines while idle", "A database moves to a new server during maintenance with zero user impact"],
+          ["Replication", "That multiple duplicate copies of data exist", "Saving a photo on the cloud and it automatically copies across 3 datacenters"],
+          ["Concurrency", "That other users are reading and writing at the same second", "Two people buying items in an online store without corrupting inventory counts"],
+          ["Failure", "That a server crashed or lost power behind the scenes", "A web request automatically re-routes to a backup server without an error page"]
         ]}
       />
-
-      <div class="lecture-card border-2 border-amber-300 bg-amber-50 mt-3 p-3">
-        <h4 class="text-xs font-bold text-amber-950 uppercase mb-1">Important Reality: We Cannot Hide Everything</h4>
-        <p class="text-xs text-amber-950 m-0 font-medium">
-          Trying to hide every single network delay across the globe would make programs freeze while waiting for confirmation. Good engineers choose when to hide details and when to show realistic loading states.
-        </p>
-      </div>
     </div>
     <SpeakerNotes>
-      Explain why total transparency is impossible: sending data across the Pacific ocean takes at least 100 milliseconds due to the speed of light.
+      Highlight location transparency: URLs are the best example because users never type IP addresses or server rack numbers.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 7: HARDWARE CONCEPTS - TWO BASIC DESIGNS
+       SLIDE 7: HARDWARE CONCEPTS - SHARED MEMORY VS CLUSTERS
        ======================================================================== -->
   <Slide
-    id="hardware-overview"
-    eyebrow="HARDWARE CONCEPTS"
-    title="Hardware Models: Shared Memory vs. Networked Machines"
+    id="hardware-models"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Hardware Models: Shared Memory vs. Networked Clusters"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          When we build systems with multiple processors, there are two main ways to connect them: sharing one common memory pool, or giving each computer its own private memory.
+          When connecting multiple processors, hardware engineers use two fundamental approaches: sharing one physical memory pool or giving each machine its own memory.
         </p>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="lecture-card border-2 border-slate-300">
             <h4 class="text-sm font-bold text-indigo-900 mb-1">Shared Memory (Multiprocessors)</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              All processors share the same physical RAM. Any processor can read any memory location directly over a shared motherboard bus. Very fast, but limited in size.
+              Multiple CPUs share one central memory bus. Any CPU can read any memory byte instantly. Very fast, but limited to 32–64 cores before the bus gets clogged.
             </p>
           </div>
           <div class="lecture-card border-2 border-slate-300">
             <h4 class="text-sm font-bold text-indigo-900 mb-1">Separate Memory (Multicomputers)</h4>
             <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-              Every machine has its own private RAM. To share data, they must send messages over network cables. Can scale to thousands of machines.
+              Each computer has its own private RAM. To share data, they must send messages over network cables. Can scale to 100,000+ computers in datacenters.
             </p>
           </div>
         </div>
@@ -376,59 +350,59 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           terms={[
             {
               term: "Multiprocessor",
-              definition: "Multiple CPUs sharing one common physical RAM address space."
+              definition: "Multiple CPU cores sharing one physical RAM address space."
             },
             {
               term: "Multicomputer",
-              definition: "Separate computers connected by network cables, each with private RAM."
+              definition: "Independent computers connected by network cables, each with private RAM."
             },
             {
-              term: "System Bus",
-              definition: "The physical wires on a motherboard connecting CPUs to RAM."
+              term: "Bus Bottleneck",
+              definition: "When too many processors try to read shared motherboard wires at once."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Compare a shared-memory computer to people sitting around one shared whiteboard, vs multicomputers as people in separate offices sending text messages.
+      Use the office analogy: shared memory is people sharing one whiteboard; multicomputers are people in separate buildings sending emails.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 8: SHARED MEMORY (UMA VS NUMA)
+       SLIDE 8: SHARED MEMORY: UMA VS NUMA
        ======================================================================== -->
   <Slide
-    id="hardware-uma-numa"
-    eyebrow="HARDWARE CONCEPTS"
-    title="Shared-Memory Computers: UMA and NUMA"
+    id="uma-numa"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Shared-Memory Architectures: UMA and NUMA"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          In shared-memory computers, how CPUs connect to RAM affects performance as you add more processor cores.
+          In multi-core computers, how CPUs connect to physical memory banks determines how well the machine performs under heavy load.
         </p>
 
         <div class="lecture-card border-2 border-slate-300">
           <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">1. Uniform Memory Access (UMA)</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            All CPUs share one central memory bus. Every CPU takes the exact same amount of time to read any memory byte. <em>Problem:</em> If 32 CPUs try to read RAM at the same time, the bus gets clogged.
+            All CPU cores connect to one central memory bus. Every core takes the exact same amount of time to read any memory location. <em>Limitation:</em> Adding too many cores creates memory traffic jams.
           </p>
         </div>
 
         <div class="lecture-card border-2 border-slate-300">
           <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">2. Non-Uniform Memory Access (NUMA)</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            Each CPU gets its own local memory bank attached directly to its socket. Reading local RAM is fast. Reading RAM attached to another CPU takes longer over internal link cables.
+            Each CPU gets its own local memory bank attached directly to its socket. Reading local memory is 3x faster than reading memory attached to another CPU socket over interconnect links.
           </p>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Memory Types"
+          title="Memory Terms"
           terms={[
             {
               term: "UMA",
@@ -439,92 +413,41 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
               definition: "Non-uniform access: local memory is fast, remote memory attached to other CPUs is slower."
             },
             {
-              term: "Bus Bottleneck",
-              definition: "When too many processors try to use one shared wire at the same moment."
+              term: "Interconnect",
+              definition: "High-speed internal links connecting CPU sockets on a server motherboard."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain why personal laptops use UMA, while big 64-core database servers use NUMA to prevent memory traffic jams.
+      Explain why big 64-core enterprise servers use NUMA architecture to avoid memory bus traffic jams.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 9: MULTICOMPUTERS & CLUSTERS
+       SLIDE 9: 3D DEMONSTRATION - HARDWARE TOPOLOGY
        ======================================================================== -->
   <Slide
-    id="hardware-clusters"
-    eyebrow="HARDWARE CONCEPTS"
-    title="Networked Clusters (Multicomputers)"
-    layout="split-sidebar"
-    unit="BIT 542CO: Distributed & Cloud Computing"
-  >
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-      <div class="md:col-span-2 space-y-4">
-        <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A <strong>multicomputer cluster</strong> is built by stacking standard, independent computers into server racks and connecting them with high-speed network switches.
-        </p>
-
-        <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">How Cluster Machines Communicate:</h4>
-          <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Message Passing</strong>: Processors send packets of bytes through network cards (NICs).</li>
-            <li><strong>Rack Switches</strong>: Servers in a rack plug into a top-of-rack switch, which connects to main datacenter spine switches.</li>
-            <li><strong>Affordable Scale</strong>: You can connect 100,000 standard machines together, which is impossible with shared-memory motherboards.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="md:col-span-1">
-        <KeyTerms
-          title="Cluster Terms"
-          terms={[
-            {
-              term: "Cluster",
-              definition: "A collection of interconnected standard computers working together on common jobs."
-            },
-            {
-              term: "Server Rack",
-              definition: "A physical metal frame holding stacked server computers and network switches."
-            },
-            {
-              term: "Network Card",
-              definition: "Hardware component that converts memory data into network cable signals."
-            }
-          ]}
-        />
-      </div>
-    </div>
-    <SpeakerNotes>
-      Show how all modern cloud datacenters (Amazon, Microsoft, Google) are built entirely out of cluster racks rather than giant single motherboards.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 10: 3D DEMONSTRATION - HARDWARE TOPOLOGY
-       ======================================================================== -->
-  <Slide
-    id="demo-hardware"
+    id="demo-hardware-topology"
     eyebrow="VISUAL DEMONSTRATION"
-    title="Visualizing Computer Connections: Shared Bus vs. Cluster Mesh"
+    title="Visualizing Node Connections: Shared Bus vs. Cluster Mesh"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center my-auto">
       <div class="space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          This 3D model shows how interconnected cluster nodes form a distributed network mesh, rather than relying on one central bus wire.
+          This 3D model illustrates how computers in a distributed cluster connect across multiple paths rather than relying on one single central wire.
         </p>
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Interact with the Model</h4>
+          <h4 class="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">Interactive Inspection</h4>
           <p class="text-xs text-slate-900 m-0 leading-relaxed font-medium">
-            <strong>Click and drag</strong> the 3D shape to see how nodes connect along multiple routes. If one link fails, traffic reroutes along another connection.
+            <strong>Click and drag</strong> to rotate the model. In a networked mesh, nodes communicate directly across independent routes. If one cable fails, traffic reroutes around the failure.
           </p>
         </div>
         <p class="text-xs text-slate-600 font-bold m-0">
-          *Key Takeaway: Mesh connections eliminate single points of failure in hardware design.
+          *Key Takeaway: Networked clusters eliminate central hardware bottlenecks.
         </p>
       </div>
 
@@ -533,96 +456,70 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       </div>
     </div>
     <SpeakerNotes>
-      Rotate the 3D model to show students how redundancy works when nodes form geometric meshes.
+      Rotate the 3D model. Explain how datacenter spine-leaf networks provide multiple paths between any two server racks.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 11: SOFTWARE CONCEPTS - THREE APPROACHES
+       SLIDE 10: SOFTWARE LAYERS - WHY MIDDLEWARE WON
        ======================================================================== -->
   <Slide
-    id="software-approaches"
-    eyebrow="SOFTWARE CONCEPTS"
-    title="Three Software Approaches: DOS, NOS & Middleware"
+    id="software-middleware"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Software Layers: Why Middleware Became the Standard"
     layout="card-grid"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="1. Distributed OS (DOS)" badge="One Kernel" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">One unified operating system across all machines.</p>
+      <Card title="Distributed OS (DOS)" badge="The Rigid Model" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">One special operating system on every machine.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          The operating system manages all machines as if they were one. <em>Why it failed:</em> Every computer in the company had to run the exact same special OS. Real companies need different operating systems for different tasks.
+          Hides everything, but requires every computer to run the exact same operating system. Failed in the real world because companies need different operating systems for different jobs.
         </p>
       </Card>
 
-      <Card title="2. Network OS (NOS)" badge="Separate Kernels" glow="cyan">
+      <Card title="Network OS (NOS)" badge="The Basic Model" glow="cyan">
         <p class="text-xs text-slate-700 font-bold mb-1">Standard operating systems with networking tools.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Each computer runs standard Linux, Windows, or macOS. Users manually connect to remote machines using tools like SSH or file shares. Shows no transparency, but very flexible.
+          Computers run normal Linux or Windows. Users manually log in to remote machines using SSH or file shares. Shows no transparency, but is very flexible.
         </p>
       </Card>
 
-      <Card title="3. Middleware" badge="The Winner" glow="amber">
+      <Card title="Middleware" badge="The Modern Standard" glow="amber">
         <p class="text-xs text-slate-700 font-bold mb-1">A helper software layer on top of standard operating systems.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
-          Runs on top of any standard OS to provide easy remote communication, database tools, and security. This is how modern web and cloud software is built.
+          Runs on top of any standard OS to provide easy remote communication, database tools, and security across different platforms. This is how all modern web and cloud apps work.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Explain why Middleware won: it allows a Windows laptop to talk to a Linux server and a cloud database without forcing all machines to run identical kernels.
+      Emphasize that Middleware lets a Python app on a Mac talk to a Java backend on Linux without rewriting operating system kernels.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 12: SOFTWARE COMPARISON TABLE
+       SLIDE 11: WHAT MIDDLEWARE PROVIDES
        ======================================================================== -->
   <Slide
-    id="software-table"
-    eyebrow="SOFTWARE CONCEPTS"
-    title="Comparing DOS, NOS, and Middleware"
-    layout="table"
-    unit="BIT 542CO: Distributed & Cloud Computing"
-  >
-    <div class="my-auto">
-      <Table
-        headers={["Feature", "Distributed OS (DOS)", "Network OS (NOS)", "Middleware Layer"]}
-        rows={[
-          ["Appearance to User", "Looks like one single computer", "Shows separate individual servers", "Hides network complexity via APIs"],
-          ["Operating System Requirement", "Must be 100% identical on all nodes", "Can be different (Linux, Windows)", "Can be different on every node"],
-          ["How Nodes Communicate", "Low-level kernel memory messages", "Explicit socket connections and files", "Remote function calls (RPC) and web APIs"],
-          ["How Many Nodes It Can Handle", "Small clusters (tens of nodes)", "Medium networks (hundreds)", "Massive scale (millions of devices)"]
-        ]}
-      />
-    </div>
-    <SpeakerNotes>
-      Walk students through why heterogeneity (differences in OS and hardware) made Middleware the industry standard.
-    </SpeakerNotes>
-  </Slide>
-
-  <!-- ========================================================================
-       SLIDE 13: WHAT MIDDLEWARE DOES
-       ======================================================================== -->
-  <Slide
-    id="middleware-services"
-    eyebrow="SOFTWARE CONCEPTS"
-    title="What Does Middleware Do for Developers?"
+    id="middleware-tools"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="What Tools Does Middleware Provide for Developers?"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          Instead of developers writing complex low-level network code for every app, <strong>middleware</strong> provides ready-to-use building blocks for common distributed tasks.
+          Instead of developers writing complex low-level network code for every application, <strong>middleware</strong> provides ready-made building blocks for distributed systems.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Common Middleware Services:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Essential Middleware Services:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Calling Remote Functions (RPC)</strong>: Running a function on another server as easily as calling a local function in your code.</li>
-            <li><strong>Finding Services (Naming)</strong>: Looking up which server currently runs a specific service (like DNS or service discovery).</li>
-            <li><strong>Handling Security</strong>: Verifying user logins and permissions across multiple servers using secure tokens.</li>
-            <li><strong>Message Queues</strong>: Storing messages safely when thousands of requests arrive at once (like Apache Kafka).</li>
+            <li><strong>Remote Procedure Calls (RPC)</strong>: Running a function on another server as easily as calling a local function in your code (e.g. gRPC).</li>
+            <li><strong>Service Discovery</strong>: Automatically looking up which server is currently healthy and running a specific service.</li>
+            <li><strong>Security Tokens</strong>: Verifying user logins and permissions across multiple servers using secure tokens (like OAuth2).</li>
+            <li><strong>Message Queues</strong>: Holding incoming requests in a safe buffer when traffic spikes (like Apache Kafka or RabbitMQ).</li>
           </ul>
         </div>
       </div>
@@ -632,84 +529,84 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           title="Terms"
           terms={[
             {
-              term: "Middleware",
-              definition: "Software between the operating system and applications that handles network communication."
+              term: "RPC",
+              definition: "Remote Procedure Call: executing code on a remote server using simple function syntax."
             },
             {
-              term: "RPC",
-              definition: "Remote Procedure Call: calling a function on another computer over the network."
+              term: "Service Discovery",
+              definition: "An automated directory that tracks the live network addresses of healthy servers."
             },
             {
               term: "Message Queue",
-              definition: "A buffer that holds messages until receiving servers are ready to process them."
+              definition: "A buffer that stores incoming messages until backend servers are ready to process them."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Explain how tools like gRPC and Kafka are examples of modern middleware that students will use in their careers.
+      Explain how tools like gRPC and Kafka make building distributed systems much faster for developers.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 14: EIGHT FALSE ASSUMPTIONS (DEUTSCH)
+       SLIDE 12: THE 8 FALSE ASSUMPTIONS (DEUTSCH)
        ======================================================================== -->
   <Slide
-    id="eight-fallacies"
-    eyebrow="DESIGN CHALLENGES"
+    id="deutsch-fallacies"
+    eyebrow="DISTRIBUTED CONCEPTS"
     title="The Eight False Assumptions About Networks (Deutsch)"
     layout="table"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="my-auto">
       <p class="text-sm text-slate-900 font-medium mb-3">
-        New developers often make false assumptions that cause systems to fail in production:
+        Peter Deutsch identified eight false assumptions that lead to bugs in distributed software:
       </p>
 
       <Table
-        headers={["False Assumption", "The Real Truth", "What You Should Do"]}
+        headers={["False Assumption", "The Real Truth", "What You Must Do in Code"]}
         rows={[
-          ["1. The network never fails", "Wi-Fi drops and switches restart often", "Always add timeout and retry logic"],
-          ["2. Data travels instantly", "Signals take 50–150ms to cross oceans", "Do not block the screen while waiting"],
-          ["3. Bandwidth is unlimited", "Cables get clogged during busy hours", "Send small, compact data packets"],
-          ["4. The network is secure", "Anyone on public Wi-Fi can intercept data", "Always use HTTPS and encryption"],
-          ["5. Network structure never changes", "Servers crash and new ones start dynamically", "Use service discovery tools"],
-          ["6. There is only one administrator", "Data travels across companies and countries", "Use standard authentication tokens"],
-          ["7. Moving data costs nothing", "Cloud providers charge fees for exported data", "Keep data transfers minimal"],
-          ["8. All computers are identical", "Users have different phones, laptops, and OS", "Use standard data formats like JSON"]
+          ["1. The network never fails", "Wi-Fi drops, cables get cut, routers restart", "Always add timeouts and retry logic"],
+          ["2. Data travels instantly", "Signals take 50–150ms to cross oceans", "Never freeze the user interface while waiting"],
+          ["3. Bandwidth is unlimited", "Network pipes get congested during busy hours", "Send compact data formats like JSON or Protobuf"],
+          ["4. The network is secure", "Packets can be intercepted on open networks", "Always use HTTPS and encryption"],
+          ["5. Network structure never changes", "Servers crash and new instances spin up", "Use automated service discovery tools"],
+          ["6. There is only one administrator", "Data crosses multiple companies and clouds", "Use standard authentication tokens"],
+          ["7. Moving data costs nothing", "Cloud providers charge fees for data egress", "Keep data transfers minimal and efficient"],
+          ["8. All computers are identical", "Clients use iPhones, Androids, Windows, Linux", "Use universal data formats"]
         ]}
       />
     </div>
     <SpeakerNotes>
-      Tell stories about apps that freeze when Wi-Fi drops because the developer assumed the network never fails.
+      Emphasize that network failures are normal in distributed computing, not rare exceptions.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 15: DESIGN CHALLENGE - HETEROGENEITY
+       SLIDE 13: DESIGN CHALLENGE - HANDLING DIFFERENT MACHINES
        ======================================================================== -->
   <Slide
-    id="heterogeneity"
-    eyebrow="DESIGN CHALLENGES"
-    title="Challenge 1: Handling Different Types of Computers"
+    id="challenge-heterogeneity"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Challenge 1: Connecting Different Types of Computers"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          A single system might connect an iPhone (ARM chip), a Windows desktop (x86 chip), and a Linux server. They store numbers in different byte orders and run different programming languages.
+          A single distributed system connects many different kinds of devices: an iPhone (ARM processor), a laptop (x86 chip), and a cloud server running Linux. They store numbers differently and run different languages.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">How We Solve This:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">How Software Bridges the Gap:</h4>
           <div class="space-y-2 text-xs text-slate-900 font-medium">
             <p class="m-0">
-              <strong>1. Standard Data Formats</strong>: Instead of sending raw computer memory bytes, we convert data into standard formats like JSON or Protocol Buffers before sending it over the wire.
+              <strong>1. Data Serialization</strong>: In-memory objects are converted into standard text or byte strings (like JSON or Protocol Buffers) before sending them over the network.
             </p>
             <p class="m-0">
-              <strong>2. Clear Interface Rules</strong>: We define API inputs and outputs clearly so programs written in Python, Java, or C++ can understand each other without errors.
+              <strong>2. Standard API Definitions</strong>: Clear rules define what data is sent and received so a backend written in Java can easily talk to a frontend written in JavaScript.
             </p>
           </div>
         </div>
@@ -721,84 +618,84 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           terms={[
             {
               term: "Heterogeneity",
-              definition: "Having different brands of hardware, operating systems, and languages in one network."
+              definition: "Having different hardware architectures, operating systems, and languages in one system."
             },
             {
               term: "Serialization",
-              definition: "Converting a program object into a text or byte string to send over a network."
+              definition: "Converting a computer object into a text or byte stream to send over the network."
             },
             {
               term: "JSON",
-              definition: "A standard text format readable by all programming languages."
+              definition: "A standard text data format understood by all programming languages."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Show an example of how JSON lets a Python script send data to a Java server seamlessly.
+      Show how JSON bridges language differences: Python creates a dictionary, converts it to JSON, and Java parses it into a class.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 16: DESIGN CHALLENGE - SCALING BOTTLENECKS
+       SLIDE 14: DESIGN CHALLENGE - AVOIDING CENTRAL BOTTLENECKS
        ======================================================================== -->
   <Slide
-    id="scalability-bottlenecks"
-    eyebrow="DESIGN CHALLENGES"
-    title="Challenge 2: Avoiding Central Bottlenecks"
+    id="challenge-bottlenecks"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Challenge 2: Avoiding Single Bottlenecks"
     layout="card-grid"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
-      <Card title="One Central Server" badge="Bottleneck 1" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Having one machine handle all logins.</p>
+      <Card title="One Central Login Server" badge="Bottleneck 1" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Having one machine handle all authentication.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          Works fine for 100 users, but crashes when 100,000 users try to log in at once. <em>Solution:</em> Run multiple login servers behind a load balancer.
+          Works for 100 users, but crashes when 100,000 try to log in at once. <em>Solution:</em> Run multiple login servers behind a load balancer.
         </p>
       </Card>
 
-      <Card title="One Central Database File" badge="Bottleneck 2" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Storing all user records on one hard disk.</p>
+      <Card title="One Giant Database Disk" badge="Bottleneck 2" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Storing all user records on a single hard drive.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          The hard disk becomes too slow to read all requests. <em>Solution:</em> Split data into shards across many database servers.
+          The disk becomes too slow to process all read/write requests. <em>Solution:</em> Shard data across multiple database servers.
         </p>
       </Card>
 
-      <Card title="Requiring Total Knowledge" badge="Bottleneck 3" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Algorithms that require knowing the state of every computer.</p>
+      <Card title="Centralized Algorithms" badge="Bottleneck 3" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Algorithms that require knowing the state of all nodes.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          Asking 10,000 computers for their status causes massive network traffic. <em>Solution:</em> Have nodes talk only to their immediate neighbors.
+          Asking 10,000 servers for their status creates huge network traffic. <em>Solution:</em> Have nodes communicate only with nearby neighbors.
         </p>
       </Card>
     </div>
     <SpeakerNotes>
-      Explain how dividing work among many smaller servers prevents bottlenecks.
+      Explain how decentralization and sharding allow websites to scale without crashing under heavy traffic.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 17: DESIGN CHALLENGE - HANDLING CRASHES
+       SLIDE 15: DESIGN CHALLENGE - HANDLING FAILURES
        ======================================================================== -->
   <Slide
-    id="fault-tolerance"
-    eyebrow="DESIGN CHALLENGES"
-    title="Challenge 3: Handling Machine Crashes Gracefully"
+    id="challenge-failures"
+    eyebrow="DISTRIBUTED CONCEPTS"
+    title="Challenge 3: Handling Machine Crashes Automatically"
     layout="split-sidebar"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          In large systems, hardware failures happen every day. A system is <strong>fault-tolerant</strong> if it continues serving users even when some servers crash.
+          In large systems with thousands of servers, hardware failures happen every day. A distributed system is designed to keep running even when individual servers crash.
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
           <h4 class="text-sm font-bold text-slate-950 uppercase">How Systems Recover from Crashes:</h4>
           <ol class="text-xs text-slate-900 space-y-1.5 pl-4 list-decimal font-medium">
-            <li><strong>Detecting the Problem</strong>: Servers send regular "heartbeat" signals. If a server stops answering, the system knows it failed.</li>
-            <li><strong>Automatic Backup Copies</strong>: Important data is stored on at least 3 separate machines so losing one machine causes no data loss.</li>
-            <li><strong>Stopping Domino Effects</strong>: If one service slows down, circuit breakers stop sending requests to it so the whole website does not freeze.</li>
+            <li><strong>Heartbeats</strong>: Servers send regular "I am alive" messages. If a server stops answering, the system marks it as failed.</li>
+            <li><strong>Data Replication</strong>: Important records are saved on 3 separate servers so losing one causes zero data loss.</li>
+            <li><strong>Circuit Breakers</strong>: If a database slows down, the system stops sending new requests to it temporarily so the whole website does not freeze.</li>
           </ol>
         </div>
       </div>
@@ -809,32 +706,32 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           terms={[
             {
               term: "Heartbeat",
-              definition: "A periodic check message sent by servers to prove they are still running."
+              definition: "A periodic check message proving a server is still running."
             },
             {
               term: "Circuit Breaker",
-              definition: "Software pattern that stops calling a broken service to prevent cascading crashes."
+              definition: "A software pattern that stops sending requests to a broken service to prevent system-wide crashes."
             },
             {
-              term: "Redundancy",
-              definition: "Keeping duplicate backup servers ready to take over instantly."
+              term: "Failover",
+              definition: "Automatically redirecting user traffic to a backup server when the primary server fails."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Use the electrical fuse box analogy: a circuit breaker stops one failing appliance from setting the whole house on fire.
+      Use the electrical circuit breaker analogy: an electrical breaker trips so your whole house does not catch fire when one appliance short-circuits.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 18: CODE DEMONSTRATION - NETWORK MESSAGING
+       SLIDE 16: CODE DEMONSTRATION - NETWORK MESSAGING
        ======================================================================== -->
   <Slide
-    id="code-demo"
+    id="code-messaging"
     eyebrow="CODE DEMONSTRATION"
-    title="Code Example: Sending Messages Across Network Nodes"
+    title="Code Example: Simulating Network Message Passing & Latency"
     layout="code"
     unit="BIT 542CO: Distributed & Cloud Computing"
   >
@@ -844,19 +741,107 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       </p>
 
       <CodeBlock
-        title="DistributedNode.js: Simulating Message Passing"
+        title="DistributedNode.js: Sending Data Between Servers"
         lang="javascript"
         code={distributedMessagePassingCode}
         output={"Sending data across network...\nResponse: {\"status\":\"ACK\",\"receiver\":\"node-eu-west-1\",\"appliedState\":{\"key\":\"cluster_config\",\"value\":\"replicated\"}}"}
         pitfalls={[
-          "Forgetting that network requests take time: always use async and await when talking to other machines.",
-          "Not adding timeout handling: your code can hang forever if the receiving server loses power.",
-          "Trying to send in-memory function references over the network: functions cannot be sent directly as text."
+          "Forgetting that network calls take time: always use async and await when talking to other servers.",
+          "Not adding timeout handling: your code can freeze forever if the receiving server loses power.",
+          "Trying to send in-memory function references over the network: only data can be sent as text/bytes."
         ]}
       />
     </div>
     <SpeakerNotes>
-      Walk through the code lines: explain the `setTimeout` delay simulating real network cables between US and Europe.
+      Walk through the code: explain how the delay simulates real transatlantic network cables between US and Europe.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 17: COMMERCIALIZING DISTRIBUTED SYSTEMS (AMAZON'S STORY)
+       ======================================================================== -->
+  <Slide
+    id="amazon-story"
+    eyebrow="THE CLOUD REVOLUTION"
+    title="Commercializing Distributed Systems: The Amazon E-Commerce Story"
+    layout="split-sidebar"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+      <div class="md:col-span-2 space-y-4">
+        <p class="text-base leading-relaxed text-slate-900 font-medium">
+          In the early 2000s, Amazon built massive server clusters to handle the huge surge of holiday shopping traffic during Black Friday and Cyber Monday.
+        </p>
+
+        <div class="lecture-card border-2 border-slate-300 space-y-2">
+          <h4 class="text-sm font-bold text-slate-950 uppercase">The Problem and the Big Idea:</h4>
+          <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
+            <li><strong>The Idle Server Problem</strong>: For 11 months of the year, over 80% of Amazon's expensive servers sat completely idle with zero traffic.</li>
+            <li><strong>The Big Idea (2006)</strong>: Instead of letting idle servers waste money, why not rent access to them to other developers and companies by the hour?</li>
+            <li><strong>The Birth of AWS</strong>: Amazon launched Amazon Web Services (AWS), creating Amazon EC2 (virtual computers) and Amazon S3 (storage).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <KeyTerms
+          title="Story Terms"
+          terms={[
+            {
+              term: "Idle Capacity",
+              definition: "Expensive computer hardware sitting powered on without doing any useful work."
+            },
+            {
+              term: "AWS",
+              definition: "Amazon Web Services: the first major commercial public cloud platform, launched in 2006."
+            },
+            {
+              term: "Utility Computing",
+              definition: "Selling computing power like water or electricity, billed by exact usage."
+            }
+          ]}
+        />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Tell the story of how a bookstore became the world's biggest computing infrastructure company.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 18: HOW AWS CHANGED THE SOFTWARE INDUSTRY
+       ======================================================================== -->
+  <Slide
+    id="aws-impact"
+    eyebrow="THE CLOUD REVOLUTION"
+    title="How AWS Changed the Software Industry Forever"
+    layout="card-grid"
+    unit="BIT 542CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Before AWS (Pre-2006)" badge="The Old Way" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Starting a software company required $100,000+ in hardware.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          You had to buy physical servers, sign a 3-year datacenter lease, wire cables, and wait 8 weeks for hardware delivery before writing a single line of production code.
+        </p>
+      </Card>
+
+      <Card title="After AWS (2006–Present)" badge="The Cloud Way" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">A student with a credit card has the same power as Netflix.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Anyone can launch 50 global servers in 60 seconds for a few dollars. If the project succeeds, it scales instantly; if it fails, you delete the servers and owe nothing more.
+        </p>
+      </Card>
+
+      <Card title="The Cloud Giants" badge="Today's Market" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Microsoft, Google, and others joined the market.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Microsoft launched Azure and Google launched Google Cloud Platform (GCP). Today, over 90% of global internet traffic runs through cloud provider datacenters.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain how startups like Airbnb, Uber, and Pinterest were able to grow rapidly because they never had to buy physical servers.
     </SpeakerNotes>
   </Slide>
 
@@ -864,7 +849,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
        SLIDE 19: WHAT IS CLOUD COMPUTING?
        ======================================================================== -->
   <Slide
-    id="cloud-intro"
+    id="cloud-definition"
     eyebrow="CLOUD COMPUTING"
     title="What Is Cloud Computing?"
     layout="split-sidebar"
@@ -873,41 +858,41 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          <strong>Cloud computing</strong> means renting computer power, storage space, and software over the internet from companies like Amazon (AWS), Microsoft (Azure), and Google (GCP), instead of buying physical computers yourself.
+          <strong>Cloud computing</strong> means renting computing power, storage space, and software over the internet from providers (like AWS, Azure, or Google Cloud), instead of buying physical computers yourself.
         </p>
 
         <div class="lecture-card border-2 border-slate-300">
-          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">How It Changes Computing:</h4>
+          <h4 class="text-sm font-bold text-slate-950 mb-1 uppercase">Three Everyday Characteristics:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Like Electricity or Water</strong>: You plug in and pay only for what you consume each month.</li>
-            <li><strong>No Building Maintenance</strong>: You do not need to buy air conditioning, backup generators, or rent server rooms.</li>
-            <li><strong>Instant Setup</strong>: You can create 10 new servers in 30 seconds using a web dashboard or code script.</li>
+            <li><strong>On-Demand</strong>: Start or stop computers anytime without asking for permission.</li>
+            <li><strong>Elastic</strong>: Automatically stretch to handle busy traffic and shrink when quiet.</li>
+            <li><strong>Pay for Usage</strong>: Pay only for the exact seconds of CPU and gigabytes of storage you use.</li>
           </ul>
         </div>
       </div>
 
       <div class="md:col-span-1">
         <KeyTerms
-          title="Cloud Terms"
+          title="Terms"
           terms={[
             {
               term: "Cloud Provider",
-              definition: "A company (like AWS or Google) that owns datacenters and rents access to them."
+              definition: "A company (like AWS or Google) that owns datacenters and rents computing access."
             },
             {
-              term: "On-Demand",
-              definition: "Getting resources immediately whenever you need them without waiting weeks."
+              term: "Elasticity",
+              definition: "The ability to automatically add or remove computing power matching real-time user traffic."
             },
             {
               term: "Pay-As-You-Go",
-              definition: "Billing based strictly on the exact minutes and gigabytes you use."
+              definition: "Paying only for the exact minutes and gigabytes your software consumes."
             }
           ]}
         />
       </div>
     </div>
     <SpeakerNotes>
-      Use the electricity utility analogy: nobody builds their own power plant to run a house; we plug into the electrical grid.
+      Use the electricity utility analogy: you don't build a private power generator to run a toaster; you plug into the grid and pay the monthly bill.
     </SpeakerNotes>
   </Slide>
 
@@ -915,7 +900,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
        SLIDE 20: THE 5 ESSENTIAL CLOUD TRAITS (NIST)
        ======================================================================== -->
   <Slide
-    id="cloud-nist-traits"
+    id="nist-traits"
     eyebrow="CLOUD COMPUTING"
     title="How Cloud Computing Works: The Five Essential Traits (NIST)"
     layout="split-sidebar"
@@ -924,16 +909,16 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       <div class="md:col-span-2 space-y-4">
         <p class="text-base leading-relaxed text-slate-900 font-medium">
-          The National Institute of Standards and Technology (NIST) defines five characteristics that a system must have to be called a true cloud:
+          The National Institute of Standards and Technology (NIST) defines five traits that a service must have to be considered a true cloud:
         </p>
 
         <div class="lecture-card border-2 border-slate-300">
           <ol class="text-xs text-slate-900 space-y-1.5 pl-4 list-decimal font-medium">
-            <li><strong>On-Demand Self-Service</strong>: You can start servers yourself instantly without calling support.</li>
-            <li><strong>Broad Network Access</strong>: You can access services over standard internet from phones, laptops, or tablets.</li>
-            <li><strong>Resource Pooling</strong>: Hardware is shared securely among many customers to keep prices low.</li>
-            <li><strong>Rapid Elasticity</strong>: Systems automatically add servers during traffic spikes and remove them when traffic drops.</li>
-            <li><strong>Measured Service</strong>: You get a clear bill showing exactly how many seconds and bytes were used.</li>
+            <li><strong>On-Demand Self-Service</strong>: You start servers yourself in seconds from a web page or script.</li>
+            <li><strong>Broad Network Access</strong>: You access services over standard internet from phones, laptops, and tablets.</li>
+            <li><strong>Resource Pooling</strong>: Physical servers are shared securely among multiple customers to keep prices low.</li>
+            <li><strong>Rapid Elasticity</strong>: Systems automatically add servers during traffic spikes and remove them when quiet.</li>
+            <li><strong>Measured Service</strong>: You get a clear bill showing exactly how many seconds and gigabytes were used.</li>
           </ol>
         </div>
       </div>
@@ -943,16 +928,16 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
           title="Terms"
           terms={[
             {
-              term: "Elasticity",
-              definition: "The ability to automatically stretch bigger during busy times and shrink smaller when quiet."
-            },
-            {
               term: "Resource Pooling",
-              definition: "Sharing large physical server farms securely among multiple clients."
+              definition: "Sharing large server farms securely among multiple clients with logical isolation."
             },
             {
               term: "Self-Service",
-              definition: "Creating and managing servers directly from a web page or script."
+              definition: "Creating and managing servers directly from a web page or code."
+            },
+            {
+              term: "Measured Service",
+              definition: "Tracking resource usage accurately for transparent metered billing."
             }
           ]}
         />
@@ -985,7 +970,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       <Card title="PaaS (Platform)" badge="App Platforms" glow="cyan">
         <p class="text-xs text-slate-700 font-bold mb-1">Renting a managed environment ready to run your code.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          You upload your code (like Node.js or Python). The provider handles the servers, OS updates, and scaling.
+          You upload your code (Node.js, Python, Java). The provider handles the servers, OS updates, and auto-scaling.
         </p>
         <p class="text-xs text-slate-600 font-bold m-0">Examples: Heroku, AWS Elastic Beanstalk, Vercel.</p>
       </Card>
@@ -993,21 +978,21 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       <Card title="SaaS (Software)" badge="Ready Applications" glow="rose">
         <p class="text-xs text-slate-700 font-bold mb-1">Using complete applications directly in your browser.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium mb-2">
-          You don't manage any servers or code. You just log in and use the finished software.
+          You don't manage any servers or write code. You just log in and use the finished web application.
         </p>
         <p class="text-xs text-slate-600 font-bold m-0">Examples: Google Docs, Gmail, Microsoft 365, Canva.</p>
       </Card>
     </div>
     <SpeakerNotes>
-      Use the Pizza as a Service analogy: IaaS is buying raw dough and toppings, PaaS is pizza delivered, SaaS is dining at a restaurant.
+      Use the Pizza as a Service analogy: IaaS is buying raw ingredients, PaaS is pizza delivered, SaaS is eating at a restaurant.
     </SpeakerNotes>
   </Slide>
 
   <!-- ========================================================================
-       SLIDE 22: IAAS IN DETAIL
+       SLIDE 22: IAAS IN DEPTH
        ======================================================================== -->
   <Slide
-    id="iaas-detail"
+    id="iaas-in-depth"
     eyebrow="CLOUD SERVICE MODELS"
     title="Infrastructure as a Service (IaaS): What You Control"
     layout="split-sidebar"
@@ -1020,9 +1005,9 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
         </p>
 
         <div class="lecture-card border-2 border-slate-300 space-y-2">
-          <h4 class="text-sm font-bold text-slate-950 uppercase">Who Manages What in IaaS:</h4>
+          <h4 class="text-sm font-bold text-slate-950 uppercase">Division of Responsibility in IaaS:</h4>
           <ul class="text-xs text-slate-900 space-y-1.5 pl-4 list-disc font-medium">
-            <li><strong>Cloud Provider Manages</strong>: Physical datacenter buildings, cooling, electricity, real server hardware, and the hypervisor software.</li>
+            <li><strong>Cloud Provider Manages</strong>: Physical datacenters, cooling, electricity, physical server hardware, and hypervisor virtualization software.</li>
             <li><strong>You Manage</strong>: Choosing Linux or Windows, installing security updates, setting firewall rules, installing databases, and running your software.</li>
             <li><strong>When to Use</strong>: When you need total control over software versions or want to move existing systems to the cloud without rewriting them.</li>
           </ul>
@@ -1050,7 +1035,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       </div>
     </div>
     <SpeakerNotes>
-      Explain that with great control comes responsibility: in IaaS, if you forget to install a security patch on Linux, hackers can compromise the server.
+      Explain that in IaaS, if you forget to install a security update on your virtual Linux server, hackers can exploit it.
     </SpeakerNotes>
   </Slide>
 
@@ -1058,7 +1043,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
        SLIDE 23: PAAS AND SERVERLESS
        ======================================================================== -->
   <Slide
-    id="paas-detail"
+    id="paas-and-serverless"
     eyebrow="CLOUD SERVICE MODELS"
     title="Platform as a Service (PaaS) and Serverless Computing"
     layout="split-sidebar"
@@ -1131,7 +1116,7 @@ console.log("3-Year Cost Comparison:", JSON.stringify(result, null, 2));`;
       <div class="lecture-card border-2 border-indigo-300 bg-indigo-50 mt-3 p-3">
         <h4 class="text-xs font-bold text-indigo-950 uppercase mb-1">Key Takeaway</h4>
         <p class="text-xs text-indigo-950 m-0 font-medium">
-          No matter which cloud model you use, <strong>your data and user passwords are always your responsibility</strong>. If you give a user an insecure password, the cloud provider cannot prevent unauthorized logins.
+          No matter which cloud model you use, <strong>your data and user passwords are always your responsibility</strong>. If you give a user a weak password, the cloud provider cannot prevent unauthorized logins.
         </p>
       </div>
     </div>
