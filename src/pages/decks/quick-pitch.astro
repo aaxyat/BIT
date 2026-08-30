@@ -1,0 +1,171 @@
+---
+import DeckLayout from '../../layouts/DeckLayout.astro';
+import Slide from '../../components/slides/Slide.astro';
+import Step from '../../components/slides/Step.astro';
+import Card from '../../components/slides/Card.astro';
+import SpeakerNotes from '../../components/slides/SpeakerNotes.astro';
+import { Rocket, Target, TrendingUp, DollarSign, CheckCircle2, ArrowRight } from 'lucide-astro';
+---
+
+<DeckLayout
+  title="Nova AI — Pitch Deck"
+  description="Next-generation autonomous data infrastructure"
+  initialScene="constellation"
+>
+  <!-- Slide 1: Cover -->
+  <Slide id="cover" layout="cover" bgScene="constellation">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+        <Rocket class="w-3.5 h-3.5" />
+        <span>Seed Round Pitch Deck</span>
+      </div>
+      <h1 class="text-gradient font-black text-6xl tracking-tight mb-4 leading-tight">
+        Nova Data Platform
+      </h1>
+      <p class="text-xl text-slate-300 font-light max-w-2xl mb-8 leading-relaxed">
+        The autonomous data streaming architecture built for the real-time AI enterprise.
+      </p>
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+        <span>Confidential • Q3 2026</span>
+        <span>•</span>
+        <span>Press SPACE to proceed</span>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Introduce company mission: making real-time AI context streaming effortless for large enterprises.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 2: Problem & Solution -->
+  <Slide id="problem-solution" title="The Enterprise Challenge" subtitle="Traditional data pipelines break under LLM workloads" layout="split" bgScene="constellation">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-auto">
+      <Card title="The Problem" badge="Current Pain" glow="rose">
+        <ul class="space-y-3 text-slate-300 text-sm list-none p-0">
+          <li class="flex items-start gap-2">
+            <span class="text-rose-400 font-bold">•</span>
+            <span>Batch ETL pipelines are too slow for instant AI agent context.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-rose-400 font-bold">•</span>
+            <span>Fragmented vector stores create data silos and stale embeddings.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-rose-400 font-bold">•</span>
+            <span>Massive cloud infrastructure costs and difficult scaling.</span>
+          </li>
+        </ul>
+      </Card>
+
+      <Step effect="fade-up" index={1}>
+        <Card title="Our Solution" badge="Nova Engine" glow="cyan">
+          <ul class="space-y-3 text-slate-300 text-sm list-none p-0">
+            <li class="flex items-start gap-2">
+              <CheckCircle2 class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <span>Sub-millisecond unified streaming and vector embedding.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <CheckCircle2 class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <span>Zero-copy data synchronization directly to edge nodes.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <CheckCircle2 class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <span>65% reduction in cloud infrastructure computing expenses.</span>
+            </li>
+          </ul>
+        </Card>
+      </Step>
+    </div>
+    <SpeakerNotes>
+      Contrast legacy batch pipelines with Nova's instant streaming architecture.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 3: Market Size & Traction Stats -->
+  <Slide id="market-traction" title="Market Opportunity & Traction" subtitle="Accelerating enterprise demand for real-time AI infrastructure" bgScene="particles">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+      <Step effect="zoom-in" index={1}>
+        <Card stat="$42B" statLabel="Total Addressable Market by 2028" glow="indigo" badge="Market Size">
+          <p class="text-xs text-slate-400">
+            Global real-time data streaming & vector indexing infrastructure CAGR of 34%.
+          </p>
+        </Card>
+      </Step>
+
+      <Step effect="zoom-in" index={2}>
+        <Card stat="10x" statLabel="Faster Query Execution" glow="cyan" badge="Performance">
+          <p class="text-xs text-slate-400">
+            Benchmarked against leading legacy cloud data warehouses and streaming brokers.
+          </p>
+        </Card>
+      </Step>
+
+      <Step effect="zoom-in" index={3}>
+        <Card stat="320%" statLabel="YoY ARR Growth in Private Beta" glow="amber" badge="Traction">
+          <p class="text-xs text-slate-400">
+            18 Fortune 500 enterprise customers currently deploying in production environments.
+          </p>
+        </Card>
+      </Step>
+    </div>
+    <SpeakerNotes>
+      Emphasize the rapid expansion of enterprise AI budgets and our strong early pilot customer conversion rate.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 4: Product Roadmap -->
+  <Slide id="roadmap" title="Execution Roadmap" subtitle="Milestones through 2027" bgScene="grid">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+      <div class="p-6 rounded-2xl glass-panel border-t-4 border-indigo-500">
+        <div class="text-xs font-mono text-indigo-400 font-bold mb-2">Q4 2026</div>
+        <h4 class="text-base font-bold text-white mb-2">Global Edge Mesh</h4>
+        <p class="text-xs text-slate-300">
+          Deploy low-latency vector nodes across 35 worldwide availability regions.
+        </p>
+      </div>
+
+      <Step effect="fade-up" index={1}>
+        <div class="p-6 rounded-2xl glass-panel border-t-4 border-cyan-500">
+          <div class="text-xs font-mono text-cyan-400 font-bold mb-2">Q2 2027</div>
+          <h4 class="text-base font-bold text-white mb-2">Autonomous Optimizer</h4>
+          <p class="text-xs text-slate-300">
+            Self-tuning index partitioning driven by predictive neural network routing.
+          </p>
+        </div>
+      </Step>
+
+      <Step effect="fade-up" index={2}>
+        <div class="p-6 rounded-2xl glass-panel border-t-4 border-emerald-500">
+          <div class="text-xs font-mono text-emerald-400 font-bold mb-2">Q4 2027</div>
+          <h4 class="text-base font-bold text-white mb-2">Enterprise Marketplace</h4>
+          <p class="text-xs text-slate-300">
+            One-click ecosystem connectors for Snowflake, Databricks, and AWS.
+          </p>
+        </div>
+      </Step>
+    </div>
+    <SpeakerNotes>
+      Walk through the roadmap milestones and describe how each phase opens up larger enterprise contract sizes.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 5: The Ask & Call to Action -->
+  <Slide id="closing" layout="center" bgScene="constellation">
+    <div class="max-w-2xl text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-6">
+        <DollarSign class="w-3.5 h-3.5" />
+        <span>Raising $8.5M Seed Round</span>
+      </div>
+      <h2 class="text-gradient font-black text-5xl mb-4">Build the Real-Time Future</h2>
+      <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+        We are partnering with world-class investors to accelerate global infrastructure rollout and enterprise go-to-market.
+      </p>
+      <div class="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold text-sm shadow-xl">
+        <span>investors@novadata.ai</span>
+        <ArrowRight class="w-4 h-4" />
+      </div>
+    </div>
+    <SpeakerNotes>
+      Close the pitch with the funding target and open up for questions.
+    </SpeakerNotes>
+  </Slide>
+</DeckLayout>

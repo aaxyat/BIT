@@ -1,0 +1,41 @@
+---
+interface Props {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  layout?: 'cover' | 'default' | 'split' | 'grid-3' | 'center';
+  bgScene?: 'particles' | 'grid' | 'geometry' | 'constellation' | 'none';
+  transition?: 'slide' | 'fade' | 'convex' | 'concave' | 'zoom' | 'none';
+  class?: string;
+}
+
+const {
+  id,
+  title,
+  subtitle,
+  layout = 'default',
+  bgScene,
+  transition,
+  class: className = '',
+} = Astro.props;
+
+const layoutClass = `slide-layout-${layout}`;
+---
+
+<section
+  id={id}
+  class={`relative w-full h-full ${layoutClass} ${className}`}
+  data-bg-scene={bgScene}
+  data-transition={transition}
+>
+  {title && (
+    <div class="slide-header mb-6">
+      <h2 class="text-gradient font-bold tracking-tight mb-1">{title}</h2>
+      {subtitle && <p class="text-muted text-sm font-medium">{subtitle}</p>}
+    </div>
+  )}
+
+  <div class="slide-content">
+    <slot />
+  </div>
+</section>

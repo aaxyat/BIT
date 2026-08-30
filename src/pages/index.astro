@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThreeBackground from '../components/three/ThreeBackground.astro';
+import DeckCard from '../components/decks/DeckCard.astro';
+import { Presentation, Sparkles, Layers, Box, Cpu, Keyboard, ArrowUpRight, Zap } from 'lucide-astro';
+
+const decks = [
+  {
+    title: 'Master Feature Showcase',
+    description: 'Comprehensive tour of Astro slide components, 2D vertical stacks, step fragments, Tokyo Night code highlights, and presenter speaker notes.',
+    slug: 'showcase',
+    category: 'Showcase',
+    slideCount: 6,
+    duration: '10 min',
+    glow: 'indigo' as const,
+    featured: true,
+  },
+  {
+    title: 'Three.js 3D Visual Playground',
+    description: 'Explore the 4 WebGL background presets (Particle Wave, Cyber Grid, Floating Polyhedra, Constellation) and embedded interactive 3D model widgets.',
+    slug: 'threejs-deepdive',
+    category: '3D Graphics',
+    slideCount: 5,
+    duration: '8 min',
+    glow: 'cyan' as const,
+    featured: false,
+  },
+  {
+    title: 'Nova AI — Startup Pitch Deck',
+    description: 'Sleek, high-impact business pitch deck with problem/solution cards, $42B market size stats, and execution roadmap.',
+    slug: 'quick-pitch',
+    category: 'Business Pitch',
+    slideCount: 5,
+    duration: '7 min',
+    glow: 'amber' as const,
+    featured: false,
+  },
+];
+---
+
+<BaseLayout
+  title="Astro Slides — Modern Presentation Platform"
+  description="Component-driven presentation decks built with Astro, Reveal.js, Three.js, and Tailwind CSS."
+>
+  <!-- Background 3D WebGL Canvas Layer -->
+  <ThreeBackground initialScene="particles" />
+
+  <div class="relative min-h-screen flex flex-col justify-between px-6 py-12 max-w-7xl mx-auto z-10">
+    <!-- Header -->
+    <header class="flex items-center justify-between pb-8 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400">
+          <Presentation class="w-6 h-6" />
+        </div>
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-bold block">Astro Engine</span>
+          <h1 class="text-xl font-extrabold text-white tracking-tight m-0">Slides Platform</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs font-mono text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Astro 5 + Reveal.js + Three.js</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Hero & Catalog -->
+    <main class="my-auto py-12">
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+          <Sparkles class="w-3.5 h-3.5" />
+          <span>Multi-Deck Presentation Hub</span>
+        </div>
+        <h2 class="text-gradient font-black text-4xl sm:text-6xl tracking-tight leading-tight mb-6">
+          Present with Speed, Polish & 3D Visuals.
+        </h2>
+        <p class="text-lg text-slate-300 font-light leading-relaxed mb-8 max-w-2xl">
+          Craft slide presentations using declarative Astro components, zero runtime hydration bloat, and fluid Three.js WebGL backgrounds.
+        </p>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-3 gap-4 max-w-xl">
+          <div class="p-4 rounded-xl glass-panel">
+            <div class="text-2xl font-bold text-white">3</div>
+            <div class="text-xs text-slate-400">Active Decks</div>
+          </div>
+          <div class="p-4 rounded-xl glass-panel">
+            <div class="text-2xl font-bold text-cyan-400">4</div>
+            <div class="text-xs text-slate-400">3D Scene Presets</div>
+          </div>
+          <div class="p-4 rounded-xl glass-panel">
+            <div class="text-2xl font-bold text-indigo-400">60 FPS</div>
+            <div class="text-xs text-slate-400">Hardware Accel</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decks Grid -->
+      <section class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <Layers class="w-5 h-5 text-indigo-400" />
+            <span>Available Slide Decks</span>
+          </h3>
+          <span class="text-xs font-mono text-slate-400">Select a deck to present</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {decks.map((deck) => (
+            <DeckCard {...deck} />
+          ))}
+        </div>
+      </section>
+
+      <!-- Keyboard Shortcuts Banner -->
+      <section class="mt-16 p-6 rounded-2xl glass-panel border border-white/10">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="p-3 rounded-xl bg-indigo-500/20 text-indigo-400">
+              <Keyboard class="w-6 h-6" />
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white mb-0.5">Presenter Controls Ready</h4>
+              <p class="text-xs text-slate-300/80 m-0">
+                Inside any deck, press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">SPACE</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">→</kbd> for slides, <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">S</kbd> for Speaker Notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">ESC</kbd> for Overview, and <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">?</kbd> for help.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-mono">
+      <div>
+        <span>Built with Astro, Reveal.js, Three.js & Tailwind CSS</span>
+      </div>
+      <div>
+        <span>Clean Path URLs Enabled</span>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>

@@ -1,0 +1,169 @@
+---
+interface Props {
+  model?: 'torus' | 'sphere' | 'cube' | 'dodecahedron' | 'knot';
+  color?: string;
+  wireframe?: boolean;
+  height?: string;
+  className?: string;
+}
+
+const {
+  model = 'knot',
+  color = '#6366f1',
+  wireframe = true,
+  height = '320px',
+  className = '',
+} = Astro.props;
+
+const uniqueId = `three-inline-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div
+  id={uniqueId}
+  class={`relative rounded-xl overflow-hidden glass-panel flex items-center justify-center cursor-grab active:cursor-grabbing ${className}`}
+  style={`height: ${height}; min-height: 200px; width: 100%;`}
+  data-model={model}
+  data-color={color}
+  data-wireframe={wireframe.toString()}
+>
+  <canvas class="w-full h-full block"></canvas>
+  <div class="absolute bottom-2 right-3 pointer-events-none text-xs text-slate-400/60 font-mono flex items-center gap-1">
+    <span>Drag to rotate</span>
+  </div>
+</div>
+
+<script>
+  import * as THREE from 'three';
+
+  function setupInlineCanvases() {
+    const wrappers = document.querySelectorAll<HTMLElement>('[id^="three-inline-"]');
+
+    wrappers.forEach((wrapper) => {
+      if (wrapper.dataset.initialized === 'true') return;
+      wrapper.dataset.initialized = 'true';
+
+      const canvas = wrapper.querySelector('canvas');
+      if (!canvas) return;
+
+      const width = wrapper.clientWidth || 300;
+      const height = wrapper.clientHeight || 300;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Geometry based on prop
+      const modelType = wrapper.dataset.model || 'knot';
+      const colorVal = wrapper.dataset.color || '#6366f1';
+      const isWireframe = wrapper.dataset.wireframe !== 'false';
+
+      let geometry: THREE.BufferGeometry;
+      switch (modelType) {
+        case 'torus':
+          geometry = new THREE.TorusGeometry(1.2, 0.4, 16, 60);
+          break;
+        case 'sphere':
+          geometry = new THREE.SphereGeometry(1.4, 24, 24);
+          break;
+        case 'cube':
+          geometry = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+          break;
+        case 'dodecahedron':
+          geometry = new THREE.DodecahedronGeometry(1.4, 0);
+          break;
+        case 'knot':
+        default:
+          geometry = new THREE.TorusKnotGeometry(1.1, 0.35, 100, 16);
+          break;
+      }
+
+      const material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(colorVal),
+        wireframe: isWireframe,
+        roughness: 0.3,
+        metalness: 0.8,
+        emissive: new THREE.Color(colorVal).multiplyScalar(0.2),
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      // Lights
+      const light1 = new THREE.DirectionalLight(0xffffff, 2.5);
+      light1.position.set(2, 4, 3);
+      scene.add(light1);
+
+      const light2 = new THREE.PointLight(0x22d3ee, 3, 10);
+      light2.position.set(-3, -2, -2);
+      scene.add(light2);
+
+      const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambient);
+
+      // Interactive drag rotation
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+
+      wrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
+
+        mesh.rotation.y += deltaX * 0.01;
+        mesh.rotation.x += deltaY * 0.01;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      // Resize observer
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const w = entry.contentRect.width;
+          const h = entry.contentRect.height;
+          if (w && h) {
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+          }
+        }
+      });
+      resizeObserver.observe(wrapper);
+
+      // Animation loop
+      let animId: number;
+      function animate() {
+        if (!isDragging) {
+          mesh.rotation.x += 0.006;
+          mesh.rotation.y += 0.009;
+        }
+        renderer.render(scene, camera);
+        animId = requestAnimationFrame(animate);
+      }
+      animate();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupInlineCanvases);
+  } else {
+    setupInlineCanvases();
+  }
+  document.addEventListener('astro:page-load', setupInlineCanvases);
+</script>

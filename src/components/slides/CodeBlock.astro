@@ -1,0 +1,42 @@
+---
+interface Props {
+  code: string;
+  lang?: string;
+  lines?: string; // e.g. "1|2-4|5-8"
+  title?: string;
+  class?: string;
+}
+
+const {
+  code,
+  lang = 'typescript',
+  lines,
+  title,
+  class: className = '',
+} = Astro.props;
+
+// Trim excess leading/trailing whitespace
+const trimmedCode = code.trim();
+---
+
+<div class={`rounded-xl overflow-hidden glass-panel my-3 ${className}`}>
+  {title && (
+    <div class="bg-slate-900/80 px-4 py-2.5 border-b border-white/10 flex items-center justify-between text-xs text-slate-300 font-mono">
+      <div class="flex items-center gap-2">
+        <div class="flex gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+        </div>
+        <span class="font-medium text-slate-300 ml-2">{title}</span>
+      </div>
+      <span class="text-indigo-400 font-semibold uppercase">{lang}</span>
+    </div>
+  )}
+  <pre class="m-0 !bg-slate-950/70"><code
+    class={`language-${lang} text-sm`}
+    data-trim
+    data-noescape
+    data-line-numbers={lines}
+  >{trimmedCode}</code></pre>
+</div>

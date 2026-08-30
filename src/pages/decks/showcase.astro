@@ -1,0 +1,221 @@
+---
+import DeckLayout from '../../layouts/DeckLayout.astro';
+import Slide from '../../components/slides/Slide.astro';
+import VerticalStack from '../../components/slides/VerticalStack.astro';
+import Step from '../../components/slides/Step.astro';
+import CodeBlock from '../../components/slides/CodeBlock.astro';
+import SpeakerNotes from '../../components/slides/SpeakerNotes.astro';
+import Card from '../../components/slides/Card.astro';
+import { Layers, Sparkles, Cpu, Zap, Code2, ShieldCheck, Play } from 'lucide-astro';
+
+const sampleCode = `import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+
+// Configure Astro with Reveal.js and Three.js
+export default defineConfig({
+  integrations: [tailwind()],
+  vite: {
+    ssr: {
+      noExternal: ['three', 'reveal.js']
+    }
+  }
+});`;
+---
+
+<DeckLayout
+  title="Master Feature Showcase"
+  description="Explore the full power of Astro, Reveal.js, and Three.js presentation engine"
+  initialScene="particles"
+>
+  <!-- Slide 1: Cover -->
+  <Slide id="cover" layout="cover" bgScene="particles">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+        <Sparkles class="w-3.5 h-3.5" />
+        <span>Next-Gen Presentations</span>
+      </div>
+      <h1 class="text-gradient font-black text-6xl tracking-tight mb-4 leading-tight">
+        Astro + Reveal.js <br />+ Three.js Engine
+      </h1>
+      <p class="text-xl text-slate-300 font-light max-w-2xl mb-8 leading-relaxed">
+        Ultra-fast slide presentations engineered with Astro components, fluid WebGL 3D graphics, and responsive Tailwind styling.
+      </p>
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+        <span class="px-2.5 py-1 rounded bg-slate-900/80 border border-white/10">Press SPACE to begin</span>
+        <span>•</span>
+        <span>Use ARROWS to navigate</span>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Welcome the audience. Introduce the core stack: Astro for static generation and zero runtime bloat, Reveal.js for keyboard controls and transitions, and Three.js for interactive WebGL visuals.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 2: Split Architecture Layout -->
+  <Slide id="architecture" title="Component-Driven Architecture" subtitle="How Astro powers modern presentation decks" layout="split" bgScene="particles">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
+      <div class="space-y-4">
+        <Step effect="fade-up" index={1}>
+          <div class="p-4 rounded-xl glass-panel border border-indigo-500/30">
+            <div class="flex items-center gap-3 mb-2 text-indigo-400">
+              <Layers class="w-5 h-5" />
+              <h3 class="text-lg font-bold text-white m-0">Zero Hydration Bloat</h3>
+            </div>
+            <p class="text-sm text-slate-300 m-0">
+              Astro compiles slides into lean, optimized static HTML, loading JavaScript only where interactive controls and WebGL canvases are needed.
+            </p>
+          </div>
+        </Step>
+
+        <Step effect="fade-up" index={2}>
+          <div class="p-4 rounded-xl glass-panel border border-cyan-500/30">
+            <div class="flex items-center gap-3 mb-2 text-cyan-400">
+              <Cpu class="w-5 h-5" />
+              <h3 class="text-lg font-bold text-white m-0">Shared WebGL Background</h3>
+            </div>
+            <p class="text-sm text-slate-300 m-0">
+              A single fixed Three.js scene manager lives behind the presentation, smoothly morphing camera angles and shaders between slide transitions.
+            </p>
+          </div>
+        </Step>
+      </div>
+
+      <Step effect="zoom-in" index={3}>
+        <div class="p-6 rounded-2xl glass-card border border-white/10 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
+            <Zap class="w-8 h-8" />
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2">60 FPS Hardware Accelerated</h3>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            Runs buttery smooth on any device. Auto-pauses RAF loops when the tab is hidden or paused with the <code>B</code> key.
+          </p>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+            <ShieldCheck class="w-3.5 h-3.5" />
+            <span>Battery & GPU Optimized</span>
+          </div>
+        </div>
+      </Step>
+    </div>
+    <SpeakerNotes>
+      Point out that unlike typical SPA decks (React/Vue), Astro delivers optimal performance because slides are rendered as pure HTML components.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 3: 3-Column Glassmorphic Feature Grid -->
+  <Slide id="features" title="Slide Components & Visual Polish" subtitle="Pre-built primitives for rapid presentation authoring" bgScene="grid">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+      <Step effect="fade-up" index={1}>
+        <Card title="Fragments & Steps" badge="Step.astro" glow="indigo">
+          <p>
+            Animate bullet points, diagrams, and content sequentially on click or keystroke with customizable CSS animations.
+          </p>
+        </Card>
+      </Step>
+
+      <Step effect="fade-up" index={2}>
+        <Card title="Vertical Stacks" badge="2D Navigation" glow="cyan">
+          <p>
+            Organize complex topics in 2D grids. Press the Down Arrow on the next slide to drill down into technical details.
+          </p>
+        </Card>
+      </Step>
+
+      <Step effect="fade-up" index={3}>
+        <Card title="Syntax Highlighting" badge="Tokyo Night" glow="rose">
+          <p>
+            Rich code blocks with line-by-line animations, language tags, and Dracula / Tokyo Night themes.
+          </p>
+        </Card>
+      </Step>
+    </div>
+    <SpeakerNotes>
+      Highlight the 3-column layout and note that the next slide is a Vertical Stack drill-down demo.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 4: Vertical Slide Stack (2D Navigation) -->
+  <VerticalStack id="stack-demo">
+    <!-- Top Slide in Stack -->
+    <Slide id="vertical-1" title="Vertical Navigation (Slide 1/2)" subtitle="Drill-down into topic details without breaking flow" bgScene="geometry">
+      <div class="p-6 rounded-2xl glass-panel max-w-2xl my-auto">
+        <h3 class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+          <span>Main Topic Level</span>
+        </h3>
+        <p class="text-slate-300 text-base leading-relaxed mb-6">
+          Reveal.js supports 2-dimensional slide navigation. Horizontal arrows move between high-level topics, while vertical arrows drill into subtopics.
+        </p>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-sm font-semibold">
+          <span>Press</span>
+          <kbd class="px-2 py-1 bg-indigo-900 border border-indigo-400/40 rounded text-xs">↓ DOWN ARROW</kbd>
+          <span>to view sub-slide</span>
+        </div>
+      </div>
+      <SpeakerNotes>
+        Tell the audience that vertical navigation keeps high-level agendas clean while allowing presenters to dive deep when needed.
+      </SpeakerNotes>
+    </Slide>
+
+    <!-- Sub-Slide in Stack -->
+    <Slide id="vertical-2" title="Vertical Navigation (Slide 2/2)" subtitle="Sub-topic deep dive" bgScene="geometry">
+      <div class="p-6 rounded-2xl glass-panel max-w-2xl my-auto">
+        <h3 class="text-xl font-bold text-cyan-400 mb-3">
+          Subtopic Deep Dive Details
+        </h3>
+        <p class="text-slate-300 text-base leading-relaxed mb-6">
+          You are now on the vertical sub-slide. When you are done exploring this detail, you can navigate back up or continue to the next main topic with the Right Arrow.
+        </p>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-sm font-semibold">
+          <span>Press</span>
+          <kbd class="px-2 py-1 bg-cyan-900 border border-cyan-400/40 rounded text-xs">↑ UP ARROW</kbd>
+          <span>or</span>
+          <kbd class="px-2 py-1 bg-cyan-900 border border-cyan-400/40 rounded text-xs">→ RIGHT ARROW</kbd>
+        </div>
+      </div>
+      <SpeakerNotes>
+        Explain that vertical stacks are great for FAQs, deep code analysis, or backup slides during Q&A.
+      </SpeakerNotes>
+    </Slide>
+  </VerticalStack>
+
+  <!-- Slide 5: Code Block with Line Highlighting -->
+  <Slide id="code-demo" title="Interactive Code Highlights" subtitle="Step through code line-by-line" bgScene="constellation">
+    <div class="max-w-3xl my-auto">
+      <p class="text-slate-300 text-sm mb-4">
+        Notice how lines highlight sequentially on subsequent keystrokes using the <code>lines="1-2|4-6|8-11"</code> prop:
+      </p>
+      <CodeBlock
+        title="astro.config.mjs"
+        lang="javascript"
+        lines="1-2|4-6|8-11"
+        code={sampleCode}
+      />
+    </div>
+    <SpeakerNotes>
+      Demonstrate pressing SPACE to step through lines 1-2, then lines 4-6, and finally lines 8-11.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- Slide 6: Summary & Presenter Notes Callout -->
+  <Slide id="summary" layout="center" bgScene="particles">
+    <div class="max-w-2xl text-center">
+      <div class="w-16 h-16 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-6 border border-indigo-500/30">
+        <Sparkles class="w-8 h-8" />
+      </div>
+      <h2 class="text-gradient font-extrabold text-4xl mb-4">Ready to Create?</h2>
+      <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+        Press <kbd class="px-2.5 py-1 rounded bg-slate-800 border border-white/10 text-indigo-400 font-mono text-sm font-bold">S</kbd> to open Presenter Speaker Notes in a popup window, or press <kbd class="px-2.5 py-1 rounded bg-slate-800 border border-white/10 text-indigo-400 font-mono text-sm font-bold">ESC</kbd> to view the Slide Grid Overview.
+      </p>
+      <div class="flex items-center justify-center gap-4">
+        <a
+          href="/"
+          class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-all shadow-lg hover:shadow-indigo-500/25"
+        >
+          Return to Decks Hub
+        </a>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Final slide notes. Remind the audience that they can also press 'F' for fullscreen or '?' for the shortcut cheat-sheet.
+    </SpeakerNotes>
+  </Slide>
+</DeckLayout>

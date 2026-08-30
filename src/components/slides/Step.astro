@@ -1,0 +1,22 @@
+---
+interface Props {
+  effect?: 'fade-up' | 'fade-in' | 'zoom-in' | 'highlight-blue' | 'highlight-red' | 'fade-out' | 'grow' | 'shrink';
+  index?: number;
+  class?: string;
+  as?: 'div' | 'p' | 'li' | 'span';
+}
+
+const {
+  effect = 'fade-up',
+  index,
+  class: className = '',
+  as: Tag = 'div',
+} = Astro.props;
+---
+
+<Tag
+  class={`fragment ${effect} ${className}`}
+  data-fragment-index={index !== undefined ? index : undefined}
+>
+  <slot />
+</Tag>

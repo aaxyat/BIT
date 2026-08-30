@@ -1,0 +1,127 @@
+/**
+ * Modern Syntax Highlighting Theme (Tokyo Night / Cyberpunk Dark)
+ * Integrates with Reveal.js highlight.js plugin
+ */
+
+.reveal pre {
+  margin: 15px 0;
+  width: 100%;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  background: #0f1422;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.reveal pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 14pt;
+  line-height: 1.6;
+  padding: 20px 24px;
+  max-height: 520px;
+  color: #c0caf5;
+  background: #0f1422;
+  border-radius: 12px;
+  tab-size: 2;
+}
+
+/* Tokens */
+.hljs-comment,
+.hljs-quote {
+  color: #565f89;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #bb9af7;
+  font-weight: 600;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #ff9e64;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #9ece6a;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #7aa2f7;
+  font-weight: 600;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #2ac3de;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #f7768e;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #b4f9f8;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #e0af68;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0db9d7;
+}
+
+.hljs-meta {
+  color: #7dcfff;
+}
+
+.hljs-deletion {
+  background: rgba(247, 118, 142, 0.2);
+  color: #f7768e;
+}
+
+.hljs-addition {
+  background: rgba(158, 206, 106, 0.2);
+  color: #9ece6a;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* Line Highlighting (Reveal.js data-line-numbers) */
+.reveal .hljs-ln-line.hljs-ln-code {
+  padding-left: 10px;
+}
+
+.reveal .hljs-ln-line.hljs-ln-numbers {
+  color: #414868;
+  text-align: right;
+  padding-right: 15px;
+  user-select: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reveal pre code tr.highlight-line {
+  background-color: rgba(99, 102, 241, 0.18) !important;
+  display: table-row;
+  width: 100%;
+}

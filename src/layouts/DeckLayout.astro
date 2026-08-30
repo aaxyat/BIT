@@ -1,0 +1,194 @@
+---
+import 'reveal.js/dist/reveal.css';
+import '../styles/global.css';
+import '../styles/reveal-theme.css';
+import '../styles/syntax-highlight.css';
+import ThreeBackground from '../components/three/ThreeBackground.astro';
+import DeckHeader from '../components/decks/DeckHeader.astro';
+import KeyboardShortcuts from '../components/decks/KeyboardShortcuts.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  initialScene?: 'particles' | 'grid' | 'geometry' | 'constellation' | 'none';
+  transition?: 'slide' | 'fade' | 'convex' | 'concave' | 'zoom' | 'none';
+  controls?: boolean;
+  progress?: boolean;
+  slideNumber?: boolean | string;
+  hash?: boolean;
+  autoSlide?: number;
+}
+
+const {
+  title,
+  description = 'Interactive slide presentation',
+  initialScene = 'particles',
+  transition = 'slide',
+  controls = true,
+  progress = true,
+  slideNumber = true,
+  hash = true,
+  autoSlide = 0,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-background text-slate-100 h-full overflow-hidden select-none">
+    <!-- 3D Three.js Background Layer -->
+    <ThreeBackground initialScene={initialScene} />
+
+    <!-- Top HUD Bar -->
+    <DeckHeader title={title} />
+
+    <!-- Keyboard Shortcuts Modal -->
+    <KeyboardShortcuts />
+
+    <!-- Reveal.js Presentation Shell -->
+    <div
+      class="reveal"
+      id="reveal-container"
+      data-transition={transition}
+      data-controls={controls.toString()}
+      data-progress={progress.toString()}
+      data-slide-number={slideNumber.toString()}
+      data-hash={hash.toString()}
+      data-auto-slide={autoSlide.toString()}
+    >
+      <div class="slides">
+        <slot />
+      </div>
+    </div>
+
+    <!-- Client Script to Initialize Reveal.js -->
+    <script>
+      import Reveal from 'reveal.js';
+      import RevealHighlight from 'reveal.js/plugin/highlight/highlight.esm.js';
+      import RevealNotes from 'reveal.js/plugin/notes/notes.esm.js';
+      import RevealZoom from 'reveal.js/plugin/zoom/zoom.esm.js';
+      import RevealSearch from 'reveal.js/plugin/search/search.esm.js';
+      import RevealMath from 'reveal.js/plugin/math/math.esm.js';
+
+      declare global {
+        interface Window {
+          Reveal?: any;
+        }
+      }
+
+      async function initDeck() {
+        const container = document.getElementById('reveal-container');
+        if (!container) return;
+
+        const deck = new Reveal(container, {
+          // Display presentation controls
+          controls: container.dataset.controls !== 'false',
+          controlsTutorial: false,
+          controlsLayout: 'bottom-right',
+          controlsBackArrows: 'faded',
+
+          // Display presentation progress bar
+          progress: container.dataset.progress !== 'false',
+
+          // Display slide number
+          slideNumber: container.dataset.slideNumber !== 'false' ? 'c/t' : false,
+
+          // URL hash routing
+          hash: container.dataset.hash !== 'false',
+          history: false,
+          respondToHashChanges: true,
+
+          // Keyboard navigation
+          keyboard: true,
+          overview: true,
+          center: false,
+          touch: true,
+          loop: false,
+          rtl: false,
+          shuffle: false,
+          fragments: true,
+
+          // Flags whether to include the current fragment in the hash
+          fragmentInURL: false,
+
+          // Transition settings
+          transition: (container.dataset.transition as any) || 'slide',
+          transitionSpeed: 'default',
+          backgroundTransition: 'fade',
+
+          // Dimensions (16:9 Presentation Standard)
+          width: 1280,
+          height: 720,
+          margin: 0.04,
+          minScale: 0.2,
+          maxScale: 2.0,
+
+          // Auto-slide
+          autoSlide: parseInt(container.dataset.autoSlide || '0', 10),
+
+          // Plugins
+          plugins: [
+            RevealHighlight,
+            RevealNotes,
+            RevealZoom,
+            RevealSearch,
+            RevealMath.KaTeX,
+          ],
+        });
+
+        await deck.initialize();
+        window.Reveal = deck;
+
+        // Slide change hook to notify Three.js SceneManager
+        deck.on('slidechanged', (event: any) => {
+          const currentSlide = event.currentSlide as HTMLElement;
+          const bgScene = currentSlide.getAttribute('data-bg-scene');
+          const totalSlides = deck.getTotalSlides();
+          const indices = deck.getIndices();
+
+          if (window.__sceneManager) {
+            window.__sceneManager.onSlideChange(indices.h, totalSlides, bgScene || undefined);
+          }
+        });
+
+        // Pause hook for Blackout mode (B key)
+        deck.on('paused', () => {
+          if (window.__sceneManager) window.__sceneManager.pause();
+        });
+
+        deck.on('resumed', () => {
+          if (window.__sceneManager) window.__sceneManager.resume();
+        });
+
+        // Trigger initial slide scene check
+        const initialSlide = deck.getCurrentSlide() as HTMLElement | null;
+        if (initialSlide) {
+          const bgScene = initialSlide.getAttribute('data-bg-scene');
+          if (bgScene && window.__sceneManager) {
+            window.__sceneManager.setScene(bgScene);
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDeck);
+      } else {
+        initDeck();
+      }
+    </script>
+  </body>
+</html>
