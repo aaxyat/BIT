@@ -1,0 +1,29 @@
+---
+interface Props {
+  title?: string;
+  terms?: Array<{ term: string; definition: string }>;
+  class?: string;
+}
+
+const {
+  title = 'Key Terms',
+  terms = [],
+  class: className = '',
+} = Astro.props;
+---
+
+<aside class={`key-terms-sidebar ${className}`}>
+  <h4>{title}</h4>
+  {terms.length > 0 ? (
+    <div class="space-y-3">
+      {terms.map((item) => (
+        <div class="key-term-item">
+          <strong>{item.term}</strong>
+          <span class="text-slate-800">{item.definition}</span>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <slot />
+  )}
+</aside>

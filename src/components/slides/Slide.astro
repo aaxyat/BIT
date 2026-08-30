@@ -1,9 +1,11 @@
 ---
 interface Props {
   id?: string;
+  eyebrow?: string;
   title?: string;
   subtitle?: string;
-  layout?: 'cover' | 'default' | 'split' | 'grid-3' | 'center';
+  layout?: 'default' | 'split-sidebar' | 'card-grid' | 'table' | 'code' | 'cover' | 'center';
+  unit?: string;
   bgScene?: 'particles' | 'grid' | 'geometry' | 'constellation' | 'none';
   transition?: 'slide' | 'fade' | 'convex' | 'concave' | 'zoom' | 'none';
   class?: string;
@@ -11,10 +13,12 @@ interface Props {
 
 const {
   id,
+  eyebrow,
   title,
   subtitle,
   layout = 'default',
-  bgScene,
+  unit,
+  bgScene = 'none',
   transition,
   class: className = '',
 } = Astro.props;
@@ -28,14 +32,22 @@ const layoutClass = `slide-layout-${layout}`;
   data-bg-scene={bgScene}
   data-transition={transition}
 >
-  {title && (
-    <div class="slide-header mb-6">
-      <h2 class="text-gradient font-bold tracking-tight mb-1">{title}</h2>
-      {subtitle && <p class="text-muted text-sm font-medium">{subtitle}</p>}
+  {(eyebrow || title) && (
+    <div class="slide-header">
+      {eyebrow && <div class="slide-eyebrow">{eyebrow}</div>}
+      {title && <h2 class="font-extrabold text-slate-950 tracking-tight m-0">{title}</h2>}
+      {subtitle && <p class="text-slate-700 text-sm font-semibold mt-1 mb-0">{subtitle}</p>}
     </div>
   )}
 
   <div class="slide-content">
     <slot />
   </div>
+
+  {unit && (
+    <div class="slide-footer">
+      <span>{unit}</span>
+      <span class="font-mono text-xs text-slate-500">Teaching Reference</span>
+    </div>
+  )}
 </section>

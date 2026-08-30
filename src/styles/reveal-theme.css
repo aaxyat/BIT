@@ -1,50 +1,56 @@
 /**
- * Custom Reveal.js Theme for Astro Slides
- * Optimized for dark mode, glassmorphic UI, and Three.js background integration
+ * Defensive Projector & Off-White Screen High-Contrast Lecture Slide Theme
+ * Optimized for low-lumen projectors, ambient classroom light, and off-white screens
  */
 
 :root {
-  /* Colors */
-  --reveal-bg: transparent;
-  --reveal-main-color: #f8fafc;
-  --reveal-heading-color: #ffffff;
-  --reveal-link-color: #818cf8;
-  --reveal-link-hover: #a5b4fc;
-  --reveal-selection-bg: rgba(99, 102, 241, 0.4);
-  --reveal-selection-color: #ffffff;
-  --reveal-muted-color: #94a3b8;
-  --reveal-accent-cyan: #22d3ee;
-  --reveal-accent-indigo: #6366f1;
+  /* High-Contrast Defensive Palette */
+  --reveal-bg: #ffffff;
+  --reveal-main-color: #0f172a;      /* Deep Slate / Navy for maximum contrast */
+  --reveal-heading-color: #020617;   /* Near-black for headings */
+  --reveal-muted-color: #334155;     /* Dark readable neutral (never light gray) */
+  
+  --reveal-accent-indigo: #4338ca;   /* Deep saturated indigo */
+  --reveal-accent-blue: #1d4ed8;     /* Saturated blue */
+  --reveal-accent-rose: #be123c;     /* Saturated crimson */
+  --reveal-accent-amber: #b45309;    /* Saturated amber */
+  --reveal-accent-teal: #0f766e;     /* Saturated teal */
 
-  /* Typography - Fixed slide pt scale */
+  --reveal-panel-bg: #f8fafc;
+  --reveal-panel-border: #94a3b8;    /* Thick visible border */
+  --reveal-panel-border-width: 2px;
+
+  /* Typography - Fixed slide pt scale for 1280x720 16:9 canvas */
   --reveal-font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --reveal-heading-font: 'Inter', system-ui, -apple-system, sans-serif;
   --reveal-code-font: 'JetBrains Mono', 'Fira Code', monospace;
   
-  --base-font-size: 32px;  /* sets reveal.js base */
-  --text-size: 16pt;       /* base slide body text */
-  --h1-size: 38pt;
+  --base-font-size: 28px;
+  --text-size: 15pt;                 /* Base body text - strictly readable */
+  --h1-size: 34pt;
   --h2-size: 26pt;
   --h3-size: 19pt;
   --h4-size: 15pt;
+  --eyebrow-size: 11pt;
+  --footer-size: 11pt;
 }
 
 /* Base Reveal Container Overrides */
 .reveal-viewport {
-  background-color: transparent !important;
+  background-color: var(--reveal-bg) !important;
 }
 
 .reveal {
   font-family: var(--reveal-font-family);
   font-size: var(--base-font-size);
-  font-weight: 400;
+  font-weight: 500;
   color: var(--reveal-main-color);
-  background-color: transparent;
+  background-color: var(--reveal-bg);
 }
 
 .reveal ::selection {
-  background: var(--reveal-selection-bg);
-  color: var(--reveal-selection-color);
+  background: rgba(67, 56, 202, 0.2);
+  color: #020617;
 }
 
 /* Slide Canvas & Sections */
@@ -53,11 +59,13 @@
 }
 
 .reveal .slides section {
-  padding: 40px 50px;
+  padding: 36px 48px;
   box-sizing: border-box;
   height: 100%;
   display: flex !important;
   flex-direction: column;
+  background-color: var(--reveal-bg);
+  color: var(--reveal-main-color);
 }
 
 .reveal .slides section.slide-layout-center {
@@ -72,7 +80,23 @@
   text-align: left;
 }
 
-/* Headings */
+/* Eyebrow Label */
+.reveal .slide-eyebrow {
+  font-size: var(--eyebrow-size);
+  font-weight: 800;
+  color: var(--reveal-accent-indigo);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+/* Slide Header & Thick Divider */
+.reveal .slide-header {
+  margin-bottom: 20px;
+  border-bottom: 3px solid var(--reveal-main-color);
+  padding-bottom: 8px;
+}
+
 .reveal h1,
 .reveal h2,
 .reveal h3,
@@ -83,8 +107,8 @@
   color: var(--reveal-heading-color);
   letter-spacing: -0.025em;
   text-transform: none;
-  margin: 0 0 0.4em 0;
-  line-height: 1.15;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
 }
 
 .reveal h1 {
@@ -94,125 +118,181 @@
 
 .reveal h2 {
   font-size: var(--h2-size);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .reveal h3 {
   font-size: var(--h3-size);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .reveal h4 {
   font-size: var(--h4-size);
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Body Text & Lists */
-.reveal p,
+/* Body Text & Paragraphs (Dense Reference Teaching Notes) */
+.reveal p {
+  font-size: var(--text-size);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--reveal-main-color);
+  margin-bottom: 12px;
+}
+
 .reveal li {
   font-size: var(--text-size);
-  line-height: 1.6;
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--reveal-main-color);
-  margin-bottom: 0.5em;
+  margin-bottom: 8px;
+}
+
+.reveal strong {
+  font-weight: 800;
+  color: #020617;
 }
 
 .reveal .text-muted {
   color: var(--reveal-muted-color) !important;
 }
 
-/* Text Size Utility Classes (in pt for fixed slide proportions) */
+/* Text Size Utility Classes */
 .reveal .text-sm { font-size: 13pt; }
-.reveal .text-base { font-size: 16pt; }
-.reveal .text-lg { font-size: 18pt; }
-.reveal .text-xl { font-size: 21pt; }
-.reveal .text-2xl { font-size: 25pt; }
-.reveal .text-3xl { font-size: 30pt; }
-.reveal .text-4xl { font-size: 36pt; }
-
-/* Links */
-.reveal a {
-  color: var(--reveal-link-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.reveal a:hover {
-  color: var(--reveal-link-hover);
-  text-decoration: underline;
-}
+.reveal .text-base { font-size: 15pt; }
+.reveal .text-lg { font-size: 17pt; }
+.reveal .text-xl { font-size: 20pt; }
+.reveal .text-2xl { font-size: 24pt; }
+.reveal .text-3xl { font-size: 28pt; }
 
 /* Content Flex Container */
 .reveal .slide-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   position: relative;
   min-height: 0;
 }
 
+/* Lecture Bounded Panels & Cards (High-Contrast Projector Safe) */
+.reveal .lecture-card {
+  background-color: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+.reveal .key-terms-sidebar {
+  background-color: #f1f5f9;
+  border: 2px solid #94a3b8;
+  border-radius: 8px;
+  padding: 16px 18px;
+  height: 100%;
+}
+
+.reveal .key-terms-sidebar h4 {
+  font-size: 13pt;
+  font-weight: 800;
+  color: var(--reveal-accent-indigo);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+.reveal .key-term-item {
+  margin-bottom: 10px;
+  font-size: 13pt;
+  line-height: 1.45;
+}
+
+.reveal .key-term-item strong {
+  display: block;
+  color: #020617;
+  font-weight: 800;
+}
+
+/* Comparison Tables */
+.reveal table.lecture-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13pt;
+}
+
+.reveal table.lecture-table th {
+  background-color: #e2e8f0;
+  color: #020617;
+  font-weight: 800;
+  text-align: left;
+  padding: 10px 14px;
+  border: 2px solid #94a3b8;
+}
+
+.reveal table.lecture-table td {
+  padding: 10px 14px;
+  border: 2px solid #cbd5e1;
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+.reveal table.lecture-table tr:nth-child(even) td {
+  background-color: #f8fafc;
+}
+
+/* Slide Footer & Slide Numbers */
+.reveal .slide-footer {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 2px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--footer-size);
+  font-weight: 600;
+  color: #64748b;
+}
+
+.reveal .slide-number {
+  background-color: #f1f5f9 !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 6px;
+  color: #0f172a !important;
+  font-size: 11pt !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  right: 24px !important;
+  bottom: 20px !important;
+}
+
 /* Progress bar */
 .reveal .progress {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #6366f1;
+  height: 5px;
+  background: #e2e8f0;
+  color: #4338ca;
 }
 
 .reveal .progress span {
-  background: linear-gradient(90deg, #6366f1, #38bdf8);
+  background: #4338ca;
 }
 
 /* Controls */
 .reveal .controls {
-  color: #818cf8;
+  color: #4338ca;
 }
 
-.reveal .controls button:hover {
-  color: #a5b4fc;
-}
-
-/* Slide Numbers */
-.reveal .slide-number {
-  background-color: rgba(15, 23, 42, 0.6) !important;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #94a3b8 !important;
-  font-size: 11pt !important;
-  padding: 4px 10px !important;
-  right: 20px !important;
-  bottom: 20px !important;
-}
-
-/* Custom Fragment Animations */
+/* Fragment Animations */
 .reveal .fragment.fade-up {
-  transform: translateY(20px);
+  transform: translateY(12px);
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease-out;
 }
 
 .reveal .fragment.fade-up.visible {
   transform: translateY(0);
   opacity: 1;
-}
-
-.reveal .fragment.zoom-in {
-  transform: scale(0.85);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.reveal .fragment.zoom-in.visible {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.reveal .fragment.highlight-blue {
-  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.reveal .fragment.highlight-blue.visible {
-  color: #38bdf8 !important;
-  border-color: rgba(56, 189, 248, 0.6) !important;
 }

@@ -4,40 +4,38 @@ import DeckCard from '../components/decks/DeckCard.astro';
 import Presentation from 'lucide-astro/Presentation';
 import Sparkles from 'lucide-astro/Sparkles';
 import Layers from 'lucide-astro/Layers';
-import Box from 'lucide-astro/Box';
-import Cpu from 'lucide-astro/Cpu';
+import BookOpen from 'lucide-astro/BookOpen';
+import CheckCircle2 from 'lucide-astro/CheckCircle2';
 import Keyboard from 'lucide-astro/Keyboard';
-import ArrowUpRight from 'lucide-astro/ArrowUpRight';
-import Zap from 'lucide-astro/Zap';
 
 const decks = [
   {
-    title: 'Master Feature Showcase',
-    description: 'Comprehensive tour of Astro slide components, 2D vertical stacks, step fragments, Tokyo Night code highlights, and presenter speaker notes.',
+    title: 'CS 4400: Distributed Systems Architecture',
+    description: 'Complete teaching reference notes covering Data Partitioning, Consistent Hashing, CAP Theorem, and Consensus Protocols (Raft/Paxos).',
     slug: 'showcase',
-    category: 'Showcase',
-    slideCount: 6,
-    duration: '10 min',
+    category: 'Computer Science',
+    slideCount: 5,
+    duration: '20 min',
     glow: 'indigo' as const,
     featured: true,
   },
   {
-    title: 'Three.js 3D Visual Playground',
-    description: 'Explore the 4 WebGL background presets (Particle Wave, Cyber Grid, Floating Polyhedra, Constellation) and embedded interactive 3D model widgets.',
+    title: 'WebGL & 3D Graphics Mathematics',
+    description: 'Classroom visual lecture on 3D coordinate spaces, projection matrices, vertex shaders, and interactive spatial geometry.',
     slug: 'threejs-deepdive',
-    category: '3D Graphics',
+    category: 'Computer Graphics',
     slideCount: 5,
-    duration: '8 min',
+    duration: '15 min',
     glow: 'cyan' as const,
     featured: false,
   },
   {
-    title: 'Nova AI — Startup Pitch Deck',
-    description: 'Sleek, high-impact business pitch deck with problem/solution cards, $42B market size stats, and execution roadmap.',
+    title: 'Enterprise Software Architecture & Scale',
+    description: 'System design lecture on real-time streaming architectures, event-driven data meshes, and enterprise SLA fault models.',
     slug: 'quick-pitch',
-    category: 'Business Pitch',
+    category: 'Software Engineering',
     slideCount: 5,
-    duration: '7 min',
+    duration: '15 min',
     glow: 'amber' as const,
     featured: false,
   },
@@ -45,57 +43,55 @@ const decks = [
 ---
 
 <BaseLayout
-  title="Astro Slides — Modern Presentation Platform"
-  description="Component-driven presentation decks built with Astro, Reveal.js, Three.js, and Tailwind CSS."
+  title="Lecture Slide Platform — Complete Teaching Notes"
+  description="High-density, projector-ready classroom lecture presentations built with Astro and Reveal.js."
 >
-  <div class="relative min-h-screen flex flex-col justify-between px-6 py-12 max-w-7xl mx-auto z-10">
+  <div class="relative min-h-screen flex flex-col justify-between px-6 py-10 max-w-7xl mx-auto bg-slate-50 text-slate-900">
     <!-- Header -->
-    <header class="flex items-center justify-between pb-8 border-b border-white/10">
+    <header class="flex items-center justify-between pb-6 border-b-2 border-slate-200">
       <div class="flex items-center gap-3">
-        <div class="p-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400">
+        <div class="p-2.5 rounded-lg bg-indigo-100 border-2 border-indigo-300 text-indigo-900">
           <Presentation class="w-6 h-6" />
         </div>
         <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-bold block">Astro Engine</span>
-          <h1 class="text-xl font-extrabold text-white tracking-tight m-0">Slides Platform</h1>
+          <span class="text-xs font-mono uppercase tracking-widest text-indigo-900 font-extrabold block">Classroom Teaching System</span>
+          <h1 class="text-xl font-extrabold text-slate-950 tracking-tight m-0">Lecture Slide Platform</h1>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs font-mono text-slate-300">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Astro 5 + Reveal.js + Three.js</span>
-        </div>
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border-2 border-slate-300 text-xs font-bold text-slate-800 shadow-sm">
+        <CheckCircle2 class="w-4 h-4 text-emerald-600" />
+        <span>Projector & Ambient Light Optimized</span>
       </div>
     </header>
 
     <!-- Main Hero & Catalog -->
-    <main class="my-auto py-12">
-      <div class="max-w-3xl mb-12">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
-          <Sparkles class="w-3.5 h-3.5" />
-          <span>Multi-Deck Presentation Hub</span>
+    <main class="my-auto py-8">
+      <div class="max-w-3xl mb-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 border border-indigo-300 text-indigo-900 text-xs font-extrabold uppercase tracking-wider mb-4">
+          <BookOpen class="w-3.5 h-3.5" />
+          <span>Complete Teaching Notes On Screen</span>
         </div>
-        <h2 class="text-gradient font-black text-4xl sm:text-6xl tracking-tight leading-tight mb-6">
-          Present with Speed, Polish & 3D Visuals.
+        <h2 class="text-slate-950 font-black text-3xl sm:text-5xl tracking-tight leading-tight mb-4">
+          Rigorous Lecture Slides Built for Real Classrooms.
         </h2>
-        <p class="text-lg text-slate-300 font-light leading-relaxed mb-8 max-w-2xl">
-          Craft slide presentations using declarative Astro components, zero runtime hydration bloat, and fluid Three.js WebGL backgrounds.
+        <p class="text-base text-slate-700 font-medium leading-relaxed mb-6 max-w-2xl">
+          High-density reference presentations designed to ensure that a student who missed the lecture can master 100% of the material directly from the slides.
         </p>
 
-        <!-- Quick Stats -->
+        <!-- Defensive Specs -->
         <div class="grid grid-cols-3 gap-4 max-w-xl">
-          <div class="p-4 rounded-xl glass-panel">
-            <div class="text-2xl font-bold text-white">3</div>
-            <div class="text-xs text-slate-400">Active Decks</div>
+          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
+            <div class="text-2xl font-extrabold text-slate-950">100%</div>
+            <div class="text-xs text-slate-600 font-bold">Content Coverage</div>
           </div>
-          <div class="p-4 rounded-xl glass-panel">
-            <div class="text-2xl font-bold text-cyan-400">4</div>
-            <div class="text-xs text-slate-400">3D Scene Presets</div>
+          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
+            <div class="text-2xl font-extrabold text-indigo-900">16pt+</div>
+            <div class="text-xs text-slate-600 font-bold">Legible Font Scale</div>
           </div>
-          <div class="p-4 rounded-xl glass-panel">
-            <div class="text-2xl font-bold text-indigo-400">60 FPS</div>
-            <div class="text-xs text-slate-400">Hardware Accel</div>
+          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
+            <div class="text-2xl font-extrabold text-teal-800">$\ge 7:1$</div>
+            <div class="text-xs text-slate-600 font-bold">Optical Contrast</div>
           </div>
         </div>
       </div>
@@ -103,11 +99,11 @@ const decks = [
       <!-- Decks Grid -->
       <section class="space-y-6">
         <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Layers class="w-5 h-5 text-indigo-400" />
-            <span>Available Slide Decks</span>
+          <h3 class="text-xl font-extrabold text-slate-950 tracking-tight flex items-center gap-2">
+            <Layers class="w-5 h-5 text-indigo-700" />
+            <span>Course Lecture Decks</span>
           </h3>
-          <span class="text-xs font-mono text-slate-400">Select a deck to present</span>
+          <span class="text-xs font-mono text-slate-600 font-bold">Select a deck to present</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -117,28 +113,26 @@ const decks = [
         </div>
       </section>
 
-      <!-- Keyboard Shortcuts Banner -->
-      <section class="mt-16 p-6 rounded-2xl glass-panel border border-white/10">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="p-3 rounded-xl bg-indigo-500/20 text-indigo-400">
-              <Keyboard class="w-6 h-6" />
-            </div>
-            <div>
-              <h4 class="text-base font-bold text-white mb-0.5">Presenter Controls Ready</h4>
-              <p class="text-xs text-slate-300/80 m-0">
-                Inside any deck, press <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">SPACE</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">→</kbd> for slides, <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">S</kbd> for Speaker Notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">ESC</kbd> for Overview, and <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300 font-mono text-xs font-semibold">?</kbd> for help.
-              </p>
-            </div>
+      <!-- Keyboard Shortcuts Quick Guide -->
+      <section class="mt-12 p-6 rounded-xl bg-white border-2 border-slate-300 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 border border-indigo-200">
+            <Keyboard class="w-6 h-6" />
+          </div>
+          <div>
+            <h4 class="text-base font-extrabold text-slate-950 mb-0.5">Presenter Shortcuts</h4>
+            <p class="text-xs text-slate-700 font-medium m-0">
+              Press <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">SPACE</kbd> for next slide, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">S</kbd> for Speaker Notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">ESC</kbd> for Overview Grid, and <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">?</kbd> for help.
+            </p>
           </div>
         </div>
       </section>
     </main>
 
     <!-- Footer -->
-    <footer class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-mono">
+    <footer class="pt-6 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600 font-bold">
       <div>
-        <span>Built with Astro, Reveal.js, Three.js & Tailwind CSS</span>
+        <span>Astro Lecture Slides Platform</span>
       </div>
       <div>
         <span>Clean Path URLs Enabled</span>

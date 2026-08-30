@@ -1,0 +1,32 @@
+---
+interface Props {
+  headers: string[];
+  rows: string[][];
+  class?: string;
+}
+
+const { headers, rows, class: className = '' } = Astro.props;
+---
+
+<div class={`overflow-x-auto my-2 ${className}`}>
+  <table class="lecture-table">
+    <thead>
+      <tr>
+        {headers.map((header) => (
+          <th>{header}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          {row.map((cell, idx) => (
+            <td class={idx === 0 ? 'font-bold text-slate-950' : 'text-slate-900'}>
+              {cell}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

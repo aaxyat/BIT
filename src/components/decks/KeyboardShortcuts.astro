@@ -17,25 +17,25 @@ const shortcuts = [
 
 <div
   id="shortcuts-modal"
-  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden"
   role="dialog"
   aria-modal="true"
   aria-label="Keyboard Shortcuts"
 >
-  <div class="relative w-full max-w-lg rounded-2xl glass-panel p-6 shadow-2xl border border-white/10 text-white">
-    <div class="flex items-center justify-between pb-4 border-b border-white/10">
+  <div class="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl border-2 border-slate-300 text-slate-900">
+    <div class="flex items-center justify-between pb-4 border-b-2 border-slate-200">
       <div class="flex items-center gap-2.5">
-        <div class="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
+        <div class="p-2 rounded-lg bg-indigo-100 text-indigo-900 border border-indigo-200">
           <Keyboard class="w-5 h-5" />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white m-0">Keyboard Shortcuts</h3>
-          <p class="text-xs text-slate-400 m-0">Control your presentation effortlessly</p>
+          <h3 class="text-lg font-extrabold text-slate-900 m-0">Keyboard Shortcuts</h3>
+          <p class="text-xs text-slate-600 font-semibold m-0">Classroom presentation controls</p>
         </div>
       </div>
       <button
         id="close-shortcuts-modal"
-        class="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+        class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
         aria-label="Close shortcuts dialog"
       >
         <X class="w-5 h-5" />
@@ -44,19 +44,19 @@ const shortcuts = [
 
     <div class="mt-4 grid grid-cols-1 gap-2.5 max-h-[60vh] overflow-y-auto pr-1">
       {shortcuts.map((sc) => (
-        <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/60 border border-white/5">
-          <span class="text-sm text-slate-300">{sc.desc}</span>
-          <kbd class="px-2.5 py-1 text-xs font-mono font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-500/30 rounded-md shadow-sm">
+        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
+          <span class="text-sm font-medium text-slate-800">{sc.desc}</span>
+          <kbd class="px-2.5 py-1 text-xs font-mono font-bold text-indigo-950 bg-indigo-50 border-2 border-indigo-300 rounded shadow-sm">
             {sc.key}
           </kbd>
         </div>
       ))}
     </div>
 
-    <div class="mt-5 pt-3 border-t border-white/10 flex justify-end">
+    <div class="mt-5 pt-3 border-t-2 border-slate-200 flex justify-end">
       <button
         id="dismiss-shortcuts-btn"
-        class="px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-md"
+        class="px-4 py-2 text-xs font-bold rounded-lg bg-indigo-700 hover:bg-indigo-800 text-white transition-all shadow-md"
       >
         Got it
       </button>
