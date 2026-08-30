@@ -1,10 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DeckCard from '../components/decks/DeckCard.astro';
-import Presentation from 'lucide-astro/Presentation';
 import Layers from 'lucide-astro/Layers';
 import Keyboard from 'lucide-astro/Keyboard';
-import PlusCircle from 'lucide-astro/PlusCircle';
 
 interface DeckItem {
   title: string;
@@ -20,44 +18,29 @@ interface DeckItem {
 const decks: DeckItem[] = [];
 ---
 
-<BaseLayout
-  title="Lecture Slide Platform"
-  description="Course lecture presentations and technical reference slides."
->
+<BaseLayout title="BIT — Presentations" description="Course notes and presentations.">
   <div class="relative min-h-screen flex flex-col justify-between px-6 py-10 max-w-7xl mx-auto bg-slate-50 text-slate-900">
     <!-- Header -->
     <header class="flex items-center justify-between pb-6 border-b-2 border-slate-200">
-      <div class="flex items-center gap-3">
-        <div class="p-2.5 rounded-lg bg-indigo-100 border-2 border-indigo-300 text-indigo-900">
-          <Presentation class="w-6 h-6" />
-        </div>
-        <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-indigo-900 font-extrabold block">Lecture System</span>
-          <h1 class="text-xl font-extrabold text-slate-950 tracking-tight m-0">Course Lecture Repository</h1>
-        </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-slate-950 tracking-tight m-0">BIT</h1>
+        <p class="text-xs text-slate-600 font-semibold m-0">Presentations & Course Notes</p>
       </div>
     </header>
 
     <!-- Main Content -->
     <main class="my-auto py-8">
-      <div class="max-w-3xl mb-10">
-        <h2 class="text-slate-950 font-black text-3xl sm:text-5xl tracking-tight leading-tight mb-4">
-          Course Lecture Decks
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-slate-950 font-black text-3xl sm:text-4xl tracking-tight leading-tight mb-2">
+          Course Notes
         </h2>
-        <p class="text-base text-slate-700 font-medium leading-relaxed mb-6 max-w-2xl">
-          Lecture slides, code implementations, and technical notes for course presentations.
+        <p class="text-sm text-slate-700 font-medium leading-relaxed max-w-2xl">
+          Select a topic to open the presentation notes.
         </p>
       </div>
 
       <!-- Decks Section -->
       <section class="space-y-6">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xl font-extrabold text-slate-950 tracking-tight flex items-center gap-2">
-            <Layers class="w-5 h-5 text-indigo-700" />
-            <span>Available Decks</span>
-          </h3>
-        </div>
-
         {decks.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {decks.map((deck) => (
@@ -65,28 +48,28 @@ const decks: DeckItem[] = [];
             ))}
           </div>
         ) : (
-          <div class="p-8 rounded-xl bg-white border-2 border-slate-300 text-center max-w-xl mx-auto my-6 shadow-sm">
-            <div class="w-12 h-12 rounded-full bg-indigo-50 border-2 border-indigo-200 text-indigo-800 flex items-center justify-center mx-auto mb-3">
-              <PlusCircle class="w-6 h-6" />
+          <div class="p-8 rounded-xl bg-white border-2 border-slate-300 text-center max-w-lg mx-auto my-6 shadow-sm">
+            <div class="w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-700 flex items-center justify-center mx-auto mb-3">
+              <Layers class="w-5 h-5" />
             </div>
-            <h4 class="text-base font-extrabold text-slate-950 mb-1">Ready for New Lecture Slides</h4>
-            <p class="text-xs text-slate-700 font-medium m-0 leading-relaxed">
-              Create a new <code>.astro</code> file in <code>src/pages/decks/</code> to author lecture slides from source material.
+            <h3 class="text-base font-bold text-slate-950 mb-1">No presentations published yet</h3>
+            <p class="text-xs text-slate-600 font-medium m-0">
+              Presentations will appear here once added.
             </p>
           </div>
         )}
       </section>
 
       <!-- Keyboard Shortcuts Quick Guide -->
-      <section class="mt-12 p-6 rounded-xl bg-white border-2 border-slate-300 shadow-sm">
+      <section class="mt-12 p-5 rounded-xl bg-white border-2 border-slate-300 shadow-sm">
         <div class="flex items-center gap-3">
-          <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 border border-indigo-200">
-            <Keyboard class="w-6 h-6" />
+          <div class="p-2.5 rounded-lg bg-indigo-50 text-indigo-900 border border-indigo-200">
+            <Keyboard class="w-5 h-5" />
           </div>
           <div>
-            <h4 class="text-base font-extrabold text-slate-950 mb-0.5">Presenter Shortcuts</h4>
+            <h4 class="text-sm font-bold text-slate-950 mb-0.5">Navigation Shortcuts</h4>
             <p class="text-xs text-slate-700 font-medium m-0">
-              Press <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">SPACE</kbd> for next slide, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">S</kbd> for Speaker Notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">ESC</kbd> for Overview Grid, and <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">?</kbd> for help.
+              <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">SPACE</kbd> next slide, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">S</kbd> speaker notes, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">ESC</kbd> overview grid, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 text-indigo-900 font-mono text-xs font-bold">?</kbd> shortcuts guide.
             </p>
           </div>
         </div>
@@ -94,10 +77,8 @@ const decks: DeckItem[] = [];
     </main>
 
     <!-- Footer -->
-    <footer class="pt-6 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600 font-bold">
-      <div>
-        <span>Lecture Platform</span>
-      </div>
+    <footer class="pt-6 border-t-2 border-slate-200 text-xs text-slate-600 font-medium">
+      <span>BIT</span>
     </footer>
   </div>
 </BaseLayout>
