@@ -2,16 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DeckCard from '../components/decks/DeckCard.astro';
 import Presentation from 'lucide-astro/Presentation';
-import Sparkles from 'lucide-astro/Sparkles';
 import Layers from 'lucide-astro/Layers';
-import BookOpen from 'lucide-astro/BookOpen';
-import CheckCircle2 from 'lucide-astro/CheckCircle2';
 import Keyboard from 'lucide-astro/Keyboard';
 
 const decks = [
   {
     title: 'CS 3840: Three.js Core Architecture & WebGL Pipeline',
-    description: 'Complete 1-hour university teaching reference notes covering the WebGL state machine, Scene Graph hierarchy, Quaternion spatial mathematics, BufferGeometry memory layouts, PBR illumination models, and GPU buffer lifecycle optimization.',
+    description: 'Lecture covering the WebGL state machine, Scene Graph hierarchy, Quaternion spatial mathematics, BufferGeometry memory layouts, PBR illumination models, and GPU buffer lifecycle optimization.',
     slug: 'threejs-fundamentals',
     category: 'Computer Graphics',
     slideCount: 12,
@@ -23,8 +20,8 @@ const decks = [
 ---
 
 <BaseLayout
-  title="Lecture Slide Platform: Complete Teaching Notes"
-  description="High-density, projector-ready classroom lecture presentations built with Astro and Reveal.js."
+  title="CS 3840: Computer Graphics — Lecture Presentations"
+  description="Course lecture presentations and technical reference slides for CS 3840: Computer Graphics."
 >
   <div class="relative min-h-screen flex flex-col justify-between px-6 py-10 max-w-7xl mx-auto bg-slate-50 text-slate-900">
     <!-- Header -->
@@ -34,46 +31,21 @@ const decks = [
           <Presentation class="w-6 h-6" />
         </div>
         <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-indigo-900 font-extrabold block">Classroom Teaching System</span>
-          <h1 class="text-xl font-extrabold text-slate-950 tracking-tight m-0">Lecture Slide Platform</h1>
+          <span class="text-xs font-mono uppercase tracking-widest text-indigo-900 font-extrabold block">Department of Computer Science</span>
+          <h1 class="text-xl font-extrabold text-slate-950 tracking-tight m-0">Course Lecture Repository</h1>
         </div>
-      </div>
-
-      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border-2 border-slate-300 text-xs font-bold text-slate-800 shadow-sm">
-        <CheckCircle2 class="w-4 h-4 text-emerald-600" />
-        <span>Projector & Ambient Light Optimized</span>
       </div>
     </header>
 
-    <!-- Main Hero & Catalog -->
+    <!-- Main Content -->
     <main class="my-auto py-8">
       <div class="max-w-3xl mb-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 border border-indigo-300 text-indigo-900 text-xs font-extrabold uppercase tracking-wider mb-4">
-          <BookOpen class="w-3.5 h-3.5" />
-          <span>Complete Teaching Notes On Screen</span>
-        </div>
         <h2 class="text-slate-950 font-black text-3xl sm:text-5xl tracking-tight leading-tight mb-4">
-          Rigorous Lecture Slides Built for Real Classrooms.
+          Computer Graphics & WebGL Lectures
         </h2>
         <p class="text-base text-slate-700 font-medium leading-relaxed mb-6 max-w-2xl">
-          High-density reference presentations designed to ensure that a student who missed the lecture can master 100% of the material directly from the slides.
+          Lecture slides, code implementations, and technical diagrams for CS 3840: Computer Graphics.
         </p>
-
-        <!-- Defensive Specs -->
-        <div class="grid grid-cols-3 gap-4 max-w-xl">
-          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
-            <div class="text-2xl font-extrabold text-slate-950">100%</div>
-            <div class="text-xs text-slate-600 font-bold">Content Coverage</div>
-          </div>
-          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
-            <div class="text-2xl font-extrabold text-indigo-900">16pt+</div>
-            <div class="text-xs text-slate-600 font-bold">Legible Font Scale</div>
-          </div>
-          <div class="p-4 rounded-lg bg-white border-2 border-slate-300 shadow-sm">
-            <div class="text-2xl font-extrabold text-teal-800">≥ 7:1</div>
-            <div class="text-xs text-slate-600 font-bold">Optical Contrast</div>
-          </div>
-        </div>
       </div>
 
       <!-- Decks Grid -->
@@ -112,10 +84,7 @@ const decks = [
     <!-- Footer -->
     <footer class="pt-6 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600 font-bold">
       <div>
-        <span>Astro Lecture Slides Platform</span>
-      </div>
-      <div>
-        <span>Clean Path URLs Enabled</span>
+        <span>CS 3840 · Computer Graphics</span>
       </div>
     </footer>
   </div>
