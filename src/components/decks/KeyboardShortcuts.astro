@@ -17,7 +17,8 @@ const shortcuts = [
 
 <div
   id="shortcuts-modal"
-  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden"
+  class="fixed inset-0 z-[100] items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden"
+  style="display: none;"
   role="dialog"
   aria-modal="true"
   aria-label="Keyboard Shortcuts"
@@ -71,7 +72,15 @@ const shortcuts = [
     const dismissBtn = document.getElementById('dismiss-shortcuts-btn');
 
     const toggleModal = () => {
-      modal?.classList.toggle('hidden');
+      if (!modal) return;
+      const isHidden = modal.style.display === 'none' || modal.classList.contains('hidden');
+      if (isHidden) {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+      } else {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+      }
     };
 
     closeBtn?.addEventListener('click', toggleModal);
@@ -79,6 +88,7 @@ const shortcuts = [
 
     modal?.addEventListener('click', (e) => {
       if (e.target === modal) {
+        modal.style.display = 'none';
         modal.classList.add('hidden');
       }
     });
@@ -86,7 +96,8 @@ const shortcuts = [
     window.addEventListener('keydown', (e) => {
       if (e.key === '?' || (e.key === 'h' && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement))) {
         toggleModal();
-      } else if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      } else if (e.key === 'Escape' && modal && modal.style.display !== 'none') {
+        modal.style.display = 'none';
         modal.classList.add('hidden');
       }
     });

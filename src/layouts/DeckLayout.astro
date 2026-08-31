@@ -78,11 +78,6 @@ const {
     <!-- Client Script to Initialize Reveal.js -->
     <script>
       import Reveal from 'reveal.js';
-      import RevealHighlight from 'reveal.js/plugin/highlight/highlight.esm.js';
-      import RevealNotes from 'reveal.js/plugin/notes/notes.esm.js';
-      import RevealZoom from 'reveal.js/plugin/zoom/zoom.esm.js';
-      import RevealSearch from 'reveal.js/plugin/search/search.esm.js';
-      import RevealMath from 'reveal.js/plugin/math/math.esm.js';
 
       declare global {
         interface Window {
@@ -94,93 +89,93 @@ const {
         const container = document.getElementById('reveal-container');
         if (!container) return;
 
-        const deck = new Reveal(container, {
-          // Display presentation controls
-          controls: container.dataset.controls !== 'false',
-          controlsTutorial: false,
-          controlsLayout: 'bottom-right',
-          controlsBackArrows: 'faded',
+        if (window.Reveal && typeof window.Reveal.isReady === 'function' && window.Reveal.isReady()) {
+          return;
+        }
 
-          // Display presentation progress bar
-          progress: container.dataset.progress !== 'false',
+        try {
+          const deck = new Reveal(container, {
+            // Display presentation controls
+            controls: container.dataset.controls !== 'false',
+            controlsTutorial: false,
+            controlsLayout: 'bottom-right',
+            controlsBackArrows: 'faded',
 
-          // Display slide number
-          slideNumber: container.dataset.slideNumber !== 'false' ? 'c/t' : false,
+            // Display presentation progress bar
+            progress: container.dataset.progress !== 'false',
 
-          // URL hash routing
-          hash: container.dataset.hash !== 'false',
-          history: false,
-          respondToHashChanges: true,
+            // Display slide number
+            slideNumber: container.dataset.slideNumber !== 'false' ? 'c/t' : false,
 
-          // Keyboard navigation
-          keyboard: true,
-          overview: true,
-          center: false,
-          touch: true,
-          loop: false,
-          rtl: false,
-          shuffle: false,
-          fragments: true,
+            // URL hash routing
+            hash: container.dataset.hash !== 'false',
+            history: false,
+            respondToHashChanges: true,
 
-          // Flags whether to include the current fragment in the hash
-          fragmentInURL: false,
+            // Keyboard navigation
+            keyboard: true,
+            overview: true,
+            center: false,
+            touch: true,
+            loop: false,
+            rtl: false,
+            shuffle: false,
+            fragments: true,
 
-          // Transition settings
-          transition: (container.dataset.transition as any) || 'slide',
-          transitionSpeed: 'default',
-          backgroundTransition: 'fade',
+            // Flags whether to include the current fragment in the hash
+            fragmentInURL: false,
 
-          // Dimensions (16:9 Presentation Standard)
-          width: 1280,
-          height: 720,
-          margin: 0.04,
-          minScale: 0.2,
-          maxScale: 2.0,
+            // Transition settings
+            transition: (container.dataset.transition as any) || 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
 
-          // Auto-slide
-          autoSlide: parseInt(container.dataset.autoSlide || '0', 10),
+            // Dimensions (16:9 Presentation Standard)
+            width: 1280,
+            height: 720,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
 
-          // Plugins
-          plugins: [
-            RevealHighlight,
-            RevealNotes,
-            RevealZoom,
-            RevealSearch,
-            RevealMath.KaTeX,
-          ],
-        });
+            // Auto-slide
+            autoSlide: parseInt(container.dataset.autoSlide || '0', 10),
+            plugins: [],
+          });
 
-        await deck.initialize();
-        window.Reveal = deck;
+          await deck.initialize();
+          window.Reveal = deck;
 
-        // Slide change hook to notify Three.js SceneManager
-        deck.on('slidechanged', (event: any) => {
-          const currentSlide = event.currentSlide as HTMLElement;
-          const bgScene = currentSlide.getAttribute('data-bg-scene');
-          const totalSlides = deck.getTotalSlides();
-          const indices = deck.getIndices();
+          // Slide change hook to notify Three.js SceneManager
+          deck.on('slidechanged', (event: any) => {
+            const currentSlide = event.currentSlide as HTMLElement;
+            const bgScene = currentSlide?.getAttribute('data-bg-scene');
+            const totalSlides = deck.getTotalSlides();
+            const indices = deck.getIndices();
 
-          if (window.__sceneManager) {
-            window.__sceneManager.onSlideChange(indices.h, totalSlides, bgScene || undefined);
+            if (window.__sceneManager) {
+              window.__sceneManager.onSlideChange(indices.h, totalSlides, bgScene || undefined);
+            }
+          });
+
+          // Pause hook for Blackout mode (B key)
+          deck.on('paused', () => {
+            if (window.__sceneManager) window.__sceneManager.pause();
+          });
+
+          deck.on('resumed', () => {
+            if (window.__sceneManager) window.__sceneManager.resume();
+          });
+
+          // Trigger initial slide scene check
+          const initialSlide = deck.getCurrentSlide() as HTMLElement | null;
+          if (initialSlide) {
+            const bgScene = initialSlide.getAttribute('data-bg-scene');
+            if (bgScene && window.__sceneManager) {
+              window.__sceneManager.setScene(bgScene);
+            }
           }
-        });
-
-        // Pause hook for Blackout mode (B key)
-        deck.on('paused', () => {
-          if (window.__sceneManager) window.__sceneManager.pause();
-        });
-
-        deck.on('resumed', () => {
-          if (window.__sceneManager) window.__sceneManager.resume();
-        });
-
-        // Trigger initial slide scene check
-        const initialSlide = deck.getCurrentSlide() as HTMLElement | null;
-        if (initialSlide) {
-          const bgScene = initialSlide.getAttribute('data-bg-scene');
-          if (bgScene && window.__sceneManager) {
-            window.__sceneManager.setScene(bgScene);
-          }
+        } catch (err) {
+          console.error('Failed to initialize Reveal.js deck:', err);
         }
       }
 
@@ -189,6 +184,7 @@ const {
       } else {
         initDeck();
       }
+      document.addEventListener('astro:page-load', initDeck);
     </script>
   </body>
 </html>

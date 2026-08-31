@@ -1,0 +1,1746 @@
+---
+import DeckLayout from '../../../../layouts/DeckLayout.astro';
+import Slide from '../../../../components/slides/Slide.astro';
+import Card from '../../../../components/slides/Card.astro';
+import KeyTerms from '../../../../components/slides/KeyTerms.astro';
+import Table from '../../../../components/slides/Table.astro';
+import CodeBlock from '../../../../components/slides/CodeBlock.astro';
+import ThreeCanvas from '../../../../components/three/ThreeCanvas.astro';
+import SpeakerNotes from '../../../../components/slides/SpeakerNotes.astro';
+
+const messagePassingCode = `// Distributed Node Message Exchange Simulation
+class DistributedNode {
+  constructor(nodeId, networkLatencyMs = 25) {
+    this.nodeId = nodeId;
+    this.networkLatencyMs = networkLatencyMs;
+    this.localState = new Map();
+    this.peers = new Map();
+  }
+
+  registerPeer(peerNode) {
+    this.peers.set(peerNode.nodeId, peerNode);
+  }
+
+  async send(targetNodeId, message) {
+    const target = this.peers.get(targetNodeId);
+    if (!target) throw new Error("Target " + targetNodeId + " unreachable");
+
+    // Simulate physical network transit delay
+    await new Promise((resolve) => setTimeout(resolve, this.networkLatencyMs));
+    return target.receive(this.nodeId, message);
+  }
+
+  receive(senderId, message) {
+    this.localState.set(message.key, message.value);
+    return { status: "ACK", receiver: this.nodeId, appliedKey: message.key };
+  }
+}
+
+const client = new DistributedNode("client-node", 15);
+const server = new DistributedNode("server-node", 15);
+client.registerPeer(server);
+client.send("server-node", { key: "account_balance", value: 4500 });`;
+---
+
+<DeckLayout
+  title="Unit 2: System Models of Distributed Systems"
+  description="Comprehensive lecture notes covering architectural models, interaction models, and failure classifications in distributed systems."
+  initialScene="none"
+>
+  <!-- ========================================================================
+       SLIDE 0: TITLE SLIDE
+       ======================================================================== -->
+  <Slide
+    id="title-slide"
+    layout="center"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4 max-w-4xl my-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-black text-slate-950 tracking-tight leading-tight m-0">
+        System Models of Distributed Systems
+      </h1>
+      <div class="h-1.5 w-24 bg-indigo-600 mx-auto my-4 rounded-full"></div>
+      <p class="text-lg md:text-xl text-slate-700 font-semibold leading-relaxed max-w-3xl mx-auto m-0">
+        Architectural, Interaction, and Failure Models for Concurrent, Networked Computation
+      </p>
+    </div>
+    <SpeakerNotes>
+      Welcome students to Unit 2: System Models of Distributed Systems.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 1: SYSTEM MODELS DEFINITION & REALITIES
+       ======================================================================== -->
+  <Slide
+    id="distributed-systems-def"
+    eyebrow="01 · FOUNDATIONS"
+    title="What Is a Distributed System?"
+    subtitle="Independent Machines Cooperating Through Network Communication"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A distributed system is a collection of autonomous computers that work together to provide a unified service. Each machine has its own processor, memory, and operating system. The computers do not share physical memory, and no central quartz clock synchronizes their operations.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        To a user, the system appears as a single application. Behind the scenes, it coordinates across dozens or thousands of nodes. Common examples include cloud platforms, distributed databases, streaming networks, payment systems, and web search engines.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Because components execute concurrently and communicate over non-instantaneous networks, reasoning about their behavior is difficult. System models provide formal abstractions to analyze and verify these systems systematically.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Distributed System', definition: 'Independent computers communicating via a network to present a single coherent service to users.' },
+        { term: 'Local State', definition: 'The private memory, registers, and storage contents maintained exclusively on an individual node.' },
+        { term: 'Shared-Nothing Memory', definition: 'An architecture where computing nodes share neither physical RAM nor disk storage directly.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Emphasize the core definition: independent machines, private memory, communication via messages. Contrast this directly with multi-threaded programs on a single machine.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 2: INTRODUCTION TO SYSTEM MODELS
+       ======================================================================== -->
+  <Slide
+    id="intro-system-models"
+    eyebrow="01 · FOUNDATIONS"
+    title="Introduction to System Models: Why We Use Abstraction"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="What a Model Is" badge="Abstract View" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Capturing essential characteristics.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A system model is an abstract representation of a distributed system. It highlights important properties while deliberately ignoring low-level implementation details that are not relevant to the analysis.
+        </p>
+      </Card>
+
+      <Card title="What a Model Defines" badge="Explicit Rules" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Establishing clear assumptions.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A model establishes explicit assumptions about participating components, communication channels, execution speeds, message delays, and possible failure modes.
+        </p>
+      </Card>
+
+      <Card title="Why We Need It" badge="Design & Proof" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Tractable problem solving.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          The goal is not to replicate every physical wire and chip. The goal is to create a precise baseline for proving whether an algorithm will work correctly under real-world conditions.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain that all scientific engineering uses models. In distributed systems, models prevent engineers from making incorrect assumptions about network speeds or node reliability.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 3: WHY SYSTEM MODELS ARE NECESSARY
+       ======================================================================== -->
+  <Slide
+    id="why-models-necessary"
+    eyebrow="01 · FOUNDATIONS"
+    title="Why System Models Are Necessary: Three Core Difficulties"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Distributed applications contain many concurrent software components running on separate machines. Each machine has its own processor, memory, storage, operating system, and local clock.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        First, communication takes time. A sender cannot know the exact microsecond a receiver gets a message. Second, different processes execute at varying speeds. Third, components fail independently: a server can crash or a switch can drop packets while the rest of the cluster stays healthy.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        These factors make distributed systems difficult to understand. System models reduce complexity by defining consistent assumptions for design and analysis.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Non-Instantaneous Transit', definition: 'The physical reality that network packet propagation consumes variable, non-zero time.' },
+        { term: 'Partial Failure', definition: 'A condition where a subset of distributed components fails while other components continue running.' },
+        { term: 'Execution Skew', definition: 'Discrepancies in computation speeds caused by differing CPU loads and hardware capabilities.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Clarify why distributed systems are fundamentally harder than centralized ones: partial failure and lack of instantaneous observation.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 4: ABSTRACTION IN DISTRIBUTED SYSTEMS
+       ======================================================================== -->
+  <Slide
+    id="abstraction-principles"
+    eyebrow="01 · FOUNDATIONS"
+    title="Abstraction in Distributed Systems: Isolating Relevant Properties"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Abstraction represents a complex system by focusing only on the characteristics required for a specific purpose, filtering out irrelevant physical details.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Consider a cluster of hundreds of servers. When analyzing communication protocols, we do not need to know the specific processor model in every server. We need to know whether messages can be delayed or lost, and how long transmission can take.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Similarly, when studying fault tolerance, the internal code structure of a server is less important than its failure behavior: whether it halts completely upon crashing, whether it can recover from disk, and whether peers can detect the failure.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Abstraction Boundary', definition: 'The division separating essential system behaviors from irrelevant internal implementation details.' },
+        { term: 'Safety Property', definition: 'A formal algorithmic guarantee that nothing bad happens during execution.' },
+        { term: 'Liveness Property', definition: 'A formal algorithmic guarantee that the system eventually makes forward progress.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Point out that abstraction is not just an academic tool; it is the fundamental reason cloud platforms like AWS or Azure can scale globally.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 5: CHARACTERISTICS OF A DISTRIBUTED SYSTEM
+       ======================================================================== -->
+  <Slide
+    id="system-characteristics"
+    eyebrow="01 · FOUNDATIONS"
+    title="Four Fundamental Characteristics of Distributed Systems"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+      <Card title="1. Concurrent Computation" badge="Parallelism" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Independent processors executing in parallel.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Multiple computers participate in the computation concurrently. Each maintains its own local memory, instruction pipeline, and private state.
+        </p>
+      </Card>
+
+      <Card title="2. Network Message Exchange" badge="Communication" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Communication takes non-zero time.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Communication occurs through messages across networks. Network latency is variable and can be affected by congestion, routing changes, or hardware faults.
+        </p>
+      </Card>
+
+      <Card title="3. No Global Clock" badge="Time & Ordering" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Independent physical quartz crystals.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          There is no single shared clock that all processes observe with perfect accuracy, making exact event ordering across different machines challenging.
+        </p>
+      </Card>
+
+      <Card title="4. Independent Failures" badge="Fault Semantics" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Isolated node and link breakdowns.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A computer, process, network link, or storage device can fail while surrounding components continue functioning, requiring explicit fault handling.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Walk through the four pillars. Highlight that the absence of a global clock directly forces distributed algorithms to use logical timestamps.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 6: MAIN PERSPECTIVES OF SYSTEM MODELING
+       ======================================================================== -->
+  <Slide
+    id="modeling-perspectives"
+    eyebrow="01 · FOUNDATIONS"
+    title="Main Perspectives of System Modeling"
+    subtitle="Complementary Views for Complete System Understanding"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+      <Card title="Architectural Model" badge="Structure & Placement" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">How components are organized.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Describes how the major components of the distributed system are arranged, where they execute, and how responsibilities are divided among them.
+        </p>
+      </Card>
+
+      <Card title="Interaction Model" badge="Communication & Time" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">How processes communicate and time behaves.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Describes how processes exchange messages, how events occur in sequence, and what timing bounds apply to computation speeds and transit delays.
+        </p>
+      </Card>
+
+      <Card title="Failure Model" badge="Fault Classification" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">How components malfunction.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Defines the specific ways computing processes and network links can fail, and how those failures affect system operations.
+        </p>
+      </Card>
+
+      <Card title="Security Model" badge="Adversarial Vectors" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">How systems protect against threats.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Describes the capabilities of potential attackers, vulnerabilities like eavesdropping or tampering, and required security protections.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Emphasize that these models are complementary: a complete system specification requires answering questions across architecture, interaction, and failure modes.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 7: ARCHITECTURAL MODEL OVERVIEW
+       ======================================================================== -->
+  <Slide
+    id="architectural-model-overview"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Architectural Model: Structural Organization and Role Assignment"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        An architectural model describes the organization of a distributed system at a high level. It identifies the major components of the system, the services provided by those components, and the relationships between them.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, an online banking application contains user devices, web servers, application servers, authentication services, database servers, caching systems, and external payment gateways.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The architectural model does not describe the internal code implementation of each component. Instead, it explains how these components are arranged and how they cooperate to deliver the overall service.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Architectural Model', definition: 'The structural specification of components, roles, interfaces, and inter-service relationships.' },
+        { term: 'Service Boundary', definition: 'The explicit interface contract defining the inputs, outputs, and protocols of an autonomous service.' },
+        { term: 'Deployment Topology', definition: 'The physical or virtual mapping of software components across network nodes and data centers.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain how the architectural model serves as the master blueprint for system builders, dictating where data lives and how requests traverse the network.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 8: COMPONENTS OF A DISTRIBUTED ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="distributed-components"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Core Components of a Distributed Architecture"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+      <Card title="Processes" badge="Execution" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Programs in execution.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Programs executing on local or remote nodes that perform computation and maintain local state. Multiple processes execute on the same or different computers.
+        </p>
+      </Card>
+
+      <Card title="Services" badge="Interfaces" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Functionality for other components.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Capabilities provided by one component for use by another, such as database query execution or authentication validation.
+        </p>
+      </Card>
+
+      <Card title="Channels" badge="Transport" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Mechanisms for message exchange.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Network paths and socket protocols through which distributed processes exchange formatted data packets.
+        </p>
+      </Card>
+
+      <Card title="Data Resources" badge="Persistence" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Shared information stores.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Databases, files, objects, cached records, and shared data resources accessed concurrently by multiple application components.
+        </p>
+      </Card>
+
+      <Card title="Middleware" badge="Coordination" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Distribution abstraction layer.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Higher-level software providing naming, RPC, RMI, authentication, and transaction services to simplify distributed coordination.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Review these 5 core structural primitives. Every distributed system, from a small classroom cluster to AWS, is constructed from these basic building blocks.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 9: PROCESSES IN A DISTRIBUTED SYSTEM
+       ======================================================================== -->
+  <Slide
+    id="process-abstraction"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Processes in Distributed Systems: Independent Execution and State"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A process is an executing instance of a program. In a centralized system, several processes can communicate using mechanisms provided by the operating system, including shared memory.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        In a distributed system, processes located on different computers cannot directly access each other's local memory. Each process maintains its own private local state.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        If one process requires information held by another, it must obtain that information through explicit network communication. For example, an application server requests customer records from a database process, which queries disk and replies.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Process Isolation', definition: 'The physical and kernel memory boundaries that prevent external processes from directly accessing local state.' },
+        { term: 'Address Space', definition: 'The range of virtual memory addresses allocated exclusively to a specific running process.' },
+        { term: 'State Encapsulation', definition: 'The principle that internal state can only be inspected or modified through explicit message protocols.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Reinforce that in distributed systems, pointer dereferencing across machines is impossible. Everything must go through serialized message buffers.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 10: COMMUNICATION IN DISTRIBUTED SYSTEMS
+       ======================================================================== -->
+  <Slide
+    id="communication-mechanisms"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Communication in Distributed Systems: Message Passing Mechanics"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+      <div class="space-y-3">
+        <h3 class="text-base font-extrabold text-slate-950 m-0">The Request-Response Timeline</h3>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Communication between distributed processes occurs through message passing. A process generates a message containing a request and sends it across the network. The receiver gets the message, executes the operation, and replies.
+        </p>
+        <div class="p-3 rounded-lg bg-slate-100 border-2 border-slate-300 space-y-1.5 text-xs text-slate-800 font-mono">
+          <div>1. Process A formats and dispatches Request</div>
+          <div>2. Message traverses routers with variable delay</div>
+          <div>3. Process B receives, parses, and processes</div>
+          <div>4. Process B formats Response and transmits back</div>
+          <div>5. Process A receives Response and resumes work</div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-slate-900 border-2 border-slate-800 text-slate-100 font-mono text-xs shadow-md">
+        <div class="text-rose-400 font-bold mb-2">// Network Message Exchange Trace</div>
+        <div class="text-slate-300">Client Node: 10.0.1.4  -->  Server Node: 10.0.2.18</div>
+        <div class="text-slate-500">-----------------------------------------------</div>
+        <div class="text-emerald-400">[00.000 ms] Client dispatches POST /api/transfer</div>
+        <div class="text-amber-400">[00.018 ms] Network propagation transit (WAN)</div>
+        <div class="text-sky-400">[00.022 ms] Server unmarshalls request payload</div>
+        <div class="text-sky-400">[00.035 ms] Server commits transaction to DB</div>
+        <div class="text-amber-400">[00.040 ms] Network response transit (WAN)</div>
+        <div class="text-emerald-400">[00.058 ms] Client receives HTTP 200 OK</div>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Walk students through the network round-trip time (RTT). Contrast the 0.001 ms local memory lookup with the 50 ms transatlantic network trip.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 11: MIDDLEWARE
+       ======================================================================== -->
+  <Slide
+    id="middleware-role"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Middleware: Abstraction Layer for Distributed Applications"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Middleware is software that provides a common abstraction for communication and coordination between distributed applications. It sits between application programs and lower-level operating-system and network services.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Middleware provides facilities such as Remote Procedure Calls (RPC), Remote Method Invocation (RMI), message passing, naming, service discovery, authentication, serialization, and distributed transactions.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The primary purpose of middleware is to hide distribution complexities. For example, Java RMI allows an application to invoke methods on objects located in another Java Virtual Machine as if they were local references.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Middleware', definition: 'Software providing common abstractions for communication, discovery, and coordination across distributed nodes.' },
+        { term: 'Remote Method Invocation', definition: 'A mechanism allowing a process to execute an object method on a remote virtual machine transparently.' },
+        { term: 'Marshalling', definition: 'The process of packing structured memory objects into serialized byte streams suitable for network transmission.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain how middleware prevents programmers from writing raw socket code, socket buffers, and endianness conversions for every single service.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 12: SOFTWARE LAYERS
+       ======================================================================== -->
+  <Slide
+    id="software-layers"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Software Layering in Distributed Systems"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+      <div class="space-y-2">
+        <div class="p-3 rounded-lg bg-rose-50 border-2 border-rose-300 text-xs font-bold text-slate-900 flex justify-between items-center">
+          <span>Applications</span>
+          <span class="text-rose-800 font-mono">User & business functionality</span>
+        </div>
+        <div class="p-3 rounded-lg bg-indigo-50 border-2 border-indigo-300 text-xs font-bold text-slate-900 flex justify-between items-center">
+          <span>Middleware</span>
+          <span class="text-indigo-800 font-mono">RPC, RMI, naming, coordination</span>
+        </div>
+        <div class="p-3 rounded-lg bg-teal-50 border-2 border-teal-300 text-xs font-bold text-slate-900 flex justify-between items-center">
+          <span>Operating System</span>
+          <span class="text-teal-800 font-mono">Local processor, memory, storage</span>
+        </div>
+        <div class="p-3 rounded-lg bg-amber-50 border-2 border-amber-300 text-xs font-bold text-slate-900 flex justify-between items-center">
+          <span>Network / Communication</span>
+          <span class="text-amber-800 font-mono">Packet routing, sockets, transport</span>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-100 border-2 border-slate-300 text-xs font-bold text-slate-900 flex justify-between items-center">
+          <span>Hardware</span>
+          <span class="text-slate-700 font-mono">CPUs, memory, network interfaces, disks</span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-base font-extrabold text-slate-950 m-0">Layer Encapsulation Benefits</h3>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Layering reduces complexity by allowing each layer to provide well-defined services to the layer above it.
+        </p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Application developers focus on business logic using middleware abstractions, while the network and operating system manage physical transmission and local hardware.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Walk students through each layer from bottom (Hardware) to top (Applications). Show how each layer solves a specific level of complexity.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 13: APPLICATION LAYER
+       ======================================================================== -->
+  <Slide
+    id="application-layer"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Application Layer: Multi-Component Service Delivery"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The application layer contains programs that implement the functionality required by users or other applications. Examples include online banking, e-commerce platforms, streaming services, cloud storage, and enterprise resource planning systems.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        An application that appears to be a single program to a user may consist of many distributed components running across multiple servers.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, when a user logs into an online banking system, the request may pass through a frontend server, an authentication service, an application server, a database, and a security service before the final response is returned.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Application Layer', definition: 'The highest software layer delivering domain logic and user interactions in a distributed system.' },
+        { term: 'Service Orchestration', definition: 'The automated coordination and sequence of multiple independent services to fulfill a single transaction.' },
+        { term: 'Unified Interface', definition: 'A client presentation that conceals the underlying multi-service topology from the user.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain how a single click on Amazon or Netflix triggers dozens of microservices across multiple datacenters.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 14: OPERATING SYSTEM LAYER
+       ======================================================================== -->
+  <Slide
+    id="operating-system-layer"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Operating System Layer: Local Resource Management and Independence"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Every computer participating in a distributed system has its own operating system. The operating system manages local resources, including the processor, memory, storage devices, network interfaces, and running processes.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The operating system provides system calls and services that applications use to perform local operations, allocate memory, and manage sockets.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Although the computers cooperate as one distributed system, their operating systems remain independent. A process running on one computer cannot directly manipulate the memory or processor of another computer. Communication requires network mechanisms.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'OS Autonomy', definition: 'The independence of each host kernel in managing its own local processor scheduling and memory allocation.' },
+        { term: 'Kernel Protection Boundary', definition: 'The hardware-enforced separation preventing remote processes from manipulating local memory spaces.' },
+        { term: 'Network Socket API', definition: 'The OS abstraction providing endpoints for sending and receiving byte streams over physical networks.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Emphasize that the OS does not know it is in a distributed cluster; it simply manages its own hardware and network sockets.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 15: SYSTEM ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="system-architecture-overview"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="System Architecture: Structuring Distributed Components"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Client-Server" badge="Asymmetric Roles" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Centralized service hubs.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Clients request services and servers provide those services. Simple to manage and secure, but vulnerable to server bottlenecks.
+        </p>
+      </Card>
+
+      <Card title="Multi-Tier" badge="Layered Architecture" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Separation of responsibilities.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Divides applications into presentation, business logic, and database tiers, allowing each tier to scale independently.
+        </p>
+      </Card>
+
+      <Card title="Peer-to-Peer" badge="Symmetric Roles" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Decentralized resource mesh.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Nodes share symmetric roles, acting as both consumers and providers of compute and storage without a permanent central server.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Introduce the three primary architectural patterns. Explain that choosing between them is a trade-off between simplicity, scalability, and control.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 16: CLIENT-SERVER ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="client-server-arch"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Client-Server Architecture: Core Roles"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+      <div class="p-4 rounded-xl bg-slate-100 border-2 border-slate-300 font-mono text-xs space-y-2">
+        <div class="text-slate-950 font-bold text-sm mb-3">Client-Server Structural Topology</div>
+        <div class="p-2 rounded bg-indigo-50 border border-indigo-200 text-indigo-900">Client Node 1 ──┐</div>
+        <div class="p-2 rounded bg-indigo-50 border border-indigo-200 text-indigo-900">Client Node 2 ──┼──> [ Centralized Server Engine ]</div>
+        <div class="p-2 rounded bg-indigo-50 border border-indigo-200 text-indigo-900">Client Node 3 ──┘       (Processes & Responds)</div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-base font-extrabold text-slate-950 m-0">Division of Responsibilities</h3>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          The client is a process that requests a service. The server is a process that provides that service. The client sends a request to the server, and the server processes it and returns a response.
+        </p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A web browser communicating with a web server is a common example. The browser acts as the client, while the web server provides web resources or application services.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Highlight the role asymmetry: clients initiate; servers listen. Servers must be provisioned with high uptime and public network availability.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 17: REQUEST AND RESPONSE
+       ======================================================================== -->
+  <Slide
+    id="request-response-pattern"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Request-Response Interaction Pattern"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The request-response pattern is one of the most common forms of interaction in client-server systems.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The client initiates communication by sending a request that identifies the required operation and provides necessary parameters. The server receives the request, performs the processing, accesses resources if necessary, and generates a response.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, a web browser requests a webpage over HTTP. The server processes the request, retrieves content from the file system or database, and sends an HTTP response back to the browser.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Request-Response', definition: 'A conversational protocol where a client request triggers explicit server computation and reply.' },
+        { term: 'Idempotency', definition: 'A property where repeating an identical request multiple times produces the exact same system state.' },
+        { term: 'Synchronous Wait', definition: 'A client execution state that blocks thread progress until the server response is received.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain how request-response mirrors local function invocation: caller passes arguments, callee computes and returns a return value.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 18: ADVANTAGES AND LIMITATIONS OF CLIENT-SERVER
+       ======================================================================== -->
+  <Slide
+    id="client-server-tradeoffs"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Advantages and Limitations of Client-Server Architecture"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Advantages" badge="Centralized Control" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Clear role separation.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Centralizing critical services simplifies administration, security management, and resource allocation. Shared resources are maintained in a single controlled environment.
+        </p>
+      </Card>
+
+      <Card title="Limitations" badge="Bottlenecks" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Single point of failure.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A heavily used server can become a performance bottleneck. If a critical server fails, dependent clients lose access to the service.
+        </p>
+      </Card>
+
+      <Card title="Mitigations" badge="Scaling Techniques" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Handling high demand.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          These bottlenecks are addressed through server replication, load balancing, proxy caching, data partitioning, and automated failover mechanisms.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Discuss the classic engineering dilemma: centralized architectures are easy to manage, but become single points of failure without horizontal replication.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 19: TWO-TIER ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="two-tier-architecture"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Two-Tier Architecture: Client and Database Server"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Two-tier architecture divides a distributed application into two major tiers: a client tier and a server tier.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The client tier contains the user interface and application logic. The server tier provides data management services. A traditional desktop application communicating directly with a database server is a common example.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Two-tier architecture is straightforward for small systems. However, as client numbers grow, direct client-to-database connections create scalability, security, and maintenance difficulties.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Two-Tier Architecture', definition: 'A client-server topology where client software connects directly to the database persistence layer.' },
+        { term: 'Connection Exhaustion', definition: 'Depletion of database server connection pools caused by each client holding a persistent socket.' },
+        { term: 'Schema Coupling', definition: 'Direct client dependency on database table structures, making schema changes breaking.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Show why two-tier systems were popular in the 1990s desktop era, and why the internet forced everyone to adopt three-tier architectures.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 20: THREE-TIER ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="three-tier-architecture"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Three-Tier Architecture: Presentation, Application, and Data"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+      <div class="space-y-3">
+        <div class="p-3 rounded-lg bg-indigo-50 border-2 border-indigo-300 font-mono text-xs">
+          <div class="font-bold text-slate-950 mb-1">1. Presentation Tier (Web / Mobile Client)</div>
+          <div class="text-slate-700">Handles user interface rendering and input collection.</div>
+        </div>
+        <div class="p-3 rounded-lg bg-teal-50 border-2 border-teal-300 font-mono text-xs">
+          <div class="font-bold text-slate-950 mb-1">2. Application Tier (Business Logic)</div>
+          <div class="text-slate-700">Processes application rules, calculations, and workflows.</div>
+        </div>
+        <div class="p-3 rounded-lg bg-rose-50 border-2 border-rose-300 font-mono text-xs">
+          <div class="font-bold text-slate-950 mb-1">3. Data Tier (Database Server)</div>
+          <div class="text-slate-700">Manages persistent data storage, transactions, and queries.</div>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-base font-extrabold text-slate-950 m-0">Decoupling and Independent Scaling</h3>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Three-tier architecture separates application logic from user presentation and data storage.
+        </p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          This separation allows each tier to evolve and scale independently, and prevents the presentation layer from depending directly on internal database structures.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Explain how the application server protects the database from malicious client queries and connection storms.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 21: MULTI-TIER ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="multi-tier-architecture"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Multi-Tier Architecture: Enterprise and Cloud Applications"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+      <div class="p-3.5 rounded-xl bg-slate-100 border-2 border-slate-300 font-mono text-xs space-y-1.5 text-slate-900">
+        <div class="font-bold text-slate-950 border-b border-slate-300 pb-1">Multi-Tier Request Flow</div>
+        <div>User Client Browser / Mobile Device</div>
+        <div class="text-slate-500">  │  (Edge Caching & Security)</div>
+        <div class="text-indigo-900 font-bold">Content Delivery Network (CDN) & Load Balancer</div>
+        <div class="text-slate-500">  │  (Request Routing)</div>
+        <div class="text-teal-900 font-bold">Web Servers & Application Servers</div>
+        <div class="text-slate-500">  │  (Business Logic & State Lookups)</div>
+        <div class="text-rose-900 font-bold">In-Memory Cache ── Database Cluster ── Storage</div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-base font-extrabold text-slate-950 m-0">Independent Component Scaling</h3>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Large distributed systems extend three-tier designs into multi-tier architectures with dedicated caching, authentication, and load balancing layers.
+        </p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Components can be replicated and scaled independently. Additional application servers can be added when demand rises without modifying web server or database configurations.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Walk through the full modern web request pipeline. Show how each specialized tier absorbs a specific class of network or compute load.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 22: PEER-TO-PEER ARCHITECTURE
+       ======================================================================== -->
+  <Slide
+    id="peer-to-peer-arch"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Peer-to-Peer Architecture: Symmetric Nodes"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        In a peer-to-peer architecture, participating nodes can act both as service providers and service consumers. There is no requirement for a permanent central server.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A peer may request information from another peer while simultaneously providing information to other peers in the network. Processing, storage, and communication responsibilities are distributed among participating nodes.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        However, decentralization introduces additional engineering challenges involving node discovery, coordination, security, consistency, and handling dynamic node departures.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Peer-to-Peer (P2P)', definition: 'A decentralized network architecture where participating nodes share symmetric roles and pool resources.' },
+        { term: 'Node Churn', definition: 'The rapid, unpredictable joining and leaving of participating nodes in a peer-to-peer network.' },
+        { term: 'Overlay Network', definition: 'A virtual computer network built on top of physical IP networks to route messages between peers.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Contrast BitTorrent and Bitcoin with YouTube and AWS. Highlight the trade-off: high resilience and resource pooling vs complex coordination.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 23: ARCHITECTURAL COMPARISON: CLIENT-SERVER VS P2P
+       ======================================================================== -->
+  <Slide
+    id="cs-vs-p2p-comparison"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Comparison: Client-Server vs Peer-to-Peer"
+    layout="table"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-3">
+      <Table
+        headers={['Evaluation Criterion', 'Client-Server Architecture', 'Peer-to-Peer Architecture']}
+        rows={[
+          ['Role Distribution', 'Distinct roles: clients request, servers respond', 'Symmetric: every peer acts as client and server'],
+          ['Centralization', 'Centralized servers maintain shared resources', 'Decentralized: resources distributed across nodes'],
+          ['Scalability Dynamics', 'Server capacity can become a bottleneck', 'Capacity grows as more peer nodes join the network'],
+          ['Administration & Security', 'Simpler to administer and secure centrally', 'More complex discovery, trust, and consistency'],
+          ['Fault Tolerance', 'Server failure impacts all connected clients', 'System functions despite individual node departures'],
+          ['Coordination', 'Direct request-response to known server address', 'Requires overlay routing or distributed hash tables'],
+        ]}
+      />
+    </div>
+    <SpeakerNotes>
+      Use this comparison table to synthesize client-server vs P2P. Make sure students understand when to use each model.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 24: VARIATIONS OF THE CLIENT-SERVER MODEL
+       ======================================================================== -->
+  <Slide
+    id="client-server-variations"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Variations of the Client-Server Model"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+      <Card title="Proxy Servers" badge="Intermediaries" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Intermediary request routing.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Clients communicate through a proxy that forwards requests, applies security filters, translates protocols, or serves cached results.
+        </p>
+      </Card>
+
+      <Card title="Caching Layers" badge="Performance" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Storing frequently requested data.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Caches store previously retrieved resources close to clients, reducing repeated network round-trips to origin servers.
+        </p>
+      </Card>
+
+      <Card title="Server Replication" badge="Availability" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Multiple identical server instances.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Replicated servers process requests in parallel behind load balancers, ensuring service continues if one instance fails.
+        </p>
+      </Card>
+
+      <Card title="Thin vs Fat Clients" badge="Workload Division" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Computation placement choices.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Balancing application execution between lightweight browser frontends and compute-intensive local client software.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Explain that the basic client-server model is rarely used in its purest form in production; it is always augmented with proxies, caches, and load balancers.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 25: THIN CLIENT
+       ======================================================================== -->
+  <Slide
+    id="thin-client-arch"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Thin Client: Server-Centric Processing"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A thin client is a client in which relatively little application processing is performed locally. Most of the computation and data processing are provided by remote servers.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Web applications accessed through a browser are a common example. The browser handles presentation and basic user input, while business logic and database queries execute on remote servers.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Thin clients simplify centralized management because application software is maintained primarily on servers. However, they depend heavily on continuous network connectivity and server availability.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Thin Client', definition: 'A client architecture that relies on remote servers for most computational processing.' },
+        { term: 'Centralized Maintenance', definition: 'Updating application code on servers without requiring user-side software installations.' },
+        { term: 'Network Dependency', definition: 'The requirement for an active network connection for the client to function.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Discuss Google Docs vs local Microsoft Word as the classic thin client vs fat client comparison.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 26: FAT CLIENT
+       ======================================================================== -->
+  <Slide
+    id="fat-client-arch"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Fat Client: Local Processing Power"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A fat client, also called a thick client, performs a substantial amount of computational processing and business logic locally on the client machine.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Desktop applications that perform complex calculations or graphics rendering locally while communicating with a central server for shared records are common examples.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Fat clients reduce server processing demands and can operate during temporary network disconnections. However, distributing software updates, configuration changes, and security patches across many client machines is more difficult.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Fat Client (Thick Client)', definition: 'A client that executes significant business logic and processing locally before contacting servers.' },
+        { term: 'Offline Operation', definition: 'The ability of a client to perform tasks locally when disconnected from the network.' },
+        { term: 'Software Distribution', definition: 'The process of deploying software updates and patches to individual user machines.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Highlight the trade-off: rich local performance and offline capability vs administrative maintenance headaches.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 27: PROXY SERVERS
+       ======================================================================== -->
+  <Slide
+    id="proxy-servers-caching"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Proxy Servers: Intermediary Communication and Caching"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A proxy server is an intermediary between a client and another server. Instead of communicating directly with the destination server, the client sends its request to the proxy.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The proxy processes or forwards the request and returns the result to the client. Proxies provide caching, access control, security filtering, traffic management, and protocol translation.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Caching is particularly useful when multiple clients request identical resources. The proxy stores previously retrieved resources and serves subsequent requests from cache, reducing network traffic and improving response times.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Proxy Server', definition: 'An intermediary host that intercepts and handles requests between clients and destination servers.' },
+        { term: 'Cache Storage', definition: 'Temporary high-speed local storage holding frequently accessed resources.' },
+        { term: 'Traffic Management', definition: 'Filtering, routing, and optimizing data packets moving through a network boundary.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Make sure students clearly understand the difference between a forward proxy (protects clients) and a reverse proxy (protects servers).
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 28: REPLICATED SERVERS
+       ======================================================================== -->
+  <Slide
+    id="server-replication"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Replicated Servers: Capacity and High Availability"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Replication involves maintaining multiple copies or instances of a service or data resource across separate physical computers.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Replication increases system capacity because multiple servers can process requests concurrently. It also improves availability: if one server fails, another instance can continue providing the service without interrupting users.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        However, replication introduces the challenge of maintaining consistency between copies, especially when replicated resources can be modified concurrently by multiple clients.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Server Replication', definition: 'Maintaining multiple identical copies of a service or database across different machines.' },
+        { term: 'High Availability', definition: 'A system characteristic ensuring services remain accessible even during hardware failures.' },
+        { term: 'Consistency Challenge', definition: 'The difficulty of ensuring all replica copies reflect identical data after updates.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain how replication solves availability, but introduces the hardest problem in distributed systems: keeping replicas synchronized.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 29: LOAD BALANCING
+       ======================================================================== -->
+  <Slide
+    id="load-balancing-strategies"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Load Balancing: Distributing Incoming Requests"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+      <Card title="Round-Robin" badge="Sequential Routing" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Equal cyclical request allocation.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Distributes incoming client requests sequentially among server instances in the pool. Weighted variants allocate more traffic to higher-capacity servers.
+        </p>
+      </Card>
+
+      <Card title="Least Connections" badge="Workload Based" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Dynamic active connection routing.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Directs new client connections to the server currently handling the smallest number of active requests, preventing slow queries from overloading a node.
+        </p>
+      </Card>
+
+      <Card title="Resource Utilization" badge="Telemetry Based" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Routing based on real-time metrics.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Monitors real-time server metrics like CPU utilization, memory pressure, and response time to route traffic away from heavily stressed nodes.
+        </p>
+      </Card>
+
+      <Card title="IP Hash / Affinity" badge="Session Sticky" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Preserving client session state.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Hashes client IP addresses or session identifiers to ensure returning requests from a specific user reach the exact same server instance.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Compare these 4 algorithms. Point out that modern cloud load balancers combine health checks with weighted least-connections.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 30: MOBILE CODE
+       ======================================================================== -->
+  <Slide
+    id="mobile-code"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Mobile Code: Moving Computation to Data"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Mobile code refers to program code that can be transferred from one computer to another and executed in the receiving environment.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Traditional distributed computing moves data across the network to a program for processing. With mobile code, the program can be moved closer to where the data is stored.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, if a large dataset is stored on a remote server, transferring a small processing script to that system requires less network bandwidth than transferring the entire dataset across the wire. However, running external code requires strict security sandboxing.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Mobile Code', definition: 'Program code transferred across a network to execute inside a remote runtime environment.' },
+        { term: 'Compute-to-Data', definition: 'The strategy of moving code closer to stored data to conserve network bandwidth.' },
+        { term: 'Sandboxing', definition: 'An isolated execution environment that restricts the permissions and resources of untrusted code.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Point out that JavaScript in web browsers is the most common real-world example of mobile code: the server ships code that runs in the client's browser.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 31: MOBILE AGENTS
+       ======================================================================== -->
+  <Slide
+    id="mobile-agents"
+    eyebrow="02 · ARCHITECTURAL MODELS"
+    title="Mobile Agents: Autonomous Multi-Host Execution"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A mobile agent is a program that can move between computers or execution environments while continuing to perform a task.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        An agent executes part of its task on Host A, migrates its code and execution state across the network to Host B, continues processing there, and then moves to Host C.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Mobile agents differ from ordinary mobile code because they are designed as autonomous programs capable of making decisions and carrying out multi-step activities across hosts. However, they introduce significant security, compatibility, and fault-tolerance challenges.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Mobile Agent', definition: 'An autonomous program capable of migrating its code, state, and execution stack across multiple hosts.' },
+        { term: 'State Migration', definition: 'The transfer and restoration of an active program execution state on a new node.' },
+        { term: 'Host Itinerary', definition: 'The programmed sequence of host destinations an autonomous agent visits to complete its task.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain why mobile agents were heavily researched in academic literature, but struggled in industry due to security and runtime heterogeneity.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 32: FUNDAMENTAL MODELS
+       ======================================================================== -->
+  <Slide
+    id="fundamental-models-overview"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Fundamental Models: Assumptions About System Behavior"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Architectural models explain the structure and organization of a distributed system. Fundamental models describe assumptions about the behavior of that system.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Two essential fundamental models are the interaction model and the failure model. The interaction model considers how processes execute and communicate, including timing and event ordering. The failure model considers how components fail and what incorrect behavior can result.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        These models are essential when designing distributed algorithms because an algorithm can only be considered correct relative to the assumptions made about its execution environment.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Fundamental Model', definition: 'A formal specification of behavioral assumptions regarding timing, communication, and failures.' },
+        { term: 'Algorithm Correctness', definition: 'Proof that an algorithm achieves safety and liveness under specified operational models.' },
+        { term: 'Environmental Assumptions', definition: 'The explicit operational boundaries within which a distributed protocol functions.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Emphasize the shift from structure (architecture) to behavioral rules (fundamental models).
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 33: INTERACTION MODEL
+       ======================================================================== -->
+  <Slide
+    id="interaction-model-foundations"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Interaction Model: Communication and Timing Assumptions"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Concurrent Execution" badge="Processes" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Overlapping instruction cycles.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Processes execute concurrently across separate machines. No single execution sequence can be directly observed by all participating processes.
+        </p>
+      </Card>
+
+      <Card title="Transmission Delays" badge="Network Latency" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Variable message transit times.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Communication takes place through messages, and transmission incurs variable delays due to routing, buffering, and physical distance.
+        </p>
+      </Card>
+
+      <Card title="Event Ordering" badge="Clocks & Time" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Determining temporal relationships.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Because local clocks drift independently, determining the exact order of events occurring on different computers requires explicit coordination.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Review the 3 realities of the interaction model. Ask students: how do you know if Event A happened before Event B on two different machines?
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 34: SYNCHRONOUS DISTRIBUTED SYSTEMS
+       ======================================================================== -->
+  <Slide
+    id="synchronous-systems"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Synchronous Distributed Systems: Known Timing Bounds"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A synchronous distributed system is one in which known upper bounds can be placed on important aspects of computation and communication.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Specifically, the model assumes that a process takes no more than a specified maximum time to execute an operation, that a message takes no more than a specified time to travel between nodes, and that local clocks drift by at most a known rate.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        These assumptions simplify algorithm design because the absence of a response within a known timeout provides definitive information that a node has failed. However, real-world wide-area networks rarely guarantee strict synchronous bounds.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Synchronous System', definition: 'A distributed system where known upper bounds exist for computation time, transmission delay, and clock drift.' },
+        { term: 'Deterministic Timeout', definition: 'A time threshold beyond which the absence of a response confirms a failure has occurred.' },
+        { term: 'Bounded Drift', definition: 'A guarantee that local physical clocks diverge from true time by no more than a known constant rate.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain that synchronous systems are a theoretical ideal or confined to specialized hard real-time systems (automotive fly-by-wire, industrial control).
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 35: ASYNCHRONOUS DISTRIBUTED SYSTEMS
+       ======================================================================== -->
+  <Slide
+    id="asynchronous-systems"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Asynchronous Distributed Systems: Unbounded Timing"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        An asynchronous distributed system does not provide known fixed upper bounds on process execution time or message transmission latency.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A process may execute slowly, or a message may be delayed in transit for an unpredictable duration without violating the model.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        This creates a fundamental difficulty: a process that has not received a response cannot immediately determine whether the remote process has crashed or whether the message is simply delayed. Asynchronous models are important because they accurately reflect internet and cloud environments.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Asynchronous System', definition: 'A distributed system with no fixed upper bounds on computation speed, message delay, or clock sync.' },
+        { term: 'Unbounded Delay', definition: 'The condition where message delivery or execution can take an arbitrarily long time.' },
+        { term: 'Failure Ambiguity', definition: 'The inability to distinguish between a crashed node and a slow network connection.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Emphasize the core insight: on the internet, you can never prove a quiet server is dead versus just slow.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 36: FAILURE MODEL
+       ======================================================================== -->
+  <Slide
+    id="failure-model-foundations"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Failure Model: Defining Component Malfunctions"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Failures are an unavoidable reality in distributed systems. A failure model defines the ways in which components can fail and the behavior that can be expected from a faulty component.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A process may stop completely because of a crash. A communication channel may lose a message. A process may respond too slowly. In severe cases, a faulty component may behave arbitrarily and provide conflicting data to different peers.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        By defining an explicit failure model, system designers determine which failures must be tolerated and what recovery mechanisms are required to maintain correct operation.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Failure Model', definition: 'A formal specification of malfunction types and behaviors a distributed system is designed to handle.' },
+        { term: 'Fault Envelope', definition: 'The defined boundaries of failure types and quantities a protocol can withstand.' },
+        { term: 'Fault Tolerance', definition: 'The ability of a system to continue operating correctly according to specification despite failures.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Introduce the concept of designing for failure as the core mindset of distributed systems engineering.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 37: CRASH FAILURE
+       ======================================================================== -->
+  <Slide
+    id="crash-failures"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Crash Failure: Permanent Process Halting"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A crash failure occurs when a process stops executing and does not perform any further operations.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, a server may lose power, experience an operating-system panic, or terminate due to a critical software exception.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        The difficulty is that other processes may not immediately know that the failed process has crashed. A lack of response could indicate either a crashed process or a delayed message, requiring timeout mechanisms and failure detectors.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Crash Failure (Fail-Stop)', definition: 'A failure mode where a process halts execution completely and produces no further observable actions.' },
+        { term: 'Crash-Recovery Model', definition: 'A variant where a crashed process can restart, read persistent disk logs, and rejoin the active cluster.' },
+        { term: 'Failure Detector', definition: 'A software mechanism that uses heartbeats and timeouts to suspect or detect node crashes.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain fail-stop vs crash-recovery. In real cloud systems, servers reboot after crashing, which is why persistent Write-Ahead Logs (WAL) are required.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 38: OMISSION FAILURE
+       ======================================================================== -->
+  <Slide
+    id="omission-failures"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Omission Failure: Missing Communication Actions"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Send-Omission" badge="Sender Buffer" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Process fails to transmit.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A process executes a send command, but the message is never placed into the network buffer due to memory pressure or operating system errors.
+        </p>
+      </Card>
+
+      <Card title="Channel Omission" badge="Network Loss" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Dropped in physical transit.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A message enters the network but is dropped before reaching the destination, caused by buffer overflows in routers or damaged physical links.
+        </p>
+      </Card>
+
+      <Card title="Receive-Omission" badge="Receiver Buffer" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Host fails to deliver message.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A message arrives at the destination network interface, but the host operating system fails to deliver it to the application process.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Break down the three places a message can be lost: sender socket, intermediate network, or receiver buffer.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 39: TIMING FAILURE
+       ======================================================================== -->
+  <Slide
+    id="timing-failures"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Timing Failure: Violating System Deadlines"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A timing failure occurs when an operation takes longer than the time allowed by the system's timing assumptions.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, a server may eventually compute the correct response, but the response arrives after the deadline required by the application.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Timing failures are particularly critical in real-time systems, such as industrial control and live multimedia streaming. In these environments, a response that arrives late is considered invalid, even if its data is accurate.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Timing Failure', definition: 'A failure where an operation produces a correct response, but delivers it outside a required time deadline.' },
+        { term: 'Real-Time System', definition: 'A system where correctness depends on both the logical result and the exact time it is delivered.' },
+        { term: 'Clock Drift Failure', definition: 'A condition where a local clock drifts faster than the system maximum allowed rate.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Contrast timing failures with omission failures: in timing failures, the data arrives, but it arrives too late to be useful.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 40: BYZANTINE FAILURE
+       ======================================================================== -->
+  <Slide
+    id="byzantine-failures"
+    eyebrow="03 · FUNDAMENTAL MODELS"
+    title="Byzantine Failure: Arbitrary and Malicious Behavior"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A Byzantine failure represents an arbitrary failure in which a component behaves incorrectly in ways not limited to simply stopping or losing messages.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        A Byzantine-faulty process may send incorrect information, deliver conflicting messages to different peers (equivocation), or behave inconsistently over time.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Byzantine failures are challenging because other processes cannot assume that a responding node is behaving correctly. Tolerating these failures requires redundancy, agreement protocols, cryptographic authentication, and quorum majorities of at least 3f + 1 nodes to tolerate f faulty nodes.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Byzantine Failure', definition: 'An arbitrary failure mode where a node can transmit incorrect, conflicting, or corrupted data.' },
+        { term: 'Equivocation', definition: 'The act of a faulty node sending conflicting information to different peers in the same round.' },
+        { term: '3f + 1 Quorum', definition: 'The minimum total number of nodes needed to reach consensus despite f arbitrary Byzantine faults.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Introduce the classic Byzantine Generals Problem (Lamport). Explain why blockchain networks (Bitcoin/Ethereum) must use Byzantine fault tolerance.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 41: RELATIONSHIP BETWEEN THE MODELS
+       ======================================================================== -->
+  <Slide
+    id="models-synthesis"
+    eyebrow="04 · SYNTHESIS & ANALYSIS"
+    title="Relationship Between the Models: Unified Framework"
+    layout="default"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <div class="p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300 space-y-2">
+        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-indigo-200 text-indigo-900">1. Architectural Model</span>
+        <h4 class="text-sm font-extrabold text-slate-950 m-0">Structure & Placement</h4>
+        <p class="text-xs text-slate-800 font-medium leading-relaxed">
+          Explains how components are organized, their structural relationships, and how software layers are divided across computers.
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-teal-50 border-2 border-teal-300 space-y-2">
+        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-teal-200 text-teal-900">2. Interaction Model</span>
+        <h4 class="text-sm font-extrabold text-slate-950 m-0">Timing & Messages</h4>
+        <p class="text-xs text-slate-800 font-medium leading-relaxed">
+          Explains how processes communicate, how activities relate in time, and whether delays are bounded or unbounded.
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-rose-50 border-2 border-rose-300 space-y-2">
+        <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-rose-200 text-rose-900">3. Failure Model</span>
+        <h4 class="text-sm font-extrabold text-slate-950 m-0">Malfunction Semantics</h4>
+        <p class="text-xs text-slate-800 font-medium leading-relaxed">
+          Explains how components and communication channels can malfunction, from fail-stop crashes to arbitrary Byzantine faults.
+        </p>
+      </div>
+    </div>
+    <SpeakerNotes>
+      Synthesize the three pillars. Emphasize that no distributed system can be evaluated without defining all three dimensions.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 42: CASE ANALYSIS: ONLINE BANKING SYSTEM
+       ======================================================================== -->
+  <Slide
+    id="case-study-banking"
+    eyebrow="04 · SYNTHESIS & ANALYSIS"
+    title="Example: Online Banking System Across All Models"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+      <Card title="Architectural Perspective" badge="Structural Layout" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Multi-tier component organization.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          A customer uses a browser or mobile app to submit a transaction. The request passes through a load balancer to application servers, authentication services, and database clusters.
+        </p>
+      </Card>
+
+      <Card title="Interaction Perspective" badge="Timing & Latency" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">Message exchange and delays.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Components exchange messages over networks. Latency affects transaction duration, and timeout budgets prevent clients from waiting indefinitely.
+        </p>
+      </Card>
+
+      <Card title="Failure Perspective" badge="Handling Faults" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Crash and message loss recovery.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          The system specifies actions if an application server crashes, a database is temporarily unavailable, or a confirmation packet is lost.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Walk through a concrete real-world banking transaction: how all three models come together to prevent lost money or duplicate debits.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 43: WHY ARCHITECTURE ALONE IS NOT ENOUGH
+       ======================================================================== -->
+  <Slide
+    id="why-architecture-insufficient"
+    eyebrow="04 · SYNTHESIS & ANALYSIS"
+    title="Why Architecture Alone Is Not Enough"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Knowing the architecture of a distributed system does not tell us everything about its behavior.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, an architecture may contain three replicated servers, but this alone does not explain what happens if one server crashes.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Similarly, knowing that two processes communicate does not tell us whether messages can be delayed indefinitely or whether there is a guaranteed maximum transmission time. To reason about these situations, architecture must be combined with interaction and failure assumptions.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Structural Topology', definition: 'A static visual map showing component placement and physical or logical connection lines.' },
+        { term: 'Dynamic Semantics', definition: 'The runtime execution rules that govern state changes, timing, and error responses.' },
+        { term: 'Model Completeness', definition: 'Evaluating a system using architecture, interaction timing, and failure models together.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Warn students against "architecture-only" thinking: a box on a diagram doesn't tell you how a system behaves when cables get cut.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 44: SYSTEM MODELS AND DISTRIBUTED ALGORITHMS
+       ======================================================================== -->
+  <Slide
+    id="models-and-algorithms"
+    eyebrow="04 · SYNTHESIS & ANALYSIS"
+    title="System Models and Distributed Algorithms"
+    layout="split-sidebar"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="space-y-4">
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        Distributed algorithms operate under assumptions about the environment in which they execute.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        For example, a leader-election algorithm must make assumptions about communication and failures. A distributed consensus algorithm must consider the possibility that processes may fail or messages may be delayed.
+      </p>
+      <p class="text-sm leading-relaxed text-slate-900 font-medium">
+        If an algorithm assumes synchronous communication but executes where messages experience arbitrary delays, its correctness may not hold. System models define the conditions under which distributed algorithms operate correctly.
+      </p>
+    </div>
+
+    <KeyTerms
+      terms={[
+        { term: 'Consensus Algorithm', definition: 'A protocol enabling multiple independent nodes to agree on a single data value or state.' },
+        { term: 'Correctness Precondition', definition: 'The set of environmental assumptions required for an algorithm to guarantee correct results.' },
+        { term: 'Model Invalidation', definition: 'System failure occurring when real-world execution violates the baseline assumptions of an algorithm.' },
+      ]}
+    />
+
+    <SpeakerNotes>
+      Explain safety vs liveness: the fundamental theorem of distributed algorithms.
+    </SpeakerNotes>
+  </Slide>
+
+  <!-- ========================================================================
+       SLIDE 45: SUMMARY
+       ======================================================================== -->
+  <Slide
+    id="unit-summary"
+    eyebrow="04 · SYNTHESIS & ANALYSIS"
+    title="Summary: System Models of Distributed Systems"
+    layout="card-grid"
+    unit="BIT452CO: Distributed & Cloud Computing"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
+      <Card title="System Model Foundations" badge="Abstraction" glow="indigo">
+        <p class="text-xs text-slate-700 font-bold mb-1">Managing scale and concurrency.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Abstract representations formalize assumptions about independent computers communicating through networks without shared memory or a global clock.
+        </p>
+      </Card>
+
+      <Card title="Architectural Models" badge="Structure & Layers" glow="cyan">
+        <p class="text-xs text-slate-700 font-bold mb-1">From Client-Server to Multi-Tier & P2P.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Layered software stacks, middleware abstractions, client-server variations (proxies, caches, replication, load balancing), and peer-to-peer networks.
+        </p>
+      </Card>
+
+      <Card title="Interaction Models" badge="Timing & Delays" glow="amber">
+        <p class="text-xs text-slate-700 font-bold mb-1">Synchronous vs Asynchronous systems.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Synchronous systems establish known upper bounds on delays; asynchronous systems model environments where message latency cannot be bounded in advance.
+        </p>
+      </Card>
+
+      <Card title="Failure Models" badge="Malfunction Classes" glow="rose">
+        <p class="text-xs text-slate-700 font-bold mb-1">Crash, Omission, Timing & Byzantine.</p>
+        <p class="text-xs leading-relaxed text-slate-900 font-medium">
+          Classifies component malfunctions to establish the conditions under which distributed algorithms, synchronization, and replication operate correctly.
+        </p>
+      </Card>
+    </div>
+    <SpeakerNotes>
+      Summarize the entire unit. Connect these concepts directly to the next unit on logical time and distributed consensus algorithms.
+    </SpeakerNotes>
+  </Slide>
+</DeckLayout>

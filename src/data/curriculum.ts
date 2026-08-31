@@ -85,6 +85,21 @@ export const COURSES: CourseItem[] = [
           },
         ],
       },
+      {
+        id: 'unit-02',
+        number: 2,
+        title: 'System Models of Distributed Systems',
+        topics: [
+          {
+            slug: 'system-models',
+            title: 'System Models, Architectural Patterns & Failure Classifications',
+            lectureNumber: 2,
+            duration: '8 Hours (46 Slides)',
+            description: 'System modeling abstractions, physical vs architectural models, client-server and peer-to-peer topologies, synchronous vs asynchronous interaction, and failure classifications.',
+            path: '/sem8/bit452co/unit-02/system-models',
+          },
+        ],
+      },
     ],
   },
 ];
