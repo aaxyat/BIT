@@ -117,21 +117,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="What a Model Is" badge="Abstract View" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Capturing essential characteristics.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A system model is an abstract representation of a distributed system. It highlights important properties while deliberately ignoring low-level implementation details that are not relevant to the analysis.
         </p>
       </Card>
 
       <Card title="What a Model Defines" badge="Explicit Rules" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Establishing clear assumptions.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A model establishes explicit assumptions about participating components, communication channels, execution speeds, message delays, and possible failure modes.
         </p>
       </Card>
 
       <Card title="Why We Need It" badge="Design & Proof" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Tractable problem solving.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           The goal is not to replicate every physical wire and chip. The goal is to create a precise baseline for proving whether an algorithm will work correctly under real-world conditions.
         </p>
@@ -224,28 +221,24 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
       <Card title="1. Concurrent Computation" badge="Parallelism" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Independent processors executing in parallel.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Multiple computers participate in the computation concurrently. Each maintains its own local memory, instruction pipeline, and private state.
         </p>
       </Card>
 
       <Card title="2. Network Message Exchange" badge="Communication" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Communication takes non-zero time.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Communication occurs through messages across networks. Network latency is variable and can be affected by congestion, routing changes, or hardware faults.
         </p>
       </Card>
 
       <Card title="3. No Global Clock" badge="Time & Ordering" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Independent physical quartz crystals.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           There is no single shared clock that all processes observe with perfect accuracy, making exact event ordering across different machines challenging.
         </p>
       </Card>
 
       <Card title="4. Independent Failures" badge="Fault Semantics" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Isolated node and link breakdowns.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A computer, process, network link, or storage device can fail while surrounding components continue functioning, requiring explicit fault handling.
         </p>
@@ -269,28 +262,24 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
       <Card title="Architectural Model" badge="Structure & Placement" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">How components are organized.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Describes how the major components of the distributed system are arranged, where they execute, and how responsibilities are divided among them.
         </p>
       </Card>
 
       <Card title="Interaction Model" badge="Communication & Time" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">How processes communicate and time behaves.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Describes how processes exchange messages, how events occur in sequence, and what timing bounds apply to computation speeds and transit delays.
         </p>
       </Card>
 
       <Card title="Failure Model" badge="Fault Classification" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">How components malfunction.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Defines the specific ways computing processes and network links can fail, and how those failures affect system operations.
         </p>
       </Card>
 
       <Card title="Security Model" badge="Adversarial Vectors" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">How systems protect against threats.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Describes the capabilities of potential attackers, vulnerabilities like eavesdropping or tampering, and required security protections.
         </p>
@@ -348,35 +337,30 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
       <Card title="Processes" badge="Execution" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Programs in execution.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Programs executing on local or remote nodes that perform computation and maintain local state. Multiple processes execute on the same or different computers.
         </p>
       </Card>
 
       <Card title="Services" badge="Interfaces" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Functionality for other components.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Capabilities provided by one component for use by another, such as database query execution or authentication validation.
         </p>
       </Card>
 
       <Card title="Channels" badge="Transport" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Mechanisms for message exchange.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Network paths and socket protocols through which distributed processes exchange formatted data packets.
         </p>
       </Card>
 
       <Card title="Data Resources" badge="Persistence" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Shared information stores.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Databases, files, objects, cached records, and shared data resources accessed concurrently by multiple application components.
         </p>
       </Card>
 
       <Card title="Middleware" badge="Coordination" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Distribution abstraction layer.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Higher-level software providing naming, RPC, RMI, authentication, and transaction services to simplify distributed coordination.
         </p>
@@ -630,21 +614,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="Client-Server" badge="Asymmetric Roles" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Centralized service hubs.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Clients request services and servers provide those services. Simple to manage and secure, but vulnerable to server bottlenecks.
         </p>
       </Card>
 
       <Card title="Multi-Tier" badge="Layered Architecture" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Separation of responsibilities.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Divides applications into presentation, business logic, and database tiers, allowing each tier to scale independently.
         </p>
       </Card>
 
       <Card title="Peer-to-Peer" badge="Symmetric Roles" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Decentralized resource mesh.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Nodes share symmetric roles, acting as both consumers and providers of compute and storage without a permanent central server.
         </p>
@@ -735,21 +716,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="Advantages" badge="Centralized Control" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Clear role separation.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Centralizing critical services simplifies administration, security management, and resource allocation. Shared resources are maintained in a single controlled environment.
         </p>
       </Card>
 
       <Card title="Limitations" badge="Bottlenecks" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Single point of failure.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A heavily used server can become a performance bottleneck. If a critical server fails, dependent clients lose access to the service.
         </p>
       </Card>
 
       <Card title="Mitigations" badge="Scaling Techniques" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Handling high demand.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           These bottlenecks are addressed through server replication, load balancing, proxy caching, data partitioning, and automated failover mechanisms.
         </p>
@@ -948,28 +926,24 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
       <Card title="Proxy Servers" badge="Intermediaries" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Intermediary request routing.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Clients communicate through a proxy that forwards requests, applies security filters, translates protocols, or serves cached results.
         </p>
       </Card>
 
       <Card title="Caching Layers" badge="Performance" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Storing frequently requested data.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Caches store previously retrieved resources close to clients, reducing repeated network round-trips to origin servers.
         </p>
       </Card>
 
       <Card title="Server Replication" badge="Availability" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Multiple identical server instances.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Replicated servers process requests in parallel behind load balancers, ensuring service continues if one instance fails.
         </p>
       </Card>
 
       <Card title="Thin vs Fat Clients" badge="Workload Division" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Computation placement choices.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Balancing application execution between lightweight browser frontends and compute-intensive local client software.
         </p>
@@ -1132,28 +1106,24 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
       <Card title="Round-Robin" badge="Sequential Routing" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Equal cyclical request allocation.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Distributes incoming client requests sequentially among server instances in the pool. Weighted variants allocate more traffic to higher-capacity servers.
         </p>
       </Card>
 
       <Card title="Least Connections" badge="Workload Based" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Dynamic active connection routing.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Directs new client connections to the server currently handling the smallest number of active requests, preventing slow queries from overloading a node.
         </p>
       </Card>
 
       <Card title="Resource Utilization" badge="Telemetry Based" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Routing based on real-time metrics.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Monitors real-time server metrics like CPU utilization, memory pressure, and response time to route traffic away from heavily stressed nodes.
         </p>
       </Card>
 
       <Card title="IP Hash / Affinity" badge="Session Sticky" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Preserving client session state.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Hashes client IP addresses or session identifiers to ensure returning requests from a specific user reach the exact same server instance.
         </p>
@@ -1281,21 +1251,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="Concurrent Execution" badge="Processes" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Overlapping instruction cycles.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Processes execute concurrently across separate machines. No single execution sequence can be directly observed by all participating processes.
         </p>
       </Card>
 
       <Card title="Transmission Delays" badge="Network Latency" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Variable message transit times.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Communication takes place through messages, and transmission incurs variable delays due to routing, buffering, and physical distance.
         </p>
       </Card>
 
       <Card title="Event Ordering" badge="Clocks & Time" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Determining temporal relationships.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Because local clocks drift independently, determining the exact order of events occurring on different computers requires explicit coordination.
         </p>
@@ -1458,21 +1425,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="Send-Omission" badge="Sender Buffer" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Process fails to transmit.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A process executes a send command, but the message is never placed into the network buffer due to memory pressure or operating system errors.
         </p>
       </Card>
 
       <Card title="Channel Omission" badge="Network Loss" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Dropped in physical transit.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A message enters the network but is dropped before reaching the destination, caused by buffer overflows in routers or damaged physical links.
         </p>
       </Card>
 
       <Card title="Receive-Omission" badge="Receiver Buffer" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Host fails to deliver message.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A message arrives at the destination network interface, but the host operating system fails to deliver it to the application process.
         </p>
@@ -1605,21 +1569,18 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
       <Card title="Architectural Perspective" badge="Structural Layout" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Multi-tier component organization.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           A customer uses a browser or mobile app to submit a transaction. The request passes through a load balancer to application servers, authentication services, and database clusters.
         </p>
       </Card>
 
       <Card title="Interaction Perspective" badge="Timing & Latency" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">Message exchange and delays.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Components exchange messages over networks. Latency affects transaction duration, and timeout budgets prevent clients from waiting indefinitely.
         </p>
       </Card>
 
       <Card title="Failure Perspective" badge="Handling Faults" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Crash and message loss recovery.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           The system specifies actions if an application server crashes, a database is temporarily unavailable, or a confirmation packet is lost.
         </p>
@@ -1712,28 +1673,24 @@ client.send("server-node", { key: "account_balance", value: 4500 });`;
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto">
       <Card title="System Model Foundations" badge="Abstraction" glow="indigo">
-        <p class="text-xs text-slate-700 font-bold mb-1">Managing scale and concurrency.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Abstract representations formalize assumptions about independent computers communicating through networks without shared memory or a global clock.
         </p>
       </Card>
 
       <Card title="Architectural Models" badge="Structure & Layers" glow="cyan">
-        <p class="text-xs text-slate-700 font-bold mb-1">From Client-Server to Multi-Tier & P2P.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Layered software stacks, middleware abstractions, client-server variations (proxies, caches, replication, load balancing), and peer-to-peer networks.
         </p>
       </Card>
 
       <Card title="Interaction Models" badge="Timing & Delays" glow="amber">
-        <p class="text-xs text-slate-700 font-bold mb-1">Synchronous vs Asynchronous systems.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Synchronous systems establish known upper bounds on delays; asynchronous systems model environments where message latency cannot be bounded in advance.
         </p>
       </Card>
 
       <Card title="Failure Models" badge="Malfunction Classes" glow="rose">
-        <p class="text-xs text-slate-700 font-bold mb-1">Crash, Omission, Timing & Byzantine.</p>
         <p class="text-xs leading-relaxed text-slate-900 font-medium">
           Classifies component malfunctions to establish the conditions under which distributed algorithms, synchronization, and replication operate correctly.
         </p>
